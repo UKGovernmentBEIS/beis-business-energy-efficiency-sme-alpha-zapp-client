@@ -8,6 +8,7 @@
                     MenuActivation="RightClick">
         <tb:TaskbarIcon.ContextMenu>
             <ContextMenu>
+                <MenuItem Header="See Network Details" cal:Message.Attach="SeeNetworkDetails" />
                 <MenuItem Header="Hibernate" cal:Message.Attach="Hibernate" />
                 <MenuItem Header="Quit" cal:Message.Attach="Quit" />
             </ContextMenu>

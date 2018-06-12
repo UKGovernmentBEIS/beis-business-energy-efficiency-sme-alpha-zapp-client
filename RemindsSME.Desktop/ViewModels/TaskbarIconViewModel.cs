@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Quobject.SocketIoClientDotNet.Client;
 using RemindsSME.Desktop.Properties;
+using Microsoft.WindowsAPICodePack.Net;
 
 //using PowerState = System.Windows.Forms.PowerState;
 
@@ -34,6 +35,26 @@ namespace RemindsSME.Desktop.ViewModels
             Hibernate();
         }
 
+        public void SeeNetworkDetails()
+        {
+            var networkString = GetConnectedNetworkNames();
+            MessageBox.Show(networkString, "RemindS ME",
+                MessageBoxButton.OK,
+                MessageBoxImage.None,
+                MessageBoxResult.OK,
+                MessageBoxOptions.DefaultDesktopOnly);
+        }
+
+        public string GetConnectedNetworkNames()
+        {
+            var networks = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected);
+            var networkString = "You are currently connected to: \n";
+            foreach (var net in networks)
+            {
+                networkString = networkString + net.Name + '\n';
+            }
+            return networkString;
+        }
 
         public void Hibernate()
         {
