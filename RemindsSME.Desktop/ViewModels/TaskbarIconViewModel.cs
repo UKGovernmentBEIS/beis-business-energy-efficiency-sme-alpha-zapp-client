@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using Quobject.SocketIoClientDotNet.Client;
@@ -37,23 +39,8 @@ namespace RemindsSME.Desktop.ViewModels
 
         public void SeeNetworkDetails()
         {
-            var networkString = GetConnectedNetworkNames();
-            MessageBox.Show(networkString, "RemindS ME",
-                MessageBoxButton.OK,
-                MessageBoxImage.None,
-                MessageBoxResult.OK,
-                MessageBoxOptions.DefaultDesktopOnly);
-        }
-
-        public string GetConnectedNetworkNames()
-        {
-            var networks = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected);
-            var networkString = "You are currently connected to: \n";
-            foreach (var net in networks)
-            {
-                networkString = networkString + net.Name + '\n';
-            }
-            return networkString;
+            var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
+            socket.Emit("network", network);
         }
 
         public void Hibernate()
