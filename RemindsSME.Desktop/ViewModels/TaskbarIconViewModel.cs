@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
@@ -14,7 +13,7 @@ namespace RemindsSME.Desktop.ViewModels
     public class TaskbarIconViewModel
     {
         private static readonly TimeSpan HibernationTime = new TimeSpan(18, 00, 00); // 18:00
-        private Socket socket;
+        private readonly Socket socket;
 
         public TaskbarIconViewModel()
         {
@@ -22,7 +21,7 @@ namespace RemindsSME.Desktop.ViewModels
             timer.Tick += Timer_Tick;
             timer.Start();
 
-            socket = IO.Socket("http://localhost:5001");
+            socket = IO.Socket("http://localhost:5000");
         }
 
         private void Timer_Tick(object sender, EventArgs e)
