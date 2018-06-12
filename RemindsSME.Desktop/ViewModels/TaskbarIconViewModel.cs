@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Threading;
+using Quobject.SocketIoClientDotNet.Client;
 using RemindsSME.Desktop.Properties;
 
 //using PowerState = System.Windows.Forms.PowerState;
@@ -10,12 +11,15 @@ namespace RemindsSME.Desktop.ViewModels
     public class TaskbarIconViewModel
     {
         private static readonly TimeSpan HibernationTime = new TimeSpan(18, 00, 00); // 18:00
+        private Socket socket;
 
         public TaskbarIconViewModel()
         {
             var timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
             timer.Start();
+
+            socket = IO.Socket("http://localhost:5001");
         }
 
         private void Timer_Tick(object sender, EventArgs e)
