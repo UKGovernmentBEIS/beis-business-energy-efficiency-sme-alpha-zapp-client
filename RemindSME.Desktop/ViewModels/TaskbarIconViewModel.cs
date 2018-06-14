@@ -34,8 +34,21 @@ namespace RemindSME.Desktop.ViewModels
 
         public void OpenHubWindow()
         {
-            var hubViewModel = IoC.Get<HubViewModel>();
-            windowManager.ShowWindow(hubViewModel);
+            var existingWindow = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window is HubView);
+
+            if (existingWindow != null)
+            {
+                if (existingWindow.WindowState == WindowState.Minimized)
+                {
+                    existingWindow.WindowState = WindowState.Normal;
+                }
+                existingWindow.Activate();
+            }
+            else
+            {
+                var hubViewModel = IoC.Get<HubViewModel>();
+                windowManager.ShowWindow(hubViewModel);
+            }
         }
 
         public void SeeNetworkDetails()
