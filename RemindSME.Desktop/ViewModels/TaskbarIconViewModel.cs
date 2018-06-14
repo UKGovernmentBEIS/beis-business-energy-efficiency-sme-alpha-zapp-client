@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using Microsoft.WindowsAPICodePack.Net;
 using Quobject.SocketIoClientDotNet.Client;
 using RemindSME.Desktop.Properties;
-using Microsoft.WindowsAPICodePack.Net;
 
 //using PowerState = System.Windows.Forms.PowerState;
 
@@ -22,18 +22,6 @@ namespace RemindSME.Desktop.ViewModels
             timer.Start();
 
             socket = IO.Socket("http://localhost:5000");
-        }
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            var alreadyHibernatedToday = DateTime.Today <= Settings.Default.LastScheduledHibernate;
-            if (alreadyHibernatedToday || DateTime.Now.TimeOfDay < HibernationTime)
-            {
-                return;
-            }
-            Settings.Default.LastScheduledHibernate = DateTime.Today;
-            Settings.Default.Save();
-            Hibernate();
         }
 
         public void SeeNetworkDetails()
@@ -55,6 +43,16 @@ namespace RemindSME.Desktop.ViewModels
         public void Quit()
         {
             Application.Current.Shutdown();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            var alreadyHibernatedToday = DateTime.Today <= Settings.Default.LastScheduledHibernate;
+            if (alreadyHibernatedToday || DateTime.Now.TimeOfDay < HibernationTime)
+                return;
+            Settings.Default.LastScheduledHibernate = DateTime.Today;
+            Settings.Default.Save();
+            Hibernate();
         }
     }
 }
