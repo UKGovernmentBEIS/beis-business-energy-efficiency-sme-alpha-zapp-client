@@ -1,10 +1,10 @@
 ﻿using System.Windows;
-using Caliburn.Micro;
+using Caliburn.Micro.Autofac;
 using RemindSME.Desktop.ViewModels;
 
 namespace RemindSME.Desktop
 {
-    public class Bootstrapper : BootstrapperBase
+    public class Bootstrapper : AutofacBootstrapper<TaskbarIconViewModel>
     {
         public Bootstrapper()
         {

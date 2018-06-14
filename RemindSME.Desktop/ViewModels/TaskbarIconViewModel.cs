@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using Caliburn.Micro;
 using Microsoft.WindowsAPICodePack.Net;
 using Quobject.SocketIoClientDotNet.Client;
 using RemindSME.Desktop.Properties;
@@ -10,18 +11,28 @@ using RemindSME.Desktop.Properties;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class TaskbarIconViewModel
+    public class TaskbarIconViewModel : PropertyChangedBase
     {
         private static readonly TimeSpan HibernationTime = new TimeSpan(18, 00, 00); // 18:00
+
+        private readonly IWindowManager windowManager;
         private readonly Socket socket;
 
-        public TaskbarIconViewModel()
+        public TaskbarIconViewModel(IWindowManager windowManager)
         {
+            this.windowManager = windowManager;
+
             var timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
             timer.Start();
 
             socket = IO.Socket("http://localhost:5000");
+        }
+
+        public void OpenHubWindow()
+        {
+            var hubViewModel = IoC.Get<HubViewModel>();
+            windowManager.ShowWindow(hubViewModel);
         }
 
         public void SeeNetworkDetails()
