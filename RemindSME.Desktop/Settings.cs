@@ -1,4 +1,4 @@
-﻿namespace RemindsSME.Desktop.Properties {
+﻿namespace RemindSME.Desktop.Properties {
     
     
     // This class allows you to handle specific events on the settings class:

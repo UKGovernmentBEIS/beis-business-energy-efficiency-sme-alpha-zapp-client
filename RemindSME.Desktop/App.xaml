@@ -1,7 +1,7 @@
-﻿<Application x:Class="RemindsSME.Desktop.App"
+﻿<Application x:Class="RemindSME.Desktop.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:RemindsSME.Desktop">
+             xmlns:local="clr-namespace:RemindSME.Desktop">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

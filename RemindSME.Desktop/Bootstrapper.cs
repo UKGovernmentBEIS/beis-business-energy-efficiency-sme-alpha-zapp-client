@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using Caliburn.Micro;
-using RemindsSME.Desktop.ViewModels;
+using RemindSME.Desktop.ViewModels;
 
-namespace RemindsSME.Desktop
+namespace RemindSME.Desktop
 {
     public class Bootstrapper : BootstrapperBase
     {

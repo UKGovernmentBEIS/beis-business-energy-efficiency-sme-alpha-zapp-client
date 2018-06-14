@@ -3,12 +3,12 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using Quobject.SocketIoClientDotNet.Client;
-using RemindsSME.Desktop.Properties;
+using RemindSME.Desktop.Properties;
 using Microsoft.WindowsAPICodePack.Net;
 
 //using PowerState = System.Windows.Forms.PowerState;
 
-namespace RemindsSME.Desktop.ViewModels
+namespace RemindSME.Desktop.ViewModels
 {
     public class TaskbarIconViewModel
     {
