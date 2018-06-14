@@ -3,20 +3,23 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
+using Hardcodet.Wpf.TaskbarNotification;
 using Microsoft.WindowsAPICodePack.Net;
 using Quobject.SocketIoClientDotNet.Client;
 using RemindSME.Desktop.Properties;
+using RemindSME.Desktop.Views;
 
 //using PowerState = System.Windows.Forms.PowerState;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class TaskbarIconViewModel : PropertyChangedBase
+    public class TaskbarIconViewModel : ViewAware
     {
         private static readonly TimeSpan HibernationTime = new TimeSpan(18, 00, 00); // 18:00
 
         private readonly IWindowManager windowManager;
         private readonly Socket socket;
+        private TaskbarIcon icon;
 
         public TaskbarIconViewModel(IWindowManager windowManager)
         {
@@ -51,9 +54,19 @@ namespace RemindSME.Desktop.ViewModels
                 MessageBoxOptions.DefaultDesktopOnly);
         }
 
+        public void ShowTestBalloon()
+        {
+            icon.ShowBalloonTip("Test", "Hello world!", BalloonIcon.Info);
+        }
+
         public void Quit()
         {
             Application.Current.Shutdown();
+        }
+
+        protected override void OnViewAttached(object view, object context)
+        {
+            icon = (view as TaskbarIconView)?.TaskbarIcon;
         }
 
         private void Timer_Tick(object sender, EventArgs e)
