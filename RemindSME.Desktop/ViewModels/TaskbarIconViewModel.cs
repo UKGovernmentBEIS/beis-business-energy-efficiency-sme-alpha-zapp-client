@@ -60,7 +60,9 @@ namespace RemindSME.Desktop.ViewModels
         {
             var alreadyHibernatedToday = DateTime.Today <= Settings.Default.LastScheduledHibernate;
             if (alreadyHibernatedToday || DateTime.Now.TimeOfDay < HibernationTime)
+            {
                 return;
+            }
             Settings.Default.LastScheduledHibernate = DateTime.Today;
             Settings.Default.Save();
             Hibernate();

@@ -34,5 +34,17 @@ namespace RemindSME.Desktop.Properties {
                 this["LastScheduledHibernate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool HeatingOptIn {
+            get {
+                return ((bool)(this["HeatingOptIn"]));
+            }
+            set {
+                this["HeatingOptIn"] = value;
+            }
+        }
     }
 }
