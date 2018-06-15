@@ -29,7 +29,9 @@ namespace RemindSME.Desktop.ViewModels
             timer.Tick += Timer_Tick;
             timer.Start();
 
+            var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
             socket = IO.Socket("http://localhost:5000");
+            socket.Emit("join", network);
         }
 
         public void OpenHubWindow()
