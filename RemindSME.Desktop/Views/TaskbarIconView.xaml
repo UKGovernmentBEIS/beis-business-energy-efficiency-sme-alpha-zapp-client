@@ -10,7 +10,7 @@
             <ContextMenu>
                 <MenuItem Header="See Network Details" cal:Message.Attach="SeeNetworkDetails" />
                 <MenuItem Header="Hibernate" cal:Message.Attach="Hibernate" />
-                <MenuItem Header="Show Test Balloon" cal:Message.Attach="ShowTestBalloon" />
+                <MenuItem Header="Show Test Balloon" cal:Message.Attach="ShowTestNotification" />
                 <MenuItem Header="Quit" cal:Message.Attach="Quit" />
             </ContextMenu>
         </tb:TaskbarIcon.ContextMenu>

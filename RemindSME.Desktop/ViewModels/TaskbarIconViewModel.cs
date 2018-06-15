@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
-using Hardcodet.Wpf.TaskbarNotification;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Net;
 using Notifications.Wpf;
@@ -17,7 +16,7 @@ namespace RemindSME.Desktop.ViewModels
 {
     public class TaskbarIconViewModel : PropertyChangedBase
     {
-        private const string ServerUrl = "http://localhost:5000";
+        private const string ServerUrl = "https://reminds-me-server.herokuapp.com/";
         private static readonly TimeSpan HibernationTime = new TimeSpan(18, 00, 00); // 18:00
         private readonly Socket socket;
 
@@ -35,6 +34,7 @@ namespace RemindSME.Desktop.ViewModels
                 var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
                 socket.Emit("join", network);
             });
+            socket.On("last-man-reminder", LastManReminder);
 
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
 
@@ -76,17 +76,27 @@ namespace RemindSME.Desktop.ViewModels
                 MessageBoxOptions.DefaultDesktopOnly);
         }
 
-        public void ShowTestBalloon()
+        public void ShowTestNotification()
         {
-            var model = IoC.Get<NotificationViewModel>();
-            model.Title = "Custom notification.";
-            model.Message = "Click on buttons!";
-            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
+            ShowNotification("Test", "Hello world!");
         }
 
         public void Quit()
         {
             Application.Current.Shutdown();
+        }
+
+        private void LastManReminder()
+        {
+            ShowNotification("Staying a bit later?", "Don't forget to switch out the lights if you're the last one out tonight.");
+        }
+
+        public void ShowNotification(string title, string message)
+        {
+            var model = IoC.Get<NotificationViewModel>();
+            model.Title = title;
+            model.Message = message;
+            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
         }
 
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
