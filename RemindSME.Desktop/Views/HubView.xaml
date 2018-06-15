@@ -2,7 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Hub" Height="450" Width="800">
-    <StackPanel>
-        <CheckBox x:Name="HeatingOptIn" />
+    <StackPanel Margin="40">
+        <CheckBox x:Name="HeatingOptIn">
+            <Label Content="Opt-in for heating notifications"></Label>
+        </CheckBox>
     </StackPanel>
 </Window>
