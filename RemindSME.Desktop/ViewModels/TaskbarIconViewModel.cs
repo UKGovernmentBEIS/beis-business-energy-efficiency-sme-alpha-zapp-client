@@ -94,10 +94,10 @@ namespace RemindSME.Desktop.ViewModels
             switch (e.Reason)
             {
                 case SessionSwitchReason.SessionLock:
-                    socket.Emit("sessionLock");
+                    socket.Emit("session-lock");
                     break;
                 case SessionSwitchReason.SessionUnlock:
-                    socket.Emit("sessionUnlock");
+                    socket.Emit("session-unlock");
                     break;
             }
         }
