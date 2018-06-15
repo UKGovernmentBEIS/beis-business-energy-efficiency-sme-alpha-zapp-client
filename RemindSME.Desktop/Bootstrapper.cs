@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using Caliburn.Micro;
 using RemindSME.Desktop.ViewModels;
 
