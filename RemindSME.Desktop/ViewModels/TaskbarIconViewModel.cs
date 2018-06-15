@@ -16,7 +16,7 @@ namespace RemindSME.Desktop.ViewModels
 {
     public class TaskbarIconViewModel : PropertyChangedBase
     {
-        private const string ServerUrl = "https://reminds-me-server.herokuapp.com/";
+        private const string ServerUrl = "http://localhost:5000";
         private static readonly TimeSpan HibernationTime = new TimeSpan(18, 00, 00); // 18:00
         private readonly Socket socket;
 
@@ -99,15 +99,26 @@ namespace RemindSME.Desktop.ViewModels
             notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
         }
 
+        public void Lock()
+        {
+            socket.Disconnect();
+        }
+
+        public void Unlock()
+        {
+            socket.Connect();
+        }
+
+
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
             switch (e.Reason)
             {
                 case SessionSwitchReason.SessionLock:
-                    socket.Emit("session-lock");
+                    Lock();
                     break;
                 case SessionSwitchReason.SessionUnlock:
-                    socket.Emit("session-unlock");
+                    Unlock();
                     break;
             }
         }
