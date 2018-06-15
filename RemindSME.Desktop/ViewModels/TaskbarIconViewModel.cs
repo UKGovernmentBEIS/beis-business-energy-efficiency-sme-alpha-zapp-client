@@ -6,6 +6,7 @@ using Caliburn.Micro;
 using Hardcodet.Wpf.TaskbarNotification;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Net;
+using Notifications.Wpf;
 using Quobject.SocketIoClientDotNet.Client;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Views;
@@ -14,17 +15,18 @@ using RemindSME.Desktop.Views;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class TaskbarIconViewModel : ViewAware
+    public class TaskbarIconViewModel : PropertyChangedBase
     {
         private const string ServerUrl = "http://localhost:5000";
         private static readonly TimeSpan HibernationTime = new TimeSpan(18, 00, 00); // 18:00
         private readonly Socket socket;
 
+        private readonly INotificationManager notificationManager;
         private readonly IWindowManager windowManager;
-        private TaskbarIcon icon;
 
-        public TaskbarIconViewModel(IWindowManager windowManager)
+        public TaskbarIconViewModel(INotificationManager notificationManager, IWindowManager windowManager)
         {
+            this.notificationManager = notificationManager;
             this.windowManager = windowManager;
 
             socket = IO.Socket(ServerUrl);
@@ -76,17 +78,15 @@ namespace RemindSME.Desktop.ViewModels
 
         public void ShowTestBalloon()
         {
-            icon.ShowBalloonTip("Test", "Hello world!", BalloonIcon.Info);
+            var model = IoC.Get<NotificationViewModel>();
+            model.Title = "Custom notification.";
+            model.Message = "Click on buttons!";
+            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
         }
 
         public void Quit()
         {
             Application.Current.Shutdown();
-        }
-
-        protected override void OnViewAttached(object view, object context)
-        {
-            icon = (view as TaskbarIconView)?.TaskbarIcon;
         }
 
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
