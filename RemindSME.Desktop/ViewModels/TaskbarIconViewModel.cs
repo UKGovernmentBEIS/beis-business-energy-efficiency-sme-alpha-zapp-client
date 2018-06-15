@@ -15,6 +15,7 @@ namespace RemindSME.Desktop.ViewModels
 {
     public class TaskbarIconViewModel : ViewAware
     {
+        private const string ServerUrl = "http://localhost:5000";
         private static readonly TimeSpan HibernationTime = new TimeSpan(18, 00, 00); // 18:00
 
         private readonly IWindowManager windowManager;
@@ -29,9 +30,12 @@ namespace RemindSME.Desktop.ViewModels
             timer.Tick += Timer_Tick;
             timer.Start();
 
-            var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
-            socket = IO.Socket("http://localhost:5000");
-            socket.Emit("join", network);
+            socket = IO.Socket(ServerUrl);
+            socket.On("connect", () =>
+            {
+                var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
+                socket.Emit("join", network);
+            });
         }
 
         public void OpenHubWindow()
