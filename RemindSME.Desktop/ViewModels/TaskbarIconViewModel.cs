@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
 using Hardcodet.Wpf.TaskbarNotification;
+using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Net;
 using Quobject.SocketIoClientDotNet.Client;
 using RemindSME.Desktop.Properties;
@@ -17,18 +18,14 @@ namespace RemindSME.Desktop.ViewModels
     {
         private const string ServerUrl = "http://localhost:5000";
         private static readonly TimeSpan HibernationTime = new TimeSpan(18, 00, 00); // 18:00
+        private readonly Socket socket;
 
         private readonly IWindowManager windowManager;
-        private readonly Socket socket;
         private TaskbarIcon icon;
 
         public TaskbarIconViewModel(IWindowManager windowManager)
         {
             this.windowManager = windowManager;
-
-            var timer = new DispatcherTimer();
-            timer.Tick += Timer_Tick;
-            timer.Start();
 
             socket = IO.Socket(ServerUrl);
             socket.On("connect", () =>
@@ -36,6 +33,12 @@ namespace RemindSME.Desktop.ViewModels
                 var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
                 socket.Emit("join", network);
             });
+
+            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+
+            var timer = new DispatcherTimer();
+            timer.Tick += Timer_Tick;
+            timer.Start();
         }
 
         public void OpenHubWindow()
@@ -45,9 +48,7 @@ namespace RemindSME.Desktop.ViewModels
             if (existingWindow != null)
             {
                 if (existingWindow.WindowState == WindowState.Minimized)
-                {
                     existingWindow.WindowState = WindowState.Normal;
-                }
                 existingWindow.Activate();
             }
             else
@@ -88,13 +89,24 @@ namespace RemindSME.Desktop.ViewModels
             icon = (view as TaskbarIconView)?.TaskbarIcon;
         }
 
+        private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            switch (e.Reason)
+            {
+                case SessionSwitchReason.SessionLock:
+                    socket.Emit("sessionLock");
+                    break;
+                case SessionSwitchReason.SessionUnlock:
+                    socket.Emit("sessionUnlock");
+                    break;
+            }
+        }
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             var alreadyHibernatedToday = DateTime.Today <= Settings.Default.LastScheduledHibernate;
             if (alreadyHibernatedToday || DateTime.Now.TimeOfDay < HibernationTime)
-            {
                 return;
-            }
             Settings.Default.LastScheduledHibernate = DateTime.Today;
             Settings.Default.Save();
             Hibernate();
