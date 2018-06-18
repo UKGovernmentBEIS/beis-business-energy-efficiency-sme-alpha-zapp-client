@@ -6,5 +6,8 @@
         <CheckBox x:Name="HeatingOptIn">
             <Label Content="Opt-in for heating notifications"></Label>
         </CheckBox>
+        <CheckBox x:Name="LightingOptIn">
+            <Label Content="Opt-in for lighting notifications"></Label>
+        </CheckBox>
     </StackPanel>
 </Window>

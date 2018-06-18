@@ -19,5 +19,20 @@ namespace RemindSME.Desktop.ViewModels
                 NotifyOfPropertyChange(() => HeatingOptIn);
             }
         }
+
+        public bool LightingOptIn
+        {
+            get => Settings.Default.LightingOptIn;
+            set
+            {
+                if (value == Settings.Default.LightingOptIn)
+                {
+                    return;
+                }
+                Settings.Default.LightingOptIn = value;
+                Settings.Default.Save();
+                NotifyOfPropertyChange(() => LightingOptIn);
+            }
+        }
     }
 }
