@@ -58,5 +58,17 @@ namespace RemindSME.Desktop.Properties {
                 this["LightingOptIn"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("18:15:00")]
+        public global::System.TimeSpan HibernateTime {
+            get {
+                return ((global::System.TimeSpan)(this["HibernateTime"]));
+            }
+            set {
+                this["HibernateTime"] = value;
+            }
+        }
     }
 }

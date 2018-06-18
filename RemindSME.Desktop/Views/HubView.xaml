@@ -4,10 +4,12 @@
         Title="Hub" Height="450" Width="800">
     <StackPanel Margin="40">
         <CheckBox x:Name="HeatingOptIn">
-            <Label Content="Opt-in for heating notifications"></Label>
+            <Label Content="Opt-in for heating notifications" />
         </CheckBox>
         <CheckBox x:Name="LightingOptIn">
-            <Label Content="Opt-in for lighting notifications"></Label>
+            <Label Content="Opt-in for lighting notifications" />
         </CheckBox>
+        <ComboBox x:Name="HibernateHours" IsEditable="True"/>
+        <ComboBox x:Name="HibernateMinutes" IsEditable="True"/>
     </StackPanel>
 </Window>
