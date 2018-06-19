@@ -1,15 +1,68 @@
 ﻿<Window x:Class="RemindSME.Desktop.Views.HubView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Hub" Height="450" Width="800">
-    <StackPanel Margin="40">
-        <CheckBox x:Name="HeatingOptIn">
-            <Label Content="Opt-in for heating notifications" />
-        </CheckBox>
-        <CheckBox x:Name="LightingOptIn">
-            <Label Content="Opt-in for lighting notifications" />
-        </CheckBox>
-        <ComboBox x:Name="HibernateHours" IsEditable="True"/>
-        <ComboBox x:Name="HibernateMinutes" IsEditable="True"/>
+        Title="RemindS Me Custom Hub" Height="450" Width="800">
+    <StackPanel>
+        <Label
+            Content="RemindS ME Custom Hub"
+            Height="75"
+            Background="#EF103C"
+            VerticalContentAlignment="Center"
+            FontSize="30"
+            FontWeight="Bold"
+            Foreground="White"
+            Padding="40, 0 0, 0" />
+        <StackPanel Margin="40">
+            <Label
+                Content="Choose settings that suit you:"
+                FontSize="20"
+                Margin="0 0 0 20px" />
+            <CheckBox x:Name="HeatingOptIn"
+                      FlowDirection="RightToLeft"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Left"
+                      Margin="0,0,0,0">
+                <CheckBox.Resources>
+                    <Style TargetType="{x:Type Path}">
+                        <Setter Property="FlowDirection" Value="LeftToRight" />
+                    </Style>
+                </CheckBox.Resources>
+                <Label Content="Opt-in for heating notifications"
+                       FlowDirection="LeftToRight"
+                       VerticalAlignment="Center"
+                       Margin="0,-5,0,10" />
+            </CheckBox>
+            <CheckBox x:Name="LightingOptIn"
+                      FlowDirection="RightToLeft"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Left"
+                      Margin="0,0,0,10">
+                <CheckBox.Resources>
+                    <Style TargetType="{x:Type Path}">
+                        <Setter Property="FlowDirection" Value="LeftToRight" />
+                    </Style>
+                </CheckBox.Resources>
+                <Label Content="Opt-in for lighting notifications"
+                       VerticalAlignment="Center"
+                       Margin="0,-5,0,10" />
+            </CheckBox>
+            <StackPanel Orientation="Horizontal" >
+                <TextBlock Text="What time do you normally leave?"
+                           VerticalAlignment="Center"
+                           Margin="5,0,0,0" />
+                <ComboBox x:Name="HibernateHours" 
+                          IsEditable="True" 
+                          Width="40px"
+                          Margin="10,0,0,0"/>
+                <TextBlock Text=":"
+                           VerticalAlignment="Center"
+                           Margin="5,0,5,0" />
+                <ComboBox x:Name="HibernateMinutes" IsEditable="True" Width="40px" />
+            </StackPanel>
+
+
+        </StackPanel>
+
+
     </StackPanel>
 </Window>
