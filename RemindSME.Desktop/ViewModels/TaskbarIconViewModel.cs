@@ -87,6 +87,12 @@ namespace RemindSME.Desktop.ViewModels
             ShowNotification("Test", "Hello world!");
         }
 
+        public void ShowHibernationPrompt()
+        {
+            var model = IoC.Get<HibernationPromptViewModel>();
+            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
+        }
+
         public void Quit()
         {
             Application.Current.Shutdown();
