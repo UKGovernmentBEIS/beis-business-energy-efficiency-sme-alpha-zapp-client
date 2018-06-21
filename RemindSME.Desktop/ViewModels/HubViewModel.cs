@@ -3,6 +3,8 @@ using RemindSME.Desktop.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
+using System.Windows.Navigation;
 
 namespace RemindSME.Desktop.ViewModels
 {
@@ -82,6 +84,11 @@ namespace RemindSME.Desktop.ViewModels
                 Settings.Default.Save();
                 NotifyOfPropertyChange(() => HibernateMinutes);
             }
+        }
+
+        public void NavigateTo(string url)
+        {
+            Process.Start(new ProcessStartInfo(url));
         }
     }
 }
