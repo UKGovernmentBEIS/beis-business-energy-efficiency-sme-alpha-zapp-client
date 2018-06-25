@@ -81,15 +81,13 @@
                            VerticalAlignment="Center"
                            Margin="5,0,0,0" />
                 <ComboBox x:Name="HibernateHours" 
-                          IsEditable="True" 
-                          Width="40px"
+                          Width="50px"
                           Margin="10,0,0,0"/>
                 <TextBlock Text=":"
                            VerticalAlignment="Center"
                            Margin="5,0,5,0" />
                 <ComboBox x:Name="HibernateMinutes" 
-                          IsEditable="True" 
-                          Width="40px" />
+                          Width="50px" />
             </StackPanel>
             <Button Style="{StaticResource HyperlinkButton}" 
                     Focusable="False" 

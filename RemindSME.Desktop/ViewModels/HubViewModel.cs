@@ -42,17 +42,17 @@ namespace RemindSME.Desktop.ViewModels
             }
         }
 
-        public IEnumerable<int> HibernateHours
+        public IEnumerable<string> HibernateHours
         {
-            get => Enumerable.Range(00, 24).Reverse();
+            get => Enumerable.Range(00, 24).Reverse().Select(x => x.ToString("D2"));
         }
 
-        public int SelectedHibernateHour
+        public string SelectedHibernateHour
         {
-            get => Settings.Default.HibernateTime.Hours;
+            get => Settings.Default.HibernateTime.Hours.ToString("D2");
             set
             {
-                var timespan = new TimeSpan(value, Settings.Default.HibernateTime.Minutes, 0);
+                var timespan = new TimeSpan(Int32.Parse(value), Settings.Default.HibernateTime.Minutes, 0);
                 if (timespan == Settings.Default.HibernateTime)
                 {
                     return;
@@ -64,17 +64,17 @@ namespace RemindSME.Desktop.ViewModels
             }
         }
 
-        public IEnumerable<int> HibernateMinutes
+        public IEnumerable<string> HibernateMinutes
         {
-            get => Enumerable.Range(0, 4).Select(x => x * 15);
+            get => Enumerable.Range(0, 4).Select(x => (x * 15).ToString("D2"));
         }
 
-        public int SelectedHibernateMinute
+        public string SelectedHibernateMinute
         {
-            get => Settings.Default.HibernateTime.Minutes;
+            get => Settings.Default.HibernateTime.Minutes.ToString("D2");
             set
             {
-                var timespan = new TimeSpan(Settings.Default.HibernateTime.Hours, value, 0);
+                var timespan = new TimeSpan(Settings.Default.HibernateTime.Hours, Int32.Parse(value), 0);
                 if (timespan == Settings.Default.HibernateTime)
                 {
                     return;
