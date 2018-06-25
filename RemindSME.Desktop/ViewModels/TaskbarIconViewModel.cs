@@ -138,7 +138,7 @@ namespace RemindSME.Desktop.ViewModels
         private void Timer_Tick(object sender, EventArgs e)
         {
             var alreadyHibernatedToday = DateTime.Today <= Settings.Default.LastScheduledHibernate;
-            if (alreadyHibernatedToday || DateTime.Now.TimeOfDay < HibernationTime)
+            if (alreadyHibernatedToday || DateTime.Now.TimeOfDay < Settings.Default.HibernateTime)
             {
                 return;
             }
