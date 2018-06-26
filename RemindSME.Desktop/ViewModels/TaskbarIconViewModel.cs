@@ -90,7 +90,7 @@ namespace RemindSME.Desktop.ViewModels
             }
         }
 
-        public void Connect()
+        private void Connect()
         {
             if (socket != null)
             {
@@ -106,7 +106,7 @@ namespace RemindSME.Desktop.ViewModels
             socket.Connect();
         }
 
-        public void Disconnect()
+        private void Disconnect()
         {
             if (socket == null)
             {
