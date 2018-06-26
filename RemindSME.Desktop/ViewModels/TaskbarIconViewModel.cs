@@ -77,10 +77,11 @@ namespace RemindSME.Desktop.ViewModels
 
         public void Hibernate()
         {
-            Settings.Default.NextHibernationTime = DateTime.Today;
+            Settings.Default.NextHibernationTime = DateTime.Today.AddDays(1).Add(Settings.Default.DefaultHibernationTime);
             Settings.Default.Save();
 
             //            System.Windows.Forms.Application.SetSuspendState(PowerState.Hibernate, false, false);
+
             MessageBox.Show("Hibernate", "RemindS ME",
                 MessageBoxButton.OK,
                 MessageBoxImage.None,
@@ -169,7 +170,6 @@ namespace RemindSME.Desktop.ViewModels
             //If you are past the hibernation time, then update the next hibernation time then hibernate
             else if (Settings.Default.NextHibernationTime <= DateTime.Now)
             {
-                Settings.Default.NextHibernationTime = DateTime.Today.AddDays(1).Add(Settings.Default.DefaultHibernationTime);
                 Hibernate();
             }
         }
