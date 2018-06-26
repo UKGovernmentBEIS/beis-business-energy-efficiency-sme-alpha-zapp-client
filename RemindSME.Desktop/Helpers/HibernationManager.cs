@@ -53,8 +53,7 @@ namespace RemindSME.Desktop
             Settings.Default.NextHibernationTime = newDefaultHibernationTime.Subtract(TimeSpan.FromMinutes(15)) > DateTime.Now.TimeOfDay
                 ? DateTime.Today.Add(newDefaultHibernationTime)
                 : DateTime.Today.AddDays(1).Add(newDefaultHibernationTime);
-            Settings.Default.Save();
-
+            
             this.HibernationPromptHasBeenShown = false;
         }
     }
