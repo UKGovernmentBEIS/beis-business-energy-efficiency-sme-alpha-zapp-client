@@ -9,6 +9,13 @@ namespace RemindSME.Desktop.ViewModels
 {
     public class HubViewModel : PropertyChangedBase
     {
+        private readonly HibernationManager hibernationManager;
+
+        public HubViewModel()
+        {
+            this.hibernationManager = new HibernationManager();
+        }
+
         public bool HeatingOptIn
         {
             get => Settings.Default.HeatingOptIn;
@@ -56,9 +63,9 @@ namespace RemindSME.Desktop.ViewModels
                     return;
                 }
 
-                Settings.Default.DefaultHibernationTime = timespan;
-                HibernationHelper.HandleHibernationOnChange(timespan);
-                Settings.Default.Save();
+//                Settings.Default.DefaultHibernationTime = timespan;
+//                hibernationManager.HandleHibernationOnChange(timespan);
+//                Settings.Default.Save();
                 NotifyOfPropertyChange(() => HibernateHours);
             }
         }
@@ -78,9 +85,9 @@ namespace RemindSME.Desktop.ViewModels
                     return;
                 }
 
-                Settings.Default.DefaultHibernationTime = timespan;
-                HibernationHelper.HandleHibernationOnChange(timespan);
-                Settings.Default.Save();
+//                Settings.Default.DefaultHibernationTime = timespan;
+//                hibernationManager.HandleHibernationOnChange(timespan);
+//                Settings.Default.Save();
                 NotifyOfPropertyChange(() => HibernateMinutes);
             }
         }

@@ -21,17 +21,16 @@ namespace RemindSME.Desktop.ViewModels
         private readonly IWindowManager windowManager;
 
         private Socket socket;
-        private bool hibernationPromptHasBeenShown = false;
-
+        private readonly HibernationManager hibernationManager;
 
         public TaskbarIconViewModel(INotificationManager notificationManager, IWindowManager windowManager)
         {
             this.notificationManager = notificationManager;
             this.windowManager = windowManager;
+            this.hibernationManager = new HibernationManager();
 
             Connect();
         }
-
 
         public void Connect()
         {
@@ -60,6 +59,7 @@ namespace RemindSME.Desktop.ViewModels
                 {
                     existingWindow.WindowState = WindowState.Normal;
                 }
+
                 existingWindow.Activate();
             }
             else
@@ -73,20 +73,6 @@ namespace RemindSME.Desktop.ViewModels
         {
             var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
             socket.Emit("network", network);
-        }
-
-        public void Hibernate()
-        {
-            Settings.Default.NextHibernationTime = DateTime.Today.AddDays(1).Add(Settings.Default.DefaultHibernationTime);
-            Settings.Default.Save();
-
-            //            System.Windows.Forms.Application.SetSuspendState(PowerState.Hibernate, false, false);
-
-            MessageBox.Show("Hibernate", "RemindS ME",
-                MessageBoxButton.OK,
-                MessageBoxImage.None,
-                MessageBoxResult.OK,
-                MessageBoxOptions.DefaultDesktopOnly);
         }
 
         public void ShowTestNotification()
@@ -152,25 +138,29 @@ namespace RemindSME.Desktop.ViewModels
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            HibernationHelper.HandleHibernationOnTick();
-            
-            // If your are 15 minutes or less away from the hibernation, prompt the user
-            if (Settings.Default.NextHibernationTime.Subtract(DateTime.Now) <= TimeSpan.FromMinutes(15) 
-                     && DateTime.Now < Settings.Default.NextHibernationTime)
+            // If before today, set the next hibernation to today at the default time, unless that is within the next 15 minutes,
+            // in which case set it for tomorrow.
+            if (Settings.Default.NextHibernationTime.Date < DateTime.Today)
             {
-                if (hibernationPromptHasBeenShown)
+                hibernationManager.UpdateNextHiberationTime();
+            }
+
+            // If you are past the hibernation time, then hibernate
+            if (Settings.Default.NextHibernationTime <= DateTime.Now)
+            {
+                hibernationManager.Hibernate();
+            }
+
+            // If your are 15 minutes or less away from the hibernation, prompt the user
+            else if (Settings.Default.NextHibernationTime.Subtract(DateTime.Now) <= TimeSpan.FromMinutes(15))
+            {
+                if (hibernationManager.HibernationPromptHasBeenShown)
                 {
                     return;
                 }
 
                 ShowHibernationPrompt();
-                hibernationPromptHasBeenShown = true;
-            }
-
-            //If you are past the hibernation time, then update the next hibernation time then hibernate
-            else if (Settings.Default.NextHibernationTime <= DateTime.Now)
-            {
-                Hibernate();
+                hibernationManager.HibernationPromptHasBeenShown = true;
             }
         }
     }
