@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Net;
 using Notifications.Wpf;
 using Quobject.SocketIoClientDotNet.Client;
+using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Views;
 
@@ -19,34 +20,23 @@ namespace RemindSME.Desktop.ViewModels
         private const string ServerUrl = "http://localhost:5000";
         private static readonly TimeSpan HibernationTime = new TimeSpan(18, 00, 00); // 18:00
         private readonly INotificationManager notificationManager;
+        private readonly IReminderManager reminderManager;
         private readonly IWindowManager windowManager;
 
         private Socket socket;
 
-        public TaskbarIconViewModel(INotificationManager notificationManager, IWindowManager windowManager)
+        public TaskbarIconViewModel(INotificationManager notificationManager, IReminderManager reminderManager, IWindowManager windowManager)
         {
             this.notificationManager = notificationManager;
+            this.reminderManager = reminderManager;
             this.windowManager = windowManager;
-
-            Connect();
-        }
-
-
-        public void Connect()
-        {
-            socket = IO.Socket(ServerUrl);
-            socket.On("connect", () =>
-            {
-                var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
-                socket.Emit("join", network);
-            });
-            socket.On("last-man-reminder", LastManReminder);
-
-            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
 
             var timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
             timer.Start();
+
+            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+            Connect();
         }
 
         public void OpenHubWindow()
@@ -89,42 +79,6 @@ namespace RemindSME.Desktop.ViewModels
             Application.Current.Shutdown();
         }
 
-        private void LastManReminder()
-        {
-            ShowNotification("Staying a bit later?", "Don't forget to switch out the lights if you're the last one out tonight.");
-        }
-
-        public void ShowNotification(string title, string message)
-        {
-            var model = IoC.Get<NotificationViewModel>();
-            model.Title = title;
-            model.Message = message;
-            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
-        }
-
-        public void Lock()
-        {
-            socket.Disconnect();
-        }
-
-        public void Unlock()
-        {
-            Connect();
-        }
-
-        private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
-        {
-            switch (e.Reason)
-            {
-                case SessionSwitchReason.SessionLock:
-                    Lock();
-                    break;
-                case SessionSwitchReason.SessionUnlock:
-                    Unlock();
-                    break;
-            }
-        }
-
         private void Timer_Tick(object sender, EventArgs e)
         {
             var alreadyHibernatedToday = DateTime.Today <= Settings.Default.LastScheduledHibernate;
@@ -135,6 +89,51 @@ namespace RemindSME.Desktop.ViewModels
             Settings.Default.LastScheduledHibernate = DateTime.Today;
             Settings.Default.Save();
             Hibernate();
+        }
+
+        private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            switch (e.Reason)
+            {
+                case SessionSwitchReason.SessionLock:
+                    Disconnect();
+                    break;
+                case SessionSwitchReason.SessionUnlock:
+                    Connect();
+                    break;
+            }
+        }
+
+        public void Connect()
+        {
+            if (socket != null)
+            {
+                return;
+            }
+            socket = IO.Socket(ServerUrl, new IO.Options { AutoConnect = false });
+            socket.On("connect", () =>
+            {
+                var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
+                socket.Emit("join", network);
+            });
+            socket.On("network-count-change", HandleNetworkCountChange);
+            socket.Connect();
+        }
+
+        public void Disconnect()
+        {
+            if (socket == null)
+            {
+                return;
+            }
+            socket.Disconnect();
+            socket = null;
+        }
+
+        private void HandleNetworkCountChange(object arg)
+        {
+            var count = unchecked ((int)(long)arg);
+            reminderManager.UpdateNetworkCount(count);
         }
     }
 }

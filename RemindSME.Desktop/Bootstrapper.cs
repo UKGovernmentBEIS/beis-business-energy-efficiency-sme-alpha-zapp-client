@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Reflection;
+using System.Windows;
 using Autofac;
 using Caliburn.Micro.Autofac;
 using Notifications.Wpf;
@@ -15,6 +16,7 @@ namespace RemindSME.Desktop
 
         protected override void ConfigureContainer(ContainerBuilder builder)
         {
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).AsImplementedInterfaces();
             builder.RegisterType<NotificationManager>().As<INotificationManager>().SingleInstance();
         }
 
