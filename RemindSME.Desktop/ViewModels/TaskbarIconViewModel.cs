@@ -19,9 +19,13 @@ namespace RemindSME.Desktop.ViewModels
         private const string ServerUrl = "http://localhost:5000";
         private readonly INotificationManager notificationManager;
         private readonly IWindowManager windowManager;
+
         private Socket socket;
+<<<<<<< HEAD
         public Socket Socket { get => socket; set => socket = value; }
         private bool hibernationPromptHasBeenShown = false;
+=======
+>>>>>>> 5433861374474b854a7f1ea9ddc0c0edfa936894
 
         public TaskbarIconViewModel(INotificationManager notificationManager, IWindowManager windowManager)
         {
@@ -31,9 +35,10 @@ namespace RemindSME.Desktop.ViewModels
             Connect();
         }
 
+
         public void Connect()
         {
-            this.socket = IO.Socket(ServerUrl);
+            socket = IO.Socket(ServerUrl);
             socket.On("connect", () =>
             {
                 var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
@@ -46,7 +51,6 @@ namespace RemindSME.Desktop.ViewModels
             var timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
             timer.Start();
-
         }
 
         public void OpenHubWindow()
@@ -56,7 +60,9 @@ namespace RemindSME.Desktop.ViewModels
             if (existingWindow != null)
             {
                 if (existingWindow.WindowState == WindowState.Minimized)
+                {
                     existingWindow.WindowState = WindowState.Normal;
+                }
                 existingWindow.Activate();
             }
             else
@@ -123,7 +129,6 @@ namespace RemindSME.Desktop.ViewModels
         {
             Connect();
         }
-
 
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {

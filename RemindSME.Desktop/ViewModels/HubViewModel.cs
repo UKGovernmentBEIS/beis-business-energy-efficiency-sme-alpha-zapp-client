@@ -1,10 +1,9 @@
-﻿using Caliburn.Micro;
-using RemindSME.Desktop.Properties;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Diagnostics;
-using System.Windows.Navigation;
+using System.Linq;
+using Caliburn.Micro;
+using RemindSME.Desktop.Properties;
 
 namespace RemindSME.Desktop.ViewModels
 {
@@ -42,17 +41,16 @@ namespace RemindSME.Desktop.ViewModels
             }
         }
 
-        public IEnumerable<string> HibernateHours
-        {
-            get => Enumerable.Range(00, 24).Reverse().Select(x => x.ToString("D2"));
-        }
+        public IEnumerable<string> HibernateHours => Enumerable.Range(0, 24).Reverse().Select(x => x.ToString("D2"));
 
         public string SelectedHibernateHour
         {
             get => Settings.Default.HibernateTime.Hours.ToString("D2");
             set
             {
-                var timespan = new TimeSpan(Int32.Parse(value), Settings.Default.HibernateTime.Minutes, 0);
+                var hours = int.Parse(value);
+                var minutes = Settings.Default.HibernateTime.Minutes;
+                var timespan = new TimeSpan(hours, minutes, 0);
                 if (timespan == Settings.Default.HibernateTime)
                 {
                     return;
@@ -64,17 +62,16 @@ namespace RemindSME.Desktop.ViewModels
             }
         }
 
-        public IEnumerable<string> HibernateMinutes
-        {
-            get => Enumerable.Range(0, 4).Select(x => (x * 15).ToString("D2"));
-        }
+        public IEnumerable<string> HibernateMinutes => Enumerable.Range(0, 4).Select(x => (x * 15).ToString("D2"));
 
         public string SelectedHibernateMinute
         {
             get => Settings.Default.HibernateTime.Minutes.ToString("D2");
             set
             {
-                var timespan = new TimeSpan(Settings.Default.HibernateTime.Hours, Int32.Parse(value), 0);
+                var hours = Settings.Default.HibernateTime.Hours;
+                var minutes = int.Parse(value);
+                var timespan = new TimeSpan(hours, minutes, 0);
                 if (timespan == Settings.Default.HibernateTime)
                 {
                     return;

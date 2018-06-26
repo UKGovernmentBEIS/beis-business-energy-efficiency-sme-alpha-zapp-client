@@ -3,6 +3,7 @@ using System.Windows;
 
 namespace RemindSME.Desktop.ViewModels
 {
+<<<<<<< HEAD
     public class HibernationPromptViewModel : PropertyChangedBase
     {
         public void DoItNow()
@@ -35,3 +36,7 @@ namespace RemindSME.Desktop.ViewModels
 
     }
 }
+=======
+    public class HibernationPromptViewModel : PropertyChangedBase { }
+}
+>>>>>>> 5433861374474b854a7f1ea9ddc0c0edfa936894
