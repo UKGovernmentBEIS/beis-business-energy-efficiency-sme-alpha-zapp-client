@@ -21,15 +21,15 @@ namespace RemindSME.Desktop.ViewModels
         private static readonly TimeSpan HibernationTime = new TimeSpan(18, 00, 00); // 18:00
         private readonly INotificationManager notificationManager;
         private readonly IReminderManager reminderManager;
-        private readonly IWindowManager windowManager;
+        private readonly ISingletonWindowManager singletonWindowManager;
 
         private Socket socket;
 
-        public TaskbarIconViewModel(INotificationManager notificationManager, IReminderManager reminderManager, IWindowManager windowManager)
+        public TaskbarIconViewModel(INotificationManager notificationManager, IReminderManager reminderManager, ISingletonWindowManager singletonWindowManager)
         {
             this.notificationManager = notificationManager;
             this.reminderManager = reminderManager;
-            this.windowManager = windowManager;
+            this.singletonWindowManager = singletonWindowManager;
 
             var timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
@@ -41,21 +41,7 @@ namespace RemindSME.Desktop.ViewModels
 
         public void OpenHubWindow()
         {
-            var existingWindow = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window is HubView);
-
-            if (existingWindow != null)
-            {
-                if (existingWindow.WindowState == WindowState.Minimized)
-                {
-                    existingWindow.WindowState = WindowState.Normal;
-                }
-                existingWindow.Activate();
-            }
-            else
-            {
-                var hubViewModel = IoC.Get<HubViewModel>();
-                windowManager.ShowWindow(hubViewModel);
-            }
+            singletonWindowManager.OpenOrFocusSingletonWindow<HubView, HubViewModel>();
         }
 
         public void Hibernate()
