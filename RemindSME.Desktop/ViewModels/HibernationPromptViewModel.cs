@@ -1,9 +1,9 @@
 ﻿using Caliburn.Micro;
 using System.Windows;
+using RemindSME.Desktop.Properties;
 
 namespace RemindSME.Desktop.ViewModels
 {
-<<<<<<< HEAD
     public class HibernationPromptViewModel : PropertyChangedBase
     {
         public void DoItNow()
@@ -18,7 +18,9 @@ namespace RemindSME.Desktop.ViewModels
 
         public void Snooze()
         {
-            MessageBox.Show("Snooze", "RemindS ME",
+            Settings.Default.NextHibernationTime = Settings.Default.NextHibernationTime.AddHours(1);
+
+            MessageBox.Show("Hibernation snoozed by 1 hour", "RemindS ME",
                 MessageBoxButton.OK,
                 MessageBoxImage.None,
                 MessageBoxResult.OK,
@@ -36,7 +38,4 @@ namespace RemindSME.Desktop.ViewModels
 
     }
 }
-=======
-    public class HibernationPromptViewModel : PropertyChangedBase { }
-}
->>>>>>> 5433861374474b854a7f1ea9ddc0c0edfa936894
+

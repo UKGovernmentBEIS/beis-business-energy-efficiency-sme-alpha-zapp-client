@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RemindSME.Desktop.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="LastScheduledHibernate" Type="System.DateTime" Scope="User">
+    <Setting Name="NextHibernationTime" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)">1970-01-01</Value>
     </Setting>
     <Setting Name="HeatingOptIn" Type="System.Boolean" Scope="User">
@@ -11,7 +11,7 @@
     <Setting Name="LightingOptIn" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="HibernateTime" Type="System.TimeSpan" Scope="User">
+    <Setting Name="DefaultHibernationTime" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">18:15:00</Value>
     </Setting>
   </Settings>

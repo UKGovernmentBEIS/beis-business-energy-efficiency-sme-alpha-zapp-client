@@ -21,11 +21,8 @@ namespace RemindSME.Desktop.ViewModels
         private readonly IWindowManager windowManager;
 
         private Socket socket;
-<<<<<<< HEAD
-        public Socket Socket { get => socket; set => socket = value; }
         private bool hibernationPromptHasBeenShown = false;
-=======
->>>>>>> 5433861374474b854a7f1ea9ddc0c0edfa936894
+
 
         public TaskbarIconViewModel(INotificationManager notificationManager, IWindowManager windowManager)
         {
@@ -80,7 +77,7 @@ namespace RemindSME.Desktop.ViewModels
 
         public void Hibernate()
         {
-            Settings.Default.LastScheduledHibernate = DateTime.Today;
+            Settings.Default.NextHibernationTime = DateTime.Today;
             Settings.Default.Save();
 
             //            System.Windows.Forms.Application.SetSuspendState(PowerState.Hibernate, false, false);
@@ -145,20 +142,28 @@ namespace RemindSME.Desktop.ViewModels
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            var alreadyHibernatedToday = DateTime.Today <= Settings.Default.LastScheduledHibernate;
-            var timeTilHibernation = Settings.Default.HibernateTime.Subtract(DateTime.Now.TimeOfDay);
+            if (Settings.Default.NextHibernationTime.Date <= DateTime.Today.AddDays(-1))
+            {
+                Settings.Default.NextHibernationTime = DateTime.Today.Add(Settings.Default.DefaultHibernationTime);
+            }
 
-            if (alreadyHibernatedToday)
+            else if (Settings.Default.NextHibernationTime.Subtract(DateTime.Now) <= TimeSpan.FromMinutes(15) 
+                     && DateTime.Now < Settings.Default.NextHibernationTime)
             {
-                //                return;
-            } else if (timeTilHibernation > TimeSpan.FromMinutes(0) && timeTilHibernation < TimeSpan.FromMinutes(30) && hibernationPromptHasBeenShown == false)
-            {
+                if (hibernationPromptHasBeenShown)
+                {
+                    return;
+                }
+
                 ShowHibernationPrompt();
                 hibernationPromptHasBeenShown = true;
             }
-            else
+
+            else if (Settings.Default.NextHibernationTime <= DateTime.Now)
             {
-                Hibernate();
+                Settings.Default.NextHibernationTime = Settings.Default.NextHibernationTime.AddDays(1);
+//                Hibernate();
+
             }
         }
     }

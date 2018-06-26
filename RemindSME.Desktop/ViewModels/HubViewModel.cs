@@ -45,18 +45,19 @@ namespace RemindSME.Desktop.ViewModels
 
         public string SelectedHibernateHour
         {
-            get => Settings.Default.HibernateTime.Hours.ToString("D2");
+            get => Settings.Default.DefaultHibernationTime.Hours.ToString("D2");
             set
             {
                 var hours = int.Parse(value);
-                var minutes = Settings.Default.HibernateTime.Minutes;
+                var minutes = Settings.Default.DefaultHibernationTime.Minutes;
                 var timespan = new TimeSpan(hours, minutes, 0);
-                if (timespan == Settings.Default.HibernateTime)
+                if (timespan == Settings.Default.DefaultHibernationTime)
                 {
                     return;
                 }
 
-                Settings.Default.HibernateTime = timespan;
+                Settings.Default.DefaultHibernationTime = timespan;
+                Settings.Default.NextHibernationTime = DateTime.Today.Add(Settings.Default.DefaultHibernationTime);
                 Settings.Default.Save();
                 NotifyOfPropertyChange(() => HibernateHours);
             }
@@ -66,18 +67,19 @@ namespace RemindSME.Desktop.ViewModels
 
         public string SelectedHibernateMinute
         {
-            get => Settings.Default.HibernateTime.Minutes.ToString("D2");
+            get => Settings.Default.DefaultHibernationTime.Minutes.ToString("D2");
             set
             {
-                var hours = Settings.Default.HibernateTime.Hours;
+                var hours = Settings.Default.DefaultHibernationTime.Hours;
                 var minutes = int.Parse(value);
                 var timespan = new TimeSpan(hours, minutes, 0);
-                if (timespan == Settings.Default.HibernateTime)
+                if (timespan == Settings.Default.DefaultHibernationTime)
                 {
                     return;
                 }
 
-                Settings.Default.HibernateTime = timespan;
+                Settings.Default.DefaultHibernationTime = timespan;
+                Settings.Default.NextHibernationTime = DateTime.Today.Add(Settings.Default.DefaultHibernationTime);
                 Settings.Default.Save();
                 NotifyOfPropertyChange(() => HibernateMinutes);
             }
