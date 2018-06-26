@@ -63,9 +63,9 @@ namespace RemindSME.Desktop.ViewModels
                     return;
                 }
 
-//                Settings.Default.DefaultHibernationTime = timespan;
-//                hibernationManager.HandleHibernationOnChange(timespan);
-//                Settings.Default.Save();
+                Settings.Default.DefaultHibernationTime = timespan;
+                hibernationManager.HandleHibernationOnChange(timespan);
+                Settings.Default.Save();
                 NotifyOfPropertyChange(() => HibernateHours);
             }
         }
@@ -85,9 +85,9 @@ namespace RemindSME.Desktop.ViewModels
                     return;
                 }
 
-//                Settings.Default.DefaultHibernationTime = timespan;
-//                hibernationManager.HandleHibernationOnChange(timespan);
-//                Settings.Default.Save();
+                Settings.Default.DefaultHibernationTime = timespan;
+                hibernationManager.HandleHibernationOnChange(timespan);
+                Settings.Default.Save();
                 NotifyOfPropertyChange(() => HibernateMinutes);
             }
         }
