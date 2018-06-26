@@ -9,6 +9,7 @@
         <tb:TaskbarIcon.ContextMenu>
             <ContextMenu>
                 <MenuItem Header="Show Hibernation Prompt" cal:Message.Attach="ShowHibernationPrompt" />
+                <MenuItem Header="Show Next Hibernation Time" cal:Message.Attach="ShowNextHibernationTime" />
                 <MenuItem Header="Quit" cal:Message.Attach="Quit" />
             </ContextMenu>
         </tb:TaskbarIcon.ContextMenu>

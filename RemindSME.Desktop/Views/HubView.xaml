@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:cal="http://www.caliburnproject.org"
         Icon="../RemindSME.ico"
-        Title="RemindS Me Custom Hub" Height="450" Width="650">
+        Title="RemindS Me Custom Hub" Height="500" Width="650">
     <StackPanel>
         <StackPanel.Resources>
             <Style x:Key="HyperlinkButton" TargetType="Button">
@@ -98,6 +98,11 @@
                     <Hyperlink Focusable="False">What is this?</Hyperlink>
                 </TextBlock>
             </Button>
+            <TextBlock Text="If this is set to a time that has already past today or is within the next 15 minutes, the first scheduled hibernation will happen tomorrow."
+                       Margin="5,10,0,0"
+                       TextWrapping="Wrap"
+                       Width="400"
+                       HorizontalAlignment="Left"/>
         </StackPanel>
         <Button Style="{StaticResource HyperlinkButton}" 
                 Focusable="False" 

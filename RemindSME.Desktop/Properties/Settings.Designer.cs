@@ -26,12 +26,12 @@ namespace RemindSME.Desktop.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
-        public global::System.DateTime LastScheduledHibernate {
+        public global::System.DateTime NextHibernationTime {
             get {
-                return ((global::System.DateTime)(this["LastScheduledHibernate"]));
+                return ((global::System.DateTime)(this["NextHibernationTime"]));
             }
             set {
-                this["LastScheduledHibernate"] = value;
+                this["NextHibernationTime"] = value;
             }
         }
         
@@ -62,12 +62,12 @@ namespace RemindSME.Desktop.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("18:15:00")]
-        public global::System.TimeSpan HibernateTime {
+        public global::System.TimeSpan DefaultHibernationTime {
             get {
-                return ((global::System.TimeSpan)(this["HibernateTime"]));
+                return ((global::System.TimeSpan)(this["DefaultHibernationTime"]));
             }
             set {
-                this["HibernateTime"] = value;
+                this["DefaultHibernationTime"] = value;
             }
         }
     }

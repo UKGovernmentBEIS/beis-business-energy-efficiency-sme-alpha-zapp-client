@@ -1,8 +1,10 @@
-﻿using System.Reflection;
+using System;
+using System.Reflection;
 using System.Windows;
 using Autofac;
 using Caliburn.Micro.Autofac;
 using Notifications.Wpf;
+using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.ViewModels;
 
 namespace RemindSME.Desktop
@@ -22,6 +24,13 @@ namespace RemindSME.Desktop
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            // If the next hibernation time is today, but in the past, then bump it along to the default time tomorrow
+            if (Settings.Default.NextHibernationTime < DateTime.Now)
+            {
+                Settings.Default.NextHibernationTime = DateTime.Today.AddDays(1).Add(Settings.Default.DefaultHibernationTime);
+                Settings.Default.Save();
+            }
+
             DisplayRootViewFor<TaskbarIconViewModel>();
         }
     }

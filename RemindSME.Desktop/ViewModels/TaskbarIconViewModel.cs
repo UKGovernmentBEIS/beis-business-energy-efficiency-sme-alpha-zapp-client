@@ -18,7 +18,7 @@ namespace RemindSME.Desktop.ViewModels
     public class TaskbarIconViewModel : PropertyChangedBase
     {
         private const string ServerUrl = "http://localhost:5000";
-        private static readonly TimeSpan HibernationTime = new TimeSpan(18, 00, 00); // 18:00
+        private readonly HibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
         private readonly IReminderManager reminderManager;
         private readonly ISingletonWindowManager singletonWindowManager;
@@ -30,6 +30,7 @@ namespace RemindSME.Desktop.ViewModels
             this.notificationManager = notificationManager;
             this.reminderManager = reminderManager;
             this.singletonWindowManager = singletonWindowManager;
+            hibernationManager = new HibernationManager();
 
             var timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
@@ -44,16 +45,6 @@ namespace RemindSME.Desktop.ViewModels
             singletonWindowManager.OpenOrFocusSingletonWindow<HubView, HubViewModel>();
         }
 
-        public void Hibernate()
-        {
-//            System.Windows.Forms.Application.SetSuspendState(PowerState.Hibernate, false, false);
-            MessageBox.Show("Hibernate", "RemindS ME",
-                MessageBoxButton.OK,
-                MessageBoxImage.None,
-                MessageBoxResult.OK,
-                MessageBoxOptions.DefaultDesktopOnly);
-        }
-
         public void ShowHibernationPrompt()
         {
             var model = IoC.Get<HibernationPromptViewModel>();
@@ -65,16 +56,13 @@ namespace RemindSME.Desktop.ViewModels
             Application.Current.Shutdown();
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        public void ShowNextHibernationTime()
         {
-            var alreadyHibernatedToday = DateTime.Today <= Settings.Default.LastScheduledHibernate;
-            if (alreadyHibernatedToday || DateTime.Now.TimeOfDay < HibernationTime)
-            {
-                return;
-            }
-            Settings.Default.LastScheduledHibernate = DateTime.Today;
-            Settings.Default.Save();
-            Hibernate();
+            MessageBox.Show("The next hibernation time is " + $"{Settings.Default.NextHibernationTime:f}", "RemindS ME",
+                MessageBoxButton.OK,
+                MessageBoxImage.None,
+                MessageBoxResult.OK,
+                MessageBoxOptions.DefaultDesktopOnly);
         }
 
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
@@ -87,6 +75,34 @@ namespace RemindSME.Desktop.ViewModels
                 case SessionSwitchReason.SessionUnlock:
                     Connect();
                     break;
+            }
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            // If before today, set the next hibernation to today at the default time, unless that is within the next 15 minutes,
+            // in which case set it for tomorrow.
+            if (Settings.Default.NextHibernationTime.Date < DateTime.Today)
+            {
+                hibernationManager.UpdateNextHiberationTime();
+            }
+
+            // If you are past the hibernation time, then hibernate
+            if (Settings.Default.NextHibernationTime <= DateTime.Now)
+            {
+                hibernationManager.Hibernate();
+            }
+
+            // If your are 15 minutes or less away from the hibernation, prompt the user
+            else if (Settings.Default.NextHibernationTime.Subtract(DateTime.Now) <= TimeSpan.FromMinutes(15))
+            {
+                if (hibernationManager.HibernationPromptHasBeenShown)
+                {
+                    return;
+                }
+
+                ShowHibernationPrompt();
+                hibernationManager.HibernationPromptHasBeenShown = true;
             }
         }
 
