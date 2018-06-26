@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using System;
+using Caliburn.Micro;
 using System.Windows;
 using RemindSME.Desktop.Properties;
 
@@ -18,7 +19,7 @@ namespace RemindSME.Desktop.ViewModels
 
         public void Snooze()
         {
-            Settings.Default.NextHibernationTime = Settings.Default.NextHibernationTime.AddHours(1);
+            HibernationHelper.Snooze(TimeSpan.FromHours(1));
 
             MessageBox.Show("Hibernation snoozed by 1 hour", "RemindS ME",
                 MessageBoxButton.OK,

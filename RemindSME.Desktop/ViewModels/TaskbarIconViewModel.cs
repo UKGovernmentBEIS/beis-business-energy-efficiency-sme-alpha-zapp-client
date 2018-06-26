@@ -127,6 +127,15 @@ namespace RemindSME.Desktop.ViewModels
             Connect();
         }
 
+        public void ShowNextHibernationTime()
+        {
+            MessageBox.Show("The next hibernation time is " + $"{Settings.Default.NextHibernationTime:f}", "RemindS ME",
+                MessageBoxButton.OK,
+                MessageBoxImage.None,
+                MessageBoxResult.OK,
+                MessageBoxOptions.DefaultDesktopOnly);
+        }
+
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
             switch (e.Reason)
@@ -142,12 +151,10 @@ namespace RemindSME.Desktop.ViewModels
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if (Settings.Default.NextHibernationTime.Date <= DateTime.Today.AddDays(-1))
-            {
-                Settings.Default.NextHibernationTime = DateTime.Today.Add(Settings.Default.DefaultHibernationTime);
-            }
-
-            else if (Settings.Default.NextHibernationTime.Subtract(DateTime.Now) <= TimeSpan.FromMinutes(15) 
+            HibernationHelper.HandleHibernationOnTick();
+            
+            // If your are 15 minutes or less away from the hibernation, prompt the user
+            if (Settings.Default.NextHibernationTime.Subtract(DateTime.Now) <= TimeSpan.FromMinutes(15) 
                      && DateTime.Now < Settings.Default.NextHibernationTime)
             {
                 if (hibernationPromptHasBeenShown)
@@ -159,11 +166,11 @@ namespace RemindSME.Desktop.ViewModels
                 hibernationPromptHasBeenShown = true;
             }
 
+            //If you are past the hibernation time, then update the next hibernation time then hibernate
             else if (Settings.Default.NextHibernationTime <= DateTime.Now)
             {
-                Settings.Default.NextHibernationTime = Settings.Default.NextHibernationTime.AddDays(1);
-//                Hibernate();
-
+                Settings.Default.NextHibernationTime = DateTime.Today.AddDays(1).Add(Settings.Default.DefaultHibernationTime);
+                Hibernate();
             }
         }
     }

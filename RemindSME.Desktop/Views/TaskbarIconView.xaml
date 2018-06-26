@@ -14,6 +14,7 @@
                 <MenuItem Header="Show Test Balloon" cal:Message.Attach="ShowTestNotification" />
                 <MenuItem Header="Lock" cal:Message.Attach="Lock" />
                 <MenuItem Header="Unlock" cal:Message.Attach="Unlock" />
+                <MenuItem Header="Show Next Hibernation Time" cal:Message.Attach="ShowNextHibernationTime" />
                 <MenuItem Header="Quit" cal:Message.Attach="Quit" />
             </ContextMenu>
         </tb:TaskbarIcon.ContextMenu>

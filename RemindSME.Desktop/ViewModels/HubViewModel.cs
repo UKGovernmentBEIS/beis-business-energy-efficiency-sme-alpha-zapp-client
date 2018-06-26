@@ -57,7 +57,7 @@ namespace RemindSME.Desktop.ViewModels
                 }
 
                 Settings.Default.DefaultHibernationTime = timespan;
-                Settings.Default.NextHibernationTime = DateTime.Today.Add(Settings.Default.DefaultHibernationTime);
+                HibernationHelper.HandleHibernationOnChange(timespan);
                 Settings.Default.Save();
                 NotifyOfPropertyChange(() => HibernateHours);
             }
@@ -79,7 +79,7 @@ namespace RemindSME.Desktop.ViewModels
                 }
 
                 Settings.Default.DefaultHibernationTime = timespan;
-                Settings.Default.NextHibernationTime = DateTime.Today.Add(Settings.Default.DefaultHibernationTime);
+                HibernationHelper.HandleHibernationOnChange(timespan);
                 Settings.Default.Save();
                 NotifyOfPropertyChange(() => HibernateMinutes);
             }
