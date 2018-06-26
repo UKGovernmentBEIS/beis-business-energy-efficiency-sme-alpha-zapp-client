@@ -68,12 +68,6 @@ namespace RemindSME.Desktop.ViewModels
             }
         }
 
-        public void SeeNetworkDetails()
-        {
-            var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
-            socket.Emit("network", network);
-        }
-
         public void Hibernate()
         {
 //            System.Windows.Forms.Application.SetSuspendState(PowerState.Hibernate, false, false);
@@ -82,11 +76,6 @@ namespace RemindSME.Desktop.ViewModels
                 MessageBoxImage.None,
                 MessageBoxResult.OK,
                 MessageBoxOptions.DefaultDesktopOnly);
-        }
-
-        public void ShowTestNotification()
-        {
-            ShowNotification("Test", "Hello world!");
         }
 
         public void ShowHibernationPrompt()
