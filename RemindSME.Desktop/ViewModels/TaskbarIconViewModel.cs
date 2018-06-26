@@ -30,6 +30,8 @@ namespace RemindSME.Desktop.ViewModels
 
         private bool hibernationPromptHasBeenShown;
 
+        private readonly AppUpdateManager updateManager;
+
         private Socket socket;
 
         public TaskbarIconViewModel(
@@ -43,6 +45,7 @@ namespace RemindSME.Desktop.ViewModels
             this.notificationManager = notificationManager;
             this.reminderManager = reminderManager;
             this.singletonWindowManager = singletonWindowManager;
+            this.updateManager = new AppUpdateManager();
 
             eventAggregator.Subscribe(this);
 
@@ -50,8 +53,7 @@ namespace RemindSME.Desktop.ViewModels
             timer.Tick += Timer_Tick;
             timer.Start();
 
-            var updateTimer = new DispatcherTimer();
-            updateTimer.Interval = TimeSpan.FromMinutes(5);
+            var updateTimer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(5) };
             updateTimer.Tick += UpdateTimer_TickAsync;
             updateTimer.Start();
 
@@ -120,19 +122,11 @@ namespace RemindSME.Desktop.ViewModels
 
         private async void UpdateTimer_TickAsync(object sender, EventArgs e)
         {
-            ShowNotification("Checking for update", "Checking for newer app version...");
-            using (var updateManager = new UpdateManager("https://reminds-me-server.herokuapp.com/Releases"))
+            var updateIsAvailable = await updateManager.CheckForUpdate();
+            if (updateIsAvailable)
             {
-                var info = await updateManager.CheckForUpdate();
-                if (info.FutureReleaseEntry != info.CurrentlyInstalledVersion)
-                {
-                    ShowNotification("Update Available", $"A new version ({info.FutureReleaseEntry.Version}) is available and will be installed in the background.");
-//                    await updateManager.UpdateApp();
-                }
-                else
-                {
-                    ShowNotification("No Update Available", $"You already have the latest version ({info.CurrentlyInstalledVersion.Version}) installed.");
-                }
+                ShowNotification("Update available", "A new version of the app is available and will be installed in the background.");
+                await updateManager.UpdateAndRestart();
             }
         }
 
