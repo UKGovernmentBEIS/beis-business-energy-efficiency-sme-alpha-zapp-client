@@ -17,11 +17,11 @@ namespace RemindSME.Desktop.ViewModels
     public class TaskbarIconViewModel : PropertyChangedBase
     {
         private const string ServerUrl = "http://localhost:5000";
-        private static readonly TimeSpan HibernationTime = new TimeSpan(18, 00, 00); // 18:00
         private readonly INotificationManager notificationManager;
         private readonly IWindowManager windowManager;
         private Socket socket;
         public Socket Socket { get => socket; set => socket = value; }
+        private bool hibernationPromptHasBeenShown = false;
 
         public TaskbarIconViewModel(INotificationManager notificationManager, IWindowManager windowManager)
         {
@@ -74,7 +74,10 @@ namespace RemindSME.Desktop.ViewModels
 
         public void Hibernate()
         {
-//            System.Windows.Forms.Application.SetSuspendState(PowerState.Hibernate, false, false);
+            Settings.Default.LastScheduledHibernate = DateTime.Today;
+            Settings.Default.Save();
+
+            //            System.Windows.Forms.Application.SetSuspendState(PowerState.Hibernate, false, false);
             MessageBox.Show("Hibernate", "RemindS ME",
                 MessageBoxButton.OK,
                 MessageBoxImage.None,
@@ -138,17 +141,20 @@ namespace RemindSME.Desktop.ViewModels
         private void Timer_Tick(object sender, EventArgs e)
         {
             var alreadyHibernatedToday = DateTime.Today <= Settings.Default.LastScheduledHibernate;
-            if (alreadyHibernatedToday || DateTime.Now.TimeOfDay < Settings.Default.HibernateTime)
+            var timeTilHibernation = Settings.Default.HibernateTime.Subtract(DateTime.Now.TimeOfDay);
+
+            if (alreadyHibernatedToday)
             {
-                if (Settings.Default.HibernateTime.Subtract(DateTime.Now.TimeOfDay) == TimeSpan.FromMinutes(15))
-                {
-                    ShowHibernationPrompt();
-                }
-                return;
+                //                return;
+            } else if (timeTilHibernation > TimeSpan.FromMinutes(0) && timeTilHibernation < TimeSpan.FromMinutes(30) && hibernationPromptHasBeenShown == false)
+            {
+                ShowHibernationPrompt();
+                hibernationPromptHasBeenShown = true;
             }
-            Settings.Default.LastScheduledHibernate = DateTime.Today;
-            Settings.Default.Save();
-            Hibernate();
+            else
+            {
+                Hibernate();
+            }
         }
     }
 }
