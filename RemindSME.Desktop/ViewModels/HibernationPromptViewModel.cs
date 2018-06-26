@@ -2,7 +2,5 @@
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class HibernationPromptViewModel : PropertyChangedBase
-    {
-    }
+    public class HibernationPromptViewModel : PropertyChangedBase { }
 }
