@@ -1,38 +1,43 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
 using System.Windows;
+using Caliburn.Micro;
+using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Properties;
-using RemindSME.Desktop.ViewModels;
+using static RemindSME.Desktop.Helpers.HibernationSettings;
+using MessageBox = System.Windows.MessageBox;
+using MessageBoxOptions = System.Windows.MessageBoxOptions;
 
-namespace RemindSME.Desktop
+namespace RemindSME.Desktop.Helpers
 {
-    public class HibernationManager
+    public interface IHibernationManager
     {
-        public bool HibernationPromptHasBeenShown = false;
+        TimeSpan DefaultHibernationTime { get; }
+        DateTime NextHibernationTime { get; }
 
-        public void UpdateNextHiberationTime()
+        void Hibernate();
+        void Snooze();
+        void NotTonight();
+        void SetDefaultHibernationTime(TimeSpan time);
+        void UpdateNextHiberationTime();
+    }
+
+    public class HibernationManager : IHibernationManager
+    {
+        private readonly IEventAggregator eventAggregator;
+
+        public HibernationManager(IEventAggregator eventAggregator)
         {
-            Settings.Default.NextHibernationTime = Settings.Default.DefaultHibernationTime.Subtract(DateTime.Now.TimeOfDay) > TimeSpan.FromMinutes(15)
-                ? DateTime.Today.Add(Settings.Default.DefaultHibernationTime)
-                : DateTime.Today.AddDays(1).Add(Settings.Default.DefaultHibernationTime);
-            Settings.Default.Save();
+            this.eventAggregator = eventAggregator;
         }
 
-        public void Snooze(TimeSpan timespan)
-        {
-            Settings.Default.NextHibernationTime = Settings.Default.NextHibernationTime.Add(timespan);
-        }
-
-        public void NotTonight()
-        {
-            SetNextHiberateToTomorrow();
-        }
+        public TimeSpan DefaultHibernationTime => Settings.Default.DefaultHibernationTime;
+        public DateTime NextHibernationTime => Settings.Default.NextHibernationTime;
 
         public void Hibernate()
         {
             SetNextHiberateToTomorrow();
 
-            //            System.Windows.Forms.Application.SetSuspendState(PowerState.Hibernate, false, false);
+            // System.Windows.Forms.Application.SetSuspendState(PowerState.Hibernate, false, false);
 
             MessageBox.Show("Hibernate", "RemindS ME",
                 MessageBoxButton.OK,
@@ -41,20 +46,45 @@ namespace RemindSME.Desktop
                 MessageBoxOptions.DefaultDesktopOnly);
         }
 
-        public void SetNextHiberateToTomorrow()
+        public void Snooze()
         {
-            Settings.Default.NextHibernationTime = DateTime.Today.AddDays(1).Add(Settings.Default.DefaultHibernationTime);
-            Settings.Default.Save();
+            SetNextHibernationTime(Settings.Default.NextHibernationTime.Add(SnoozeTime));
         }
 
-        public void HandleHibernationOnChange(TimeSpan newDefaultHibernationTime)
+        public void NotTonight()
         {
-            // If the new default time is set to at least 15 minutes in the future, then set it for today. Otherwise set it for tomorrow.
-            Settings.Default.NextHibernationTime = newDefaultHibernationTime.Subtract(TimeSpan.FromMinutes(15)) > DateTime.Now.TimeOfDay
-                ? DateTime.Today.Add(newDefaultHibernationTime)
-                : DateTime.Today.AddDays(1).Add(newDefaultHibernationTime);
-            
-            this.HibernationPromptHasBeenShown = false;
+            SetNextHiberateToTomorrow();
+        }
+
+        public void UpdateNextHiberationTime()
+        {
+            var defaultHibernationTime = Settings.Default.DefaultHibernationTime;
+            var defaultHibernationTimeIsWithinPromptPeriod = defaultHibernationTime.Subtract(DateTime.Now.TimeOfDay) <= HibernationPromptPeriod;
+            var defaultHibernationTimeToday = DateTime.Today.Add(defaultHibernationTime);
+
+            // If within 15 minutes of next potential hibernation, push until tomorrow.
+            var nextHibernationTime = defaultHibernationTimeIsWithinPromptPeriod ? defaultHibernationTimeToday.AddDays(1) : defaultHibernationTimeToday;
+            SetNextHibernationTime(nextHibernationTime);
+        }
+
+        public void SetDefaultHibernationTime(TimeSpan time)
+        {
+            Settings.Default.DefaultHibernationTime = time;
+            UpdateNextHiberationTime(); // Includes settings save.
+        }
+
+        private void SetNextHiberateToTomorrow()
+        {
+            var tomorrow = DateTime.Today.AddDays(1);
+            SetNextHibernationTime(tomorrow.Add(Settings.Default.DefaultHibernationTime));
+        }
+
+        private void SetNextHibernationTime(DateTime time)
+        {
+            Settings.Default.NextHibernationTime = time;
+            Settings.Default.Save();
+
+            eventAggregator.PublishOnUIThread(new NextHibernationTimeUpdatedEvent());
         }
     }
 }

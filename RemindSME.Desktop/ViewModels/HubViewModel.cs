@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Caliburn.Micro;
+using RemindSME.Desktop.Events;
+using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class HubViewModel : PropertyChangedBase
+    public class HubViewModel : PropertyChangedBase, IHandle<NextHibernationTimeUpdatedEvent>
     {
-        private readonly HibernationManager hibernationManager;
+        private readonly IHibernationManager hibernationManager;
 
-        public HubViewModel()
+        public HubViewModel(IHibernationManager hibernationManager, IEventAggregator eventAggregator)
         {
-            this.hibernationManager = new HibernationManager();
+            this.hibernationManager = hibernationManager;
+            eventAggregator.Subscribe(this);
         }
 
         public bool HeatingOptIn
@@ -52,20 +55,20 @@ namespace RemindSME.Desktop.ViewModels
 
         public string SelectedHibernateHour
         {
-            get => Settings.Default.DefaultHibernationTime.Hours.ToString("D2");
+            get => hibernationManager.DefaultHibernationTime.Hours.ToString("D2");
             set
             {
+                var defaultHibernationTime = hibernationManager.DefaultHibernationTime;
+
                 var hours = int.Parse(value);
-                var minutes = Settings.Default.DefaultHibernationTime.Minutes;
+                var minutes = defaultHibernationTime.Minutes;
                 var timespan = new TimeSpan(hours, minutes, 0);
-                if (timespan == Settings.Default.DefaultHibernationTime)
+                if (timespan == defaultHibernationTime)
                 {
                     return;
                 }
 
-                Settings.Default.DefaultHibernationTime = timespan;
-                hibernationManager.HandleHibernationOnChange(timespan);
-                Settings.Default.Save();
+                hibernationManager.SetDefaultHibernationTime(timespan);
                 NotifyOfPropertyChange(() => HibernateHours);
             }
         }
@@ -77,19 +80,26 @@ namespace RemindSME.Desktop.ViewModels
             get => Settings.Default.DefaultHibernationTime.Minutes.ToString("D2");
             set
             {
-                var hours = Settings.Default.DefaultHibernationTime.Hours;
+                var defaultHibernationTime = hibernationManager.DefaultHibernationTime;
+
+                var hours = defaultHibernationTime.Hours;
                 var minutes = int.Parse(value);
                 var timespan = new TimeSpan(hours, minutes, 0);
-                if (timespan == Settings.Default.DefaultHibernationTime)
+                if (timespan == defaultHibernationTime)
                 {
                     return;
                 }
 
-                Settings.Default.DefaultHibernationTime = timespan;
-                hibernationManager.HandleHibernationOnChange(timespan);
-                Settings.Default.Save();
+                hibernationManager.SetDefaultHibernationTime(timespan);
                 NotifyOfPropertyChange(() => HibernateMinutes);
             }
+        }
+
+        public string NextHibernationTime => $"Next scheduled hibernation: {hibernationManager.NextHibernationTime:f}";
+
+        public void Handle(NextHibernationTimeUpdatedEvent message)
+        {
+            NotifyOfPropertyChange(() => NextHibernationTime);
         }
 
         public void NavigateTo(string url)

@@ -177,6 +177,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Events\NextHibernationTimeUpdatedEvent.cs" />
+    <Compile Include="Helpers\HibernationSettings.cs" />
     <Compile Include="Helpers\ReminderManager.cs" />
     <Compile Include="Helpers\SingletonWindowManager.cs" />
     <Compile Include="Helpers\HibernationManager.cs" />

@@ -7,32 +7,44 @@ using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Net;
 using Notifications.Wpf;
 using Quobject.SocketIoClientDotNet.Client;
+using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Views;
+using static RemindSME.Desktop.Helpers.HibernationSettings;
 
 //using PowerState = System.Windows.Forms.PowerState;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class TaskbarIconViewModel : PropertyChangedBase
+    public class TaskbarIconViewModel : PropertyChangedBase, IHandle<NextHibernationTimeUpdatedEvent>
     {
         private const string ServerUrl = "http://localhost:5000";
-        private readonly HibernationManager hibernationManager;
+
+        private readonly IHibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
         private readonly IReminderManager reminderManager;
         private readonly ISingletonWindowManager singletonWindowManager;
 
+        private bool hibernationPromptHasBeenShown;
+
         private Socket socket;
 
-        public TaskbarIconViewModel(INotificationManager notificationManager, IReminderManager reminderManager, ISingletonWindowManager singletonWindowManager)
+        public TaskbarIconViewModel(
+            IEventAggregator eventAggregator,
+            IHibernationManager hibernationManager,
+            INotificationManager notificationManager,
+            IReminderManager reminderManager,
+            ISingletonWindowManager singletonWindowManager)
         {
+            this.hibernationManager = hibernationManager;
             this.notificationManager = notificationManager;
             this.reminderManager = reminderManager;
             this.singletonWindowManager = singletonWindowManager;
-            hibernationManager = new HibernationManager();
 
-            var timer = new DispatcherTimer();
+            eventAggregator.Subscribe(this);
+
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             timer.Tick += Timer_Tick;
             timer.Start();
 
@@ -45,64 +57,57 @@ namespace RemindSME.Desktop.ViewModels
             singletonWindowManager.OpenOrFocusSingletonWindow<HubView, HubViewModel>();
         }
 
-        public void ShowHibernationPrompt()
-        {
-            var model = IoC.Get<HibernationPromptViewModel>();
-            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
-        }
-
         public void Quit()
         {
             Application.Current.Shutdown();
         }
 
-        public void ShowNextHibernationTime()
+        private void Timer_Tick(object sender, EventArgs e)
         {
-            MessageBox.Show("The next hibernation time is " + $"{Settings.Default.NextHibernationTime:f}", "RemindS ME",
-                MessageBoxButton.OK,
-                MessageBoxImage.None,
-                MessageBoxResult.OK,
-                MessageBoxOptions.DefaultDesktopOnly);
+            var nextHibernationTime = Settings.Default.NextHibernationTime;
+
+            // Next hibernation time is yesterday or earlier, so should be updated.
+            if (nextHibernationTime.Date < DateTime.Today)
+            {
+                hibernationManager.UpdateNextHiberationTime();
+            }
+
+            // Within 15 minutes of next hibernation time, so show prompt.
+            var timeUntilHibernation = nextHibernationTime.Subtract(DateTime.Now);
+            if (!hibernationPromptHasBeenShown && timeUntilHibernation <= HibernationPromptPeriod)
+            {
+                ShowHibernationPrompt();
+            }
+
+            // It is time to hibernate!
+            if (nextHibernationTime <= DateTime.Now)
+            {
+                hibernationManager.Hibernate();
+            }
+        }
+
+        public void ShowHibernationPrompt()
+        {
+            hibernationPromptHasBeenShown = true;
+            var model = IoC.Get<HibernationPromptViewModel>();
+            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
+        }
+
+        public void Handle(NextHibernationTimeUpdatedEvent message)
+        {
+            hibernationPromptHasBeenShown = false;
         }
 
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
             switch (e.Reason)
             {
-                case SessionSwitchReason.SessionLock:
-                    Disconnect();
-                    break;
                 case SessionSwitchReason.SessionUnlock:
                     Connect();
                     break;
-            }
-        }
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            // If before today, set the next hibernation to today at the default time, unless that is within the next 15 minutes,
-            // in which case set it for tomorrow.
-            if (Settings.Default.NextHibernationTime.Date < DateTime.Today)
-            {
-                hibernationManager.UpdateNextHiberationTime();
-            }
-
-            // If you are past the hibernation time, then hibernate
-            if (Settings.Default.NextHibernationTime <= DateTime.Now)
-            {
-                hibernationManager.Hibernate();
-            }
-
-            // If your are 15 minutes or less away from the hibernation, prompt the user
-            else if (Settings.Default.NextHibernationTime.Subtract(DateTime.Now) <= TimeSpan.FromMinutes(15))
-            {
-                if (hibernationManager.HibernationPromptHasBeenShown)
-                {
-                    return;
-                }
-
-                ShowHibernationPrompt();
-                hibernationManager.HibernationPromptHasBeenShown = true;
+                case SessionSwitchReason.SessionLock:
+                    Disconnect();
+                    break;
             }
         }
 
