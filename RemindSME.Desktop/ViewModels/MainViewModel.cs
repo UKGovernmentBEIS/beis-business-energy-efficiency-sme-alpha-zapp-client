@@ -45,7 +45,8 @@ namespace RemindSME.Desktop.ViewModels
             eventAggregator.Subscribe(this);
 
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            timer.Tick += Timer_Tick;
+            timer.Tick += Timer_Tick_Reminders;
+            timer.Tick += Timer_Tick_Hibernation;
             timer.Start();
 
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
@@ -62,7 +63,12 @@ namespace RemindSME.Desktop.ViewModels
             Application.Current.Shutdown();
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void Timer_Tick_Reminders(object sender, EventArgs e)
+        {
+            reminderManager.MaybeShowLastManNotification();
+        }
+
+        private void Timer_Tick_Hibernation(object sender, EventArgs e)
         {
             var nextHibernationTime = Settings.Default.NextHibernationTime;
 
@@ -121,9 +127,10 @@ namespace RemindSME.Desktop.ViewModels
             socket.On("connect", () =>
             {
                 var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
-                socket.Emit("join", network);
+                socket.Emit("join", network, reminderManager.HeatingOptIn);
             });
-            socket.On("show-heating-notification", reminderManager.ShowHeatingNotification);
+            socket.On("network-count-change", arg => reminderManager.HandleNetworkCountChange(unchecked((int)(long)arg)));
+            socket.On("show-heating-notification",  reminderManager.ShowHeatingNotification);
             socket.Connect();
         }
 

@@ -12,25 +12,30 @@ namespace RemindSME.Desktop.ViewModels
     public class HubViewModel : PropertyChangedBase, IHandle<NextHibernationTimeUpdatedEvent>
     {
         private readonly IHibernationManager hibernationManager;
+        private readonly IReminderManager reminderManager;
 
-        public HubViewModel(IHibernationManager hibernationManager, IEventAggregator eventAggregator)
+        public HubViewModel(
+            IEventAggregator eventAggregator,
+            IHibernationManager hibernationManager,
+            IReminderManager reminderManager)
         {
             this.hibernationManager = hibernationManager;
+            this.reminderManager = reminderManager;
+
             eventAggregator.Subscribe(this);
         }
 
         public bool HeatingOptIn
         {
-            get => Settings.Default.HeatingOptIn;
+            get => reminderManager.HeatingOptIn;
             set
             {
-                if (value == Settings.Default.HeatingOptIn)
+                if (value == reminderManager.HeatingOptIn)
                 {
                     return;
                 }
 
-                Settings.Default.HeatingOptIn = value;
-                Settings.Default.Save();
+                reminderManager.HeatingOptIn = value;
                 NotifyOfPropertyChange(() => HeatingOptIn);
             }
         }
