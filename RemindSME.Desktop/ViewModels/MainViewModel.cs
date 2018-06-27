@@ -58,6 +58,8 @@ namespace RemindSME.Desktop.ViewModels
             updateTimer.Tick += UpdateTimer_TickAsync;
             updateTimer.Start();
 
+            SquirrelAwareApp.HandleEvents(onFirstRun: OpenHubWindow);
+
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
             Connect();
         }
