@@ -77,7 +77,7 @@ namespace RemindSME.Desktop.ViewModels
 
         public string SelectedHibernateMinute
         {
-            get => Settings.Default.DefaultHibernationTime.Minutes.ToString("D2");
+            get => hibernationManager.DefaultHibernationTime.Minutes.ToString("D2");
             set
             {
                 var defaultHibernationTime = hibernationManager.DefaultHibernationTime;
