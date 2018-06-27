@@ -3,7 +3,13 @@ using Squirrel;
 
 namespace RemindSME.Desktop.Helpers
 {
-    public class AppUpdateManager
+    public interface IAppUpdateManager
+    {
+        Task<bool> CheckForUpdate();
+        Task UpdateAndRestart();
+    }
+
+    public class AppUpdateManager : IAppUpdateManager
     {
         private const string UpdateUrl = "https://reminds-me-server.herokuapp.com/Releases";
 

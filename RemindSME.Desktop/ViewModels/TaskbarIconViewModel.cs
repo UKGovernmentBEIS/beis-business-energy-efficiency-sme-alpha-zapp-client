@@ -26,11 +26,10 @@ namespace RemindSME.Desktop.ViewModels
         private readonly IHibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
         private readonly IReminderManager reminderManager;
+        private readonly IAppUpdateManager updateManager;
         private readonly ISingletonWindowManager singletonWindowManager;
 
         private bool hibernationPromptHasBeenShown;
-
-        private readonly AppUpdateManager updateManager;
 
         private Socket socket;
 
@@ -39,13 +38,14 @@ namespace RemindSME.Desktop.ViewModels
             IHibernationManager hibernationManager,
             INotificationManager notificationManager,
             IReminderManager reminderManager,
+            IAppUpdateManager updateManager,
             ISingletonWindowManager singletonWindowManager)
         {
             this.hibernationManager = hibernationManager;
             this.notificationManager = notificationManager;
             this.reminderManager = reminderManager;
+            this.updateManager = updateManager;
             this.singletonWindowManager = singletonWindowManager;
-            this.updateManager = new AppUpdateManager();
 
             eventAggregator.Subscribe(this);
 
