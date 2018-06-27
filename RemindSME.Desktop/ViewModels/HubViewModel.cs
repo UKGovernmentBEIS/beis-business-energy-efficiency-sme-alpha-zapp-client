@@ -53,7 +53,7 @@ namespace RemindSME.Desktop.ViewModels
                 }
 
                 hibernationManager.DefaultHibernationTime = time;
-                NotifyOfPropertyChange(() => HibernateHours);
+                NotifyOfPropertyChange(() => SelectedHibernateHour);
             }
         }
 
@@ -75,7 +75,7 @@ namespace RemindSME.Desktop.ViewModels
                 }
 
                 hibernationManager.DefaultHibernationTime = time;
-                NotifyOfPropertyChange(() => HibernateMinutes);
+                NotifyOfPropertyChange(() => SelectedHibernateMinute);
             }
         }
 

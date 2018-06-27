@@ -76,12 +76,11 @@ namespace RemindSME.Desktop.Helpers
 
         public void UpdateNextHiberationTime()
         {
-            var defaultHibernationTimeIsWithinPromptPeriod = DefaultHibernationTime.Subtract(DateTime.Now.TimeOfDay) <= HibernationPromptPeriod;
             var defaultHibernationTimeToday = DateTime.Today.Add(DefaultHibernationTime);
+            var defaultHibernationTimeIsWithinPromptPeriod = defaultHibernationTimeToday.Subtract(DateTime.Now) <= HibernationPromptPeriod;
 
             // If within 15 minutes of next potential hibernation, push until tomorrow.
-            var nextHibernationTime = defaultHibernationTimeIsWithinPromptPeriod ? defaultHibernationTimeToday.AddDays(1) : defaultHibernationTimeToday;
-            NextHibernationTime = nextHibernationTime;
+            NextHibernationTime = defaultHibernationTimeIsWithinPromptPeriod ? defaultHibernationTimeToday.AddDays(1) : defaultHibernationTimeToday;
         }
 
         private void SetNextHiberateToTomorrow()
