@@ -17,7 +17,7 @@ using static RemindSME.Desktop.Helpers.HibernationSettings;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class TaskbarIconViewModel : PropertyChangedBase, IHandle<NextHibernationTimeUpdatedEvent>
+    public class MainViewModel : PropertyChangedBase, IHandle<NextHibernationTimeUpdatedEvent>
     {
         private const string ServerUrl = "http://localhost:5000";
 
@@ -30,7 +30,7 @@ namespace RemindSME.Desktop.ViewModels
 
         private Socket socket;
 
-        public TaskbarIconViewModel(
+        public MainViewModel(
             IEventAggregator eventAggregator,
             IHibernationManager hibernationManager,
             INotificationManager notificationManager,
@@ -123,7 +123,7 @@ namespace RemindSME.Desktop.ViewModels
                 var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
                 socket.Emit("join", network);
             });
-            socket.On("network-count-change", HandleNetworkCountChange);
+            socket.On("show-heating-notification", reminderManager.ShowHeatingNotification);
             socket.Connect();
         }
 
@@ -135,12 +135,6 @@ namespace RemindSME.Desktop.ViewModels
             }
             socket.Disconnect();
             socket = null;
-        }
-
-        private void HandleNetworkCountChange(object arg)
-        {
-            var count = unchecked ((int)(long)arg);
-            reminderManager.UpdateNetworkCount(count);
         }
     }
 }
