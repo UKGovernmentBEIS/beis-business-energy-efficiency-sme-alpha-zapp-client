@@ -1,21 +1,9 @@
 ﻿<Window x:Class="RemindSME.Desktop.Views.HubView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:cal="http://www.caliburnproject.org"
         Icon="../RemindSME.ico"
         Title="RemindS Me Custom Hub" Height="500" Width="650">
     <StackPanel>
-        <StackPanel.Resources>
-            <Style x:Key="HyperlinkButton" TargetType="Button">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <ContentPresenter/>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </StackPanel.Resources>
         <Label
             Content="RemindS ME Custom Hub"
             Height="75"
@@ -46,14 +34,6 @@
                        VerticalAlignment="Center"
                        Margin="0,-5,0,0" />
             </CheckBox>
-            <Button Style="{StaticResource HyperlinkButton}" 
-                    Focusable="False" 
-                    Margin="5,0,0,20"
-                    cal:Message.Attach="[Action NavigateTo('http://www.softwire.com')]">
-                <TextBlock>
-                    <Hyperlink Focusable="False">What is this?</Hyperlink>
-                </TextBlock>
-            </Button>
             <StackPanel Orientation="Horizontal" >
                 <TextBlock Text="What time do you normally leave?"
                            VerticalAlignment="Center"
@@ -67,14 +47,6 @@
                 <ComboBox x:Name="HibernateMinutes" 
                           Width="50px" />
             </StackPanel>
-            <Button Style="{StaticResource HyperlinkButton}" 
-                    Focusable="False" 
-                    Margin="5,0,0,0"
-                    cal:Message.Attach="[Action NavigateTo('http://www.softwire.com')]">
-                <TextBlock>
-                    <Hyperlink Focusable="False">What is this?</Hyperlink>
-                </TextBlock>
-            </Button>
             <TextBlock Text="If this is set to a time that has already past today or is within the next 15 minutes, the first scheduled hibernation will happen tomorrow."
                        Margin="5,10,0,0"
                        TextWrapping="Wrap"
@@ -86,15 +58,5 @@
                        Width="400"
                        HorizontalAlignment="Left"/>
         </StackPanel>
-        <Button Style="{StaticResource HyperlinkButton}" 
-                Focusable="False" 
-                HorizontalAlignment="Right" 
-                Margin="0,0,40,0" 
-                FontSize="16px"
-                cal:Message.Attach="[Action NavigateTo('http://www.softwire.com')]">
-            <TextBlock>
-                <Hyperlink Focusable="False">Want to do more?</Hyperlink>
-            </TextBlock>
-        </Button>
     </StackPanel>
 </Window>
