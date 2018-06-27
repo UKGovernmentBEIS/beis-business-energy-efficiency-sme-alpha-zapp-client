@@ -62,13 +62,13 @@ namespace RemindSME.Desktop.ViewModels
 
                 var hours = int.Parse(value);
                 var minutes = defaultHibernationTime.Minutes;
-                var timespan = new TimeSpan(hours, minutes, 0);
-                if (timespan == defaultHibernationTime)
+                var time = new TimeSpan(hours, minutes, 0);
+                if (time == defaultHibernationTime)
                 {
                     return;
                 }
 
-                hibernationManager.SetDefaultHibernationTime(timespan);
+                hibernationManager.DefaultHibernationTime = time;
                 NotifyOfPropertyChange(() => HibernateHours);
             }
         }
@@ -84,13 +84,13 @@ namespace RemindSME.Desktop.ViewModels
 
                 var hours = defaultHibernationTime.Hours;
                 var minutes = int.Parse(value);
-                var timespan = new TimeSpan(hours, minutes, 0);
-                if (timespan == defaultHibernationTime)
+                var time = new TimeSpan(hours, minutes, 0);
+                if (time == defaultHibernationTime)
                 {
                     return;
                 }
 
-                hibernationManager.SetDefaultHibernationTime(timespan);
+                hibernationManager.DefaultHibernationTime = time;
                 NotifyOfPropertyChange(() => HibernateMinutes);
             }
         }

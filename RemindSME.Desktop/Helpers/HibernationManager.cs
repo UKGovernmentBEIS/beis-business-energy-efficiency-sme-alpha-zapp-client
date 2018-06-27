@@ -11,13 +11,12 @@ namespace RemindSME.Desktop.Helpers
 {
     public interface IHibernationManager
     {
-        TimeSpan DefaultHibernationTime { get; }
+        TimeSpan DefaultHibernationTime { get; set; }
         DateTime NextHibernationTime { get; }
 
         void Hibernate();
         void Snooze();
         void NotTonight();
-        void SetDefaultHibernationTime(TimeSpan time);
         void UpdateNextHiberationTime();
     }
 
@@ -30,8 +29,27 @@ namespace RemindSME.Desktop.Helpers
             this.eventAggregator = eventAggregator;
         }
 
-        public TimeSpan DefaultHibernationTime => Settings.Default.DefaultHibernationTime;
-        public DateTime NextHibernationTime => Settings.Default.NextHibernationTime;
+        public TimeSpan DefaultHibernationTime
+        {
+            get => Settings.Default.DefaultHibernationTime;
+            set
+            {
+                Settings.Default.DefaultHibernationTime = value;
+                UpdateNextHiberationTime();
+            }
+        }
+
+        public DateTime NextHibernationTime
+        {
+            get => Settings.Default.NextHibernationTime;
+            private set
+            {
+                Settings.Default.NextHibernationTime = value;
+                Settings.Default.Save();
+
+                eventAggregator.PublishOnUIThread(new NextHibernationTimeUpdatedEvent());
+            }
+        }
 
         public void Hibernate()
         {
@@ -48,7 +66,7 @@ namespace RemindSME.Desktop.Helpers
 
         public void Snooze()
         {
-            SetNextHibernationTime(Settings.Default.NextHibernationTime.Add(SnoozeTime));
+            NextHibernationTime = NextHibernationTime.Add(SnoozeTime);
         }
 
         public void NotTonight()
@@ -58,33 +76,18 @@ namespace RemindSME.Desktop.Helpers
 
         public void UpdateNextHiberationTime()
         {
-            var defaultHibernationTime = Settings.Default.DefaultHibernationTime;
-            var defaultHibernationTimeIsWithinPromptPeriod = defaultHibernationTime.Subtract(DateTime.Now.TimeOfDay) <= HibernationPromptPeriod;
-            var defaultHibernationTimeToday = DateTime.Today.Add(defaultHibernationTime);
+            var defaultHibernationTimeIsWithinPromptPeriod = DefaultHibernationTime.Subtract(DateTime.Now.TimeOfDay) <= HibernationPromptPeriod;
+            var defaultHibernationTimeToday = DateTime.Today.Add(DefaultHibernationTime);
 
             // If within 15 minutes of next potential hibernation, push until tomorrow.
             var nextHibernationTime = defaultHibernationTimeIsWithinPromptPeriod ? defaultHibernationTimeToday.AddDays(1) : defaultHibernationTimeToday;
-            SetNextHibernationTime(nextHibernationTime);
-        }
-
-        public void SetDefaultHibernationTime(TimeSpan time)
-        {
-            Settings.Default.DefaultHibernationTime = time;
-            UpdateNextHiberationTime(); // Includes settings save.
+            NextHibernationTime = nextHibernationTime;
         }
 
         private void SetNextHiberateToTomorrow()
         {
             var tomorrow = DateTime.Today.AddDays(1);
-            SetNextHibernationTime(tomorrow.Add(Settings.Default.DefaultHibernationTime));
-        }
-
-        private void SetNextHibernationTime(DateTime time)
-        {
-            Settings.Default.NextHibernationTime = time;
-            Settings.Default.Save();
-
-            eventAggregator.PublishOnUIThread(new NextHibernationTimeUpdatedEvent());
+            NextHibernationTime = tomorrow.Add(DefaultHibernationTime);
         }
     }
 }
