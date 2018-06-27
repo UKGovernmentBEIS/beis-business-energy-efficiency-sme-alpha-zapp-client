@@ -39,7 +39,7 @@ namespace RemindSME.Desktop.Helpers
         {
             while (AnyWindowIsOpen())
             {
-                await Task.Delay(TimeSpan.FromMinutes(1));
+                await Task.Delay(TimeSpan.FromSeconds(5));
             }
             UpdateManager.RestartApp();
             Application.Current.Shutdown();
