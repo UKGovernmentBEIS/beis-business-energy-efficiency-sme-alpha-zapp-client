@@ -7,6 +7,7 @@
     <title>RemindSME</title>
     <description>RemindSME app.</description>
     <authors>Softwire</authors>
+    <iconUrl>https://reminds-me-server.herokuapp.com/Releases/AppIcon.ico</iconUrl>
     <dependencies />
   </metadata>
   <files>
