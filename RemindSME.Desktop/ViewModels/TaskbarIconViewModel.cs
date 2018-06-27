@@ -125,7 +125,6 @@ namespace RemindSME.Desktop.ViewModels
             var updateIsAvailable = await updateManager.CheckForUpdate();
             if (updateIsAvailable)
             {
-                ShowNotification("Update available", "A new version of the app is available and will be installed in the background.");
                 await updateManager.UpdateAndRestart();
             }
         }
