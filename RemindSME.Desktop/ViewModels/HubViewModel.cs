@@ -35,22 +35,6 @@ namespace RemindSME.Desktop.ViewModels
             }
         }
 
-        public bool LightingOptIn
-        {
-            get => Settings.Default.LightingOptIn;
-            set
-            {
-                if (value == Settings.Default.LightingOptIn)
-                {
-                    return;
-                }
-
-                Settings.Default.LightingOptIn = value;
-                Settings.Default.Save();
-                NotifyOfPropertyChange(() => LightingOptIn);
-            }
-        }
-
         public IEnumerable<string> HibernateHours => Enumerable.Range(0, 24).Reverse().Select(x => x.ToString("D2"));
 
         public string SelectedHibernateHour

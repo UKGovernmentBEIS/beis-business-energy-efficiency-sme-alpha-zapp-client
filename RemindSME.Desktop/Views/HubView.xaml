@@ -54,29 +54,6 @@
                     <Hyperlink Focusable="False">What is this?</Hyperlink>
                 </TextBlock>
             </Button>
-            <CheckBox x:Name="LightingOptIn"
-                      FlowDirection="RightToLeft"
-                      VerticalAlignment="Center"
-                      HorizontalAlignment="Left"
-                      Margin="0,0,0,0">
-                <CheckBox.Resources>
-                    <Style TargetType="{x:Type Path}">
-                        <Setter Property="FlowDirection" 
-                                Value="LeftToRight" />
-                    </Style>
-                </CheckBox.Resources>
-                <Label Content="Opt-in for lighting notifications"
-                       VerticalAlignment="Center"
-                       Margin="0,-5,0,0" />
-            </CheckBox>
-            <Button Style="{StaticResource HyperlinkButton}" 
-                    Focusable="False" 
-                    Margin="5,0,0,20"
-                    cal:Message.Attach="[Action NavigateTo('http://www.softwire.com')]">
-                <TextBlock>
-                    <Hyperlink Focusable="False">What is this?</Hyperlink>
-                </TextBlock>
-            </Button>
             <StackPanel Orientation="Horizontal" >
                 <TextBlock Text="What time do you normally leave?"
                            VerticalAlignment="Center"
