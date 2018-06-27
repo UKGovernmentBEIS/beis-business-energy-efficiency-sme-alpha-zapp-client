@@ -5,7 +5,6 @@ using System.Linq;
 using Caliburn.Micro;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
-using RemindSME.Desktop.Properties;
 
 namespace RemindSME.Desktop.ViewModels
 {
