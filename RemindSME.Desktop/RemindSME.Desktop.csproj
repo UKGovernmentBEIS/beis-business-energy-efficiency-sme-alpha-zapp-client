@@ -178,11 +178,12 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Events\NextHibernationTimeUpdatedEvent.cs" />
+    <Compile Include="Helpers\AppInfo.cs" />
+    <Compile Include="Helpers\AppUpdateManager.cs" />
+    <Compile Include="Helpers\HibernationManager.cs" />
     <Compile Include="Helpers\HibernationSettings.cs" />
     <Compile Include="Helpers\ReminderManager.cs" />
     <Compile Include="Helpers\SingletonWindowManager.cs" />
-    <Compile Include="Helpers\HibernationManager.cs" />
-    <Compile Include="Helpers\AppUpdateManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

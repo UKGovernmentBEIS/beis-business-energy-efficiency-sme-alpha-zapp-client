@@ -69,6 +69,13 @@ namespace RemindSME.Desktop.ViewModels
             singletonWindowManager.OpenOrActivateSingletonWindow<HubView, HubViewModel>();
         }
 
+        public void ShowAppDetails()
+        {
+            var title = AppInfo.Title ?? "App Details";
+            var version = AppInfo.Version ?? "Unknown";
+            ShowNotification(title, $"Version {version}");
+        }
+
         public void Quit()
         {
             Application.Current.Shutdown();

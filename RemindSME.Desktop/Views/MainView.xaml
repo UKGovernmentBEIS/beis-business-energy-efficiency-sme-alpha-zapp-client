@@ -9,6 +9,7 @@
         <tb:TaskbarIcon.ContextMenu>
             <ContextMenu>
                 <MenuItem Header="Open Hub" cal:Message.Attach="OpenHubWindow" />
+                <MenuItem Header="App Details" cal:Message.Attach="ShowAppDetails" />
                 <MenuItem Header="Quit" cal:Message.Attach="Quit" />
             </ContextMenu>
         </tb:TaskbarIcon.ContextMenu>
