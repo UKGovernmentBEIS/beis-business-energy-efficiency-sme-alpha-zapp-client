@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Windows;
 using Squirrel;
 
 namespace RemindSME.Desktop.Helpers
@@ -27,8 +28,14 @@ namespace RemindSME.Desktop.Helpers
             using (var updateManager = new UpdateManager(UpdateUrl))
             {
                 await updateManager.UpdateApp();
-                System.Windows.Forms.Application.Restart();
+                RestartApp();
             }
+        }
+
+        private static void RestartApp()
+        {
+            System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+            Application.Current.Shutdown();
         }
     }
 }
