@@ -9,6 +9,7 @@ namespace RemindSME.Desktop.Helpers
 {
     public interface IAppUpdateManager
     {
+        void SetupInstallerEventHandlers();
         Task<bool> CheckForUpdate();
         Task UpdateAndRestart();
     }
@@ -16,6 +17,17 @@ namespace RemindSME.Desktop.Helpers
     public class AppUpdateManager : IAppUpdateManager
     {
         private const string UpdateUrl = "https://reminds-me-server.herokuapp.com/Releases";
+
+        public void SetupInstallerEventHandlers()
+        {
+            using (var updateManager = new UpdateManager(UpdateUrl))
+            {
+                SquirrelAwareApp.HandleEvents(
+                    onInitialInstall: v => updateManager.CreateShortcutForThisExe(),
+                    onAppUpdate: v => updateManager.CreateShortcutForThisExe(),
+                    onAppUninstall: v => updateManager.RemoveShortcutForThisExe());
+            }
+        }
 
         public async Task<bool> CheckForUpdate()
         {

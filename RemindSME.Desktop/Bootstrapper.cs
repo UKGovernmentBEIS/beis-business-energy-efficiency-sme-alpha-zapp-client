@@ -23,6 +23,7 @@ namespace RemindSME.Desktop
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            Container.Resolve<IAppUpdateManager>().SetupInstallerEventHandlers();
             Container.Resolve<IHibernationManager>().UpdateNextHiberationTime();
             DisplayRootViewFor<MainViewModel>();
         }
