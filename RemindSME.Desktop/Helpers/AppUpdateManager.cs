@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
+using RemindSME.Desktop.Views;
 using Squirrel;
 
 namespace RemindSME.Desktop.Helpers
@@ -28,14 +31,23 @@ namespace RemindSME.Desktop.Helpers
             using (var updateManager = new UpdateManager(UpdateUrl))
             {
                 await updateManager.UpdateApp();
-                RestartApp();
+                RestartWhenAllWindowsClosed();
             }
         }
 
-        private static void RestartApp()
+        private static async void RestartWhenAllWindowsClosed()
         {
-            System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+            while (AnyWindowIsOpen())
+            {
+                await Task.Delay(TimeSpan.FromMinutes(1));
+            }
+            UpdateManager.RestartApp();
             Application.Current.Shutdown();
+        }
+
+        private static bool AnyWindowIsOpen()
+        {
+            return Application.Current.Windows.Cast<Window>().Any(window => window is HubView);
         }
     }
 }
