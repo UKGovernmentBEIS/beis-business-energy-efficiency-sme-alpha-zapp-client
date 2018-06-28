@@ -6,6 +6,7 @@ using System.Linq;
 using Caliburn.Micro;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
+using RemindSME.Desktop.Properties;
 
 namespace RemindSME.Desktop.ViewModels
 {
@@ -144,6 +145,17 @@ namespace RemindSME.Desktop.ViewModels
         public void OnClose()
         {
             actionTracker.Log("User closed Hub window.");
+            ShowExplanationText = false;
+        }
+
+        public bool ShowExplanationText
+        {
+            get => Settings.Default.DisplaySettingExplanations;
+            set
+            {
+                Settings.Default.DisplaySettingExplanations = value;
+                Settings.Default.Save();
+            }
         }
     }
 }
