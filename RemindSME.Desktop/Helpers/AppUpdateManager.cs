@@ -14,19 +14,21 @@ namespace RemindSME.Desktop.Helpers
         Task UpdateAndRestart();
     }
 
+    // DEBUG
     public class DummyAppUpdateManager : IAppUpdateManager
     {
         public Task<bool> CheckForUpdate()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(false);
         }
 
         public Task UpdateAndRestart()
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 
+    // RELEASE
     public class AppUpdateManager : IAppUpdateManager, IDisposable
     {
         private readonly IUpdateManager updateManager;
