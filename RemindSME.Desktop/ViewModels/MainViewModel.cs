@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
@@ -14,19 +15,17 @@ using RemindSME.Desktop.Views;
 using Squirrel;
 using static RemindSME.Desktop.Helpers.HibernationSettings;
 
-//using PowerState = System.Windows.Forms.PowerState;
-
 namespace RemindSME.Desktop.ViewModels
 {
     public class MainViewModel : PropertyChangedBase, IHandle<NextHibernationTimeUpdatedEvent>
     {
-        private const string ServerUrl = "http://localhost:5000";
+        private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
 
         private readonly IHibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
         private readonly IReminderManager reminderManager;
-        private readonly IAppUpdateManager updateManager;
         private readonly ISingletonWindowManager singletonWindowManager;
+        private readonly IAppUpdateManager updateManager;
 
         private bool hibernationPromptHasBeenShown;
 
@@ -61,6 +60,11 @@ namespace RemindSME.Desktop.ViewModels
 
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
             Connect();
+        }
+
+        public void Handle(NextHibernationTimeUpdatedEvent message)
+        {
+            hibernationPromptHasBeenShown = false;
         }
 
         public void OpenHubWindow()
@@ -117,11 +121,6 @@ namespace RemindSME.Desktop.ViewModels
             notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
         }
 
-        public void Handle(NextHibernationTimeUpdatedEvent message)
-        {
-            hibernationPromptHasBeenShown = false;
-        }
-
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
             switch (e.Reason)
@@ -142,14 +141,6 @@ namespace RemindSME.Desktop.ViewModels
             {
                 await updateManager.UpdateAndRestart();
             }
-        }
-
-        private void ShowNotification(string title, string message)
-        {
-            var model = IoC.Get<NotificationViewModel>();
-            model.Title = title;
-            model.Message = message;
-            notificationManager.Show(model, expirationTime: TimeSpan.FromMinutes(5));
         }
 
         private void Connect()

@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Reflection;
 using System.Windows;
 using Autofac;
@@ -11,7 +12,7 @@ namespace RemindSME.Desktop
 {
     public class Bootstrapper : AutofacBootstrapper<MainViewModel>
     {
-        private const string UpdateUrl = "https://reminds-me-server.herokuapp.com/Releases";
+        private static readonly string UpdateUrl = ConfigurationManager.AppSettings["UpdateUrl"];
 
         public Bootstrapper()
         {
@@ -22,12 +23,20 @@ namespace RemindSME.Desktop
         {
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<NotificationManager>().As<INotificationManager>().SingleInstance();
-            builder.RegisterInstance(new UpdateManager(UpdateUrl)).As<IUpdateManager>().SingleInstance();
+
+            if (!string.IsNullOrEmpty(UpdateUrl))
+            {
+                builder.RegisterInstance(new UpdateManager(UpdateUrl)).As<IUpdateManager>().SingleInstance();
+                builder.RegisterType<AppUpdateManager>().As<IAppUpdateManager>().SingleInstance();
+            }
+            else
+            {
+                builder.RegisterType<DummyAppUpdateManager>().As<IAppUpdateManager>().SingleInstance();
+            }
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            Container.Resolve<IAppUpdateManager>().SetupInstallerEventHandlers();
             Container.Resolve<IHibernationManager>().UpdateNextHiberationTime();
             DisplayRootViewFor<MainViewModel>();
         }

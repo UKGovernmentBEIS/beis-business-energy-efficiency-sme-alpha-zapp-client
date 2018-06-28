@@ -58,14 +58,6 @@ namespace RemindSME.Desktop.Helpers
             }
         }
 
-        private void ShowLastManNotification()
-        {
-            const string title = "Staying a bit later?";
-            const string message = "Don't forget to switch off the lights and heating if you're the last one out tonight!";
-            mostRecentLastManNotification = DateTime.Now;
-            ShowNotification(title, message);
-        }
-
         public void ShowHeatingNotification()
         {
             if (!HeatingOptIn)
@@ -73,6 +65,14 @@ namespace RemindSME.Desktop.Helpers
                 return;
             }
             ShowNotification("It's hot!", "Have you checked your AC settings?");
+        }
+
+        private void ShowLastManNotification()
+        {
+            const string title = "Staying a bit later?";
+            const string message = "Don't forget to switch off the lights and heating if you're the last one out tonight!";
+            mostRecentLastManNotification = DateTime.Now;
+            ShowNotification(title, message);
         }
 
         private bool HasSeenLastManNotificationToday()

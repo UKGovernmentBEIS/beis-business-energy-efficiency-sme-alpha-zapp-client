@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -9,11 +10,25 @@ namespace RemindSME.Desktop.Helpers
 {
     public interface IAppUpdateManager
     {
-        void SetupInstallerEventHandlers();
         Task<bool> CheckForUpdate();
         Task UpdateAndRestart();
     }
 
+    // DEBUG
+    public class DummyAppUpdateManager : IAppUpdateManager
+    {
+        public Task<bool> CheckForUpdate()
+        {
+            return Task.FromResult(false);
+        }
+
+        public Task UpdateAndRestart()
+        {
+            return Task.CompletedTask;
+        }
+    }
+
+    // RELEASE
     public class AppUpdateManager : IAppUpdateManager, IDisposable
     {
         private readonly IUpdateManager updateManager;
@@ -21,10 +36,7 @@ namespace RemindSME.Desktop.Helpers
         public AppUpdateManager(IUpdateManager updateManager)
         {
             this.updateManager = updateManager;
-        }
 
-        public void SetupInstallerEventHandlers()
-        {
             SquirrelAwareApp.HandleEvents(
                 onInitialInstall: v => updateManager.CreateShortcutForThisExe(),
                 onAppUpdate: v => updateManager.CreateShortcutForThisExe(),
