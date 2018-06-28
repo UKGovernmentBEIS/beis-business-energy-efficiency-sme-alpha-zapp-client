@@ -84,6 +84,11 @@ namespace RemindSME.Desktop.ViewModels
 
         private void Timer_Tick_Hibernation(object sender, EventArgs e)
         {
+            if (!Settings.Default.HibernationOptIn)
+            {
+                return;
+            }
+
             var nextHibernationTime = Settings.Default.NextHibernationTime;
 
             // Next hibernation time is yesterday or earlier, so should be updated.

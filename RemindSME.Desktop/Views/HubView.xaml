@@ -22,10 +22,10 @@
                       FlowDirection="RightToLeft"
                       VerticalAlignment="Center"
                       HorizontalAlignment="Left"
-                      Margin="0,0,0,0">
+                      Margin="0,0,0,10">
                 <CheckBox.Resources>
                     <Style TargetType="{x:Type Path}">
-                        <Setter Property="FlowDirection" 
+                        <Setter Property="FlowDirection"
                                 Value="LeftToRight" />
                     </Style>
                 </CheckBox.Resources>
@@ -34,34 +34,54 @@
                        VerticalAlignment="Center"
                        Margin="0,-5,0,0" />
             </CheckBox>
-            <StackPanel Orientation="Horizontal" >
-                <TextBlock Text="What time do you normally leave?"
-                           VerticalAlignment="Center"
-                           Margin="5,0,0,0" />
-                <ComboBox x:Name="HibernateHours" 
-                          Width="50px"
-                          Margin="10,0,0,0"/>
-                <TextBlock Text=":"
-                           VerticalAlignment="Center"
-                           Margin="5,0,5,0" />
-                <ComboBox x:Name="HibernateMinutes" 
-                          Width="50px" />
+            <CheckBox x:Name="HibernationOptIn"
+                      FlowDirection="RightToLeft"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Left"
+                      Margin="0,0,0,10">
+                <CheckBox.Resources>
+                    <Style TargetType="{x:Type Path}">
+                        <Setter Property="FlowDirection"
+                                Value="LeftToRight" />
+                    </Style>
+                </CheckBox.Resources>
+                <Label Content="Opt-in for automatic computer hibernation"
+                       FlowDirection="LeftToRight"
+                       VerticalAlignment="Center"
+                       Margin="0,-5,0,0" />
+            </CheckBox>
+            <StackPanel Name="HibernationOptionIsVisible">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="What time do you normally leave?"
+                               VerticalAlignment="Center"
+                               Margin="5,0,0,10" />
+                    <ComboBox x:Name="HibernateHours"
+                              Width="50px"
+                              Margin="10,0,0,10" />
+                    <TextBlock Text=":"
+                               VerticalAlignment="Center"
+                               Margin="5,0,5,10" />
+                    <ComboBox x:Name="HibernateMinutes"
+                              Width="50px"
+                              Margin="0,0,0,10" />
+                </StackPanel>
+                <TextBlock
+                    Text="If this is set to a time that has already past today or is within the next 15 minutes, the first scheduled hibernation will happen tomorrow."
+                    Margin="5,10,0,0"
+                    TextWrapping="Wrap"
+                    Width="400"
+                    HorizontalAlignment="Left" />
+                <TextBlock x:Name="NextHibernationTime"
+                           Margin="5,10,0,0"
+                           TextWrapping="Wrap"
+                           Width="400"
+                           HorizontalAlignment="Left" />
+                <TextBlock x:Name="Configuration"
+                           Margin="5,10,0,0"
+                           TextWrapping="Wrap"
+                           Width="400"
+                           HorizontalAlignment="Left"/>
             </StackPanel>
-            <TextBlock Text="If this is set to a time that has already past today or is within the next 15 minutes, the first scheduled hibernation will happen tomorrow."
-                       Margin="5,10,0,0"
-                       TextWrapping="Wrap"
-                       Width="400"
-                       HorizontalAlignment="Left"/>
-            <TextBlock x:Name="NextHibernationTime"
-                       Margin="5,10,0,0"
-                       TextWrapping="Wrap"
-                       Width="400"
-                       HorizontalAlignment="Left"/>
-            <TextBlock x:Name="Configuration"
-                       Margin="5,10,0,0"
-                       TextWrapping="Wrap"
-                       Width="400"
-                       HorizontalAlignment="Left"/>
         </StackPanel>
     </StackPanel>
 </Window>
