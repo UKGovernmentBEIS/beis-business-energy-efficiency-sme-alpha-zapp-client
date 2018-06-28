@@ -92,7 +92,7 @@ namespace RemindSME.Desktop.ViewModels
             }
         }
 
-        public void ShowHibernationPrompt()
+        private void ShowHibernationPrompt()
         {
             hibernationPromptHasBeenShown = true;
             var model = IoC.Get<HibernationPromptViewModel>();
