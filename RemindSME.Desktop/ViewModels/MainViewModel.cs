@@ -84,33 +84,30 @@ namespace RemindSME.Desktop.ViewModels
 
         private void Timer_Tick_Hibernation(object sender, EventArgs e)
         {
-            if (Settings.Default.HibernationOptIn)
-            {
-                var nextHibernationTime = Settings.Default.NextHibernationTime;
-
-                // Next hibernation time is yesterday or earlier, so should be updated.
-                if (nextHibernationTime.Date < DateTime.Today)
-                {
-                    hibernationManager.UpdateNextHiberationTime();
-                }
-
-                // Within 15 minutes of next hibernation time, so show prompt.
-                var timeUntilHibernation = nextHibernationTime.Subtract(DateTime.Now);
-                if (!hibernationPromptHasBeenShown && timeUntilHibernation <= HibernationPromptPeriod)
-                {
-                    ShowHibernationPrompt();
-                }
-
-                // It is time to hibernate!
-                if (nextHibernationTime <= DateTime.Now)
-                {
-                    hibernationManager.Hibernate();
-                }
-            }
-
-            else
+            if (!Settings.Default.HibernationOptIn)
             {
                 return;
+            }
+
+            var nextHibernationTime = Settings.Default.NextHibernationTime;
+
+            // Next hibernation time is yesterday or earlier, so should be updated.
+            if (nextHibernationTime.Date < DateTime.Today)
+            {
+                hibernationManager.UpdateNextHiberationTime();
+            }
+
+            // Within 15 minutes of next hibernation time, so show prompt.
+            var timeUntilHibernation = nextHibernationTime.Subtract(DateTime.Now);
+            if (!hibernationPromptHasBeenShown && timeUntilHibernation <= HibernationPromptPeriod)
+            {
+                ShowHibernationPrompt();
+            }
+
+            // It is time to hibernate!
+            if (nextHibernationTime <= DateTime.Now)
+            {
+                hibernationManager.Hibernate();
             }
         }
 
