@@ -11,6 +11,8 @@ using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Views;
+using Squirrel;
+
 using static RemindSME.Desktop.Helpers.HibernationSettings;
 
 //using PowerState = System.Windows.Forms.PowerState;
@@ -24,6 +26,7 @@ namespace RemindSME.Desktop.ViewModels
         private readonly IHibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
         private readonly IReminderManager reminderManager;
+        private readonly IAppUpdateManager updateManager;
         private readonly ISingletonWindowManager singletonWindowManager;
 
         private bool hibernationPromptHasBeenShown;
@@ -35,11 +38,13 @@ namespace RemindSME.Desktop.ViewModels
             IHibernationManager hibernationManager,
             INotificationManager notificationManager,
             IReminderManager reminderManager,
+            IAppUpdateManager updateManager,
             ISingletonWindowManager singletonWindowManager)
         {
             this.hibernationManager = hibernationManager;
             this.notificationManager = notificationManager;
             this.reminderManager = reminderManager;
+            this.updateManager = updateManager;
             this.singletonWindowManager = singletonWindowManager;
 
             eventAggregator.Subscribe(this);
@@ -48,6 +53,10 @@ namespace RemindSME.Desktop.ViewModels
             timer.Tick += Timer_Tick_Reminders;
             timer.Tick += Timer_Tick_Hibernation;
             timer.Start();
+
+            var updateTimer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(5) };
+            updateTimer.Tick += UpdateTimer_TickAsync;
+            updateTimer.Start();
 
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
             Connect();
@@ -115,6 +124,23 @@ namespace RemindSME.Desktop.ViewModels
                     Disconnect();
                     break;
             }
+        }
+
+        private async void UpdateTimer_TickAsync(object sender, EventArgs e)
+        {
+            var updateIsAvailable = await updateManager.CheckForUpdate();
+            if (updateIsAvailable)
+            {
+                await updateManager.UpdateAndRestart();
+            }
+        }
+
+        private void ShowNotification(string title, string message)
+        {
+            var model = IoC.Get<NotificationViewModel>();
+            model.Title = title;
+            model.Message = message;
+            notificationManager.Show(model, expirationTime: TimeSpan.FromMinutes(5));
         }
 
         private void Connect()
