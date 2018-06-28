@@ -8,6 +8,7 @@
                     cal:Message.Attach="[Event TrayLeftMouseDown] = [Action OpenHubWindow]">
         <tb:TaskbarIcon.ContextMenu>
             <ContextMenu>
+                <MenuItem Header="Open Hub" cal:Message.Attach="OpenHubWindow" />
                 <MenuItem Header="Quit" cal:Message.Attach="Quit" />
             </ContextMenu>
         </tb:TaskbarIcon.ContextMenu>
