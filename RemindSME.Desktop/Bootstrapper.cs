@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Reflection;
 using System.Windows;
 using Autofac;
@@ -5,11 +6,14 @@ using Caliburn.Micro.Autofac;
 using Notifications.Wpf;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.ViewModels;
+using Squirrel;
 
 namespace RemindSME.Desktop
 {
     public class Bootstrapper : AutofacBootstrapper<MainViewModel>
     {
+        private static readonly string UpdateUrl = ConfigurationManager.AppSettings["UpdateUrl"];
+
         public Bootstrapper()
         {
             Initialize();
@@ -19,6 +23,7 @@ namespace RemindSME.Desktop
         {
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<NotificationManager>().As<INotificationManager>().SingleInstance();
+            builder.RegisterInstance(new UpdateManager(UpdateUrl)).As<IUpdateManager>().SingleInstance();
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e)

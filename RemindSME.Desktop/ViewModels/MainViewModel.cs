@@ -12,6 +12,7 @@ using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Views;
+using Squirrel;
 using static RemindSME.Desktop.Helpers.HibernationSettings;
 
 namespace RemindSME.Desktop.ViewModels
@@ -54,6 +55,8 @@ namespace RemindSME.Desktop.ViewModels
             var updateTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
             updateTimer.Tick += UpdateTimer_TickAsync;
             updateTimer.Start();
+
+            SquirrelAwareApp.HandleEvents(onFirstRun: OpenHubWindow);
 
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
             Connect();
