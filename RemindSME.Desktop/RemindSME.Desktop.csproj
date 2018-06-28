@@ -182,6 +182,7 @@
     <Compile Include="Helpers\AppUpdateManager.cs" />
     <Compile Include="Helpers\HibernationManager.cs" />
     <Compile Include="Helpers\HibernationSettings.cs" />
+    <Compile Include="Helpers\RegistryManager.cs" />
     <Compile Include="Helpers\ReminderManager.cs" />
     <Compile Include="Helpers\SingletonWindowManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

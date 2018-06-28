@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using Microsoft.Win32;
 using RemindSME.Desktop.Views;
 using Squirrel;
 
@@ -18,10 +17,12 @@ namespace RemindSME.Desktop.Helpers
     public class AppUpdateManager : IAppUpdateManager, IDisposable
     {
         private readonly IUpdateManager updateManager;
+        private readonly IRegistryManager registryManager;
 
-        public AppUpdateManager(IUpdateManager updateManager)
+        public AppUpdateManager(IUpdateManager updateManager, IRegistryManager registryManager)
         {
             this.updateManager = updateManager;
+            this.registryManager = registryManager;
         }
 
         public void SetupInstallerEventHandlers()
@@ -35,37 +36,13 @@ namespace RemindSME.Desktop.Helpers
         private void InstallActions()
         {
             updateManager.CreateShortcutForThisExe();
-            CreateRegistryEntryToLaunchOnStartup();
+            registryManager.CreateEntryToLaunchOnStartup();
         }
 
         private void UninstallActions()
         {
             updateManager.RemoveShortcutForThisExe();
-            RemoveRegistryEntryToLaunchOnStartup();
-        }
-
-        private static void CreateRegistryEntryToLaunchOnStartup()
-        {
-            var startupKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
-            if (startupKey != null)
-            {
-                var appName = AppInfo.Title;
-                var executablePath = AppInfo.Location;
-
-                startupKey.SetValue(appName, executablePath);
-                startupKey.Close();
-            }
-        }
-
-        private static void RemoveRegistryEntryToLaunchOnStartup()
-        {
-            var startupKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
-            if (startupKey != null)
-            {
-                var appName = AppInfo.Title;
-                startupKey.DeleteValue(appName);
-                startupKey.Close();
-            }
+            registryManager.RemoveEntryToLaunchOnStartup();
         }
 
         public async Task<bool> CheckForUpdate()
