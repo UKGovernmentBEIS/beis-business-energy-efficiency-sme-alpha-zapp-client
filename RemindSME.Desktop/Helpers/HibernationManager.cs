@@ -4,8 +4,6 @@ using Caliburn.Micro;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Properties;
 using static RemindSME.Desktop.Helpers.HibernationSettings;
-using MessageBox = System.Windows.MessageBox;
-using MessageBoxOptions = System.Windows.MessageBoxOptions;
 
 namespace RemindSME.Desktop.Helpers
 {

@@ -11,11 +11,7 @@ using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Views;
-using Squirrel;
-
 using static RemindSME.Desktop.Helpers.HibernationSettings;
-
-//using PowerState = System.Windows.Forms.PowerState;
 
 namespace RemindSME.Desktop.ViewModels
 {
@@ -26,8 +22,8 @@ namespace RemindSME.Desktop.ViewModels
         private readonly IHibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
         private readonly IReminderManager reminderManager;
-        private readonly IAppUpdateManager updateManager;
         private readonly ISingletonWindowManager singletonWindowManager;
+        private readonly IAppUpdateManager updateManager;
 
         private bool hibernationPromptHasBeenShown;
 
@@ -60,6 +56,11 @@ namespace RemindSME.Desktop.ViewModels
 
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
             Connect();
+        }
+
+        public void Handle(NextHibernationTimeUpdatedEvent message)
+        {
+            hibernationPromptHasBeenShown = false;
         }
 
         public void OpenHubWindow()
@@ -108,11 +109,6 @@ namespace RemindSME.Desktop.ViewModels
             notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
         }
 
-        public void Handle(NextHibernationTimeUpdatedEvent message)
-        {
-            hibernationPromptHasBeenShown = false;
-        }
-
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
             switch (e.Reason)
@@ -135,14 +131,6 @@ namespace RemindSME.Desktop.ViewModels
             }
         }
 
-        private void ShowNotification(string title, string message)
-        {
-            var model = IoC.Get<NotificationViewModel>();
-            model.Title = title;
-            model.Message = message;
-            notificationManager.Show(model, expirationTime: TimeSpan.FromMinutes(5));
-        }
-
         private void Connect()
         {
             if (socket != null)
@@ -156,7 +144,7 @@ namespace RemindSME.Desktop.ViewModels
                 socket.Emit("join", network, reminderManager.HeatingOptIn);
             });
             socket.On("network-count-change", arg => reminderManager.HandleNetworkCountChange(unchecked((int)(long)arg)));
-            socket.On("show-heating-notification",  reminderManager.ShowHeatingNotification);
+            socket.On("show-heating-notification", reminderManager.ShowHeatingNotification);
             socket.Connect();
         }
 
