@@ -12,7 +12,6 @@ using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Views;
 using Squirrel;
-
 using static RemindSME.Desktop.Helpers.HibernationSettings;
 
 //using PowerState = System.Windows.Forms.PowerState;
@@ -81,25 +80,33 @@ namespace RemindSME.Desktop.ViewModels
 
         private void Timer_Tick_Hibernation(object sender, EventArgs e)
         {
-            var nextHibernationTime = Settings.Default.NextHibernationTime;
-
-            // Next hibernation time is yesterday or earlier, so should be updated.
-            if (nextHibernationTime.Date < DateTime.Today)
+            if (Settings.Default.HibernationOptIn)
             {
-                hibernationManager.UpdateNextHiberationTime();
+                var nextHibernationTime = Settings.Default.NextHibernationTime;
+
+                // Next hibernation time is yesterday or earlier, so should be updated.
+                if (nextHibernationTime.Date < DateTime.Today)
+                {
+                    hibernationManager.UpdateNextHiberationTime();
+                }
+
+                // Within 15 minutes of next hibernation time, so show prompt.
+                var timeUntilHibernation = nextHibernationTime.Subtract(DateTime.Now);
+                if (!hibernationPromptHasBeenShown && timeUntilHibernation <= HibernationPromptPeriod)
+                {
+                    ShowHibernationPrompt();
+                }
+
+                // It is time to hibernate!
+                if (nextHibernationTime <= DateTime.Now)
+                {
+                    hibernationManager.Hibernate();
+                }
             }
 
-            // Within 15 minutes of next hibernation time, so show prompt.
-            var timeUntilHibernation = nextHibernationTime.Subtract(DateTime.Now);
-            if (!hibernationPromptHasBeenShown && timeUntilHibernation <= HibernationPromptPeriod)
+            else
             {
-                ShowHibernationPrompt();
-            }
-
-            // It is time to hibernate!
-            if (nextHibernationTime <= DateTime.Now)
-            {
-                hibernationManager.Hibernate();
+                return;
             }
         }
 
@@ -151,6 +158,7 @@ namespace RemindSME.Desktop.ViewModels
             {
                 return;
             }
+
             socket = IO.Socket(ServerUrl, new IO.Options { AutoConnect = false });
             socket.On("connect", () =>
             {
@@ -158,7 +166,7 @@ namespace RemindSME.Desktop.ViewModels
                 socket.Emit("join", network, reminderManager.HeatingOptIn);
             });
             socket.On("network-count-change", arg => reminderManager.HandleNetworkCountChange(unchecked((int)(long)arg)));
-            socket.On("show-heating-notification",  reminderManager.ShowHeatingNotification);
+            socket.On("show-heating-notification", reminderManager.ShowHeatingNotification);
             socket.Connect();
         }
 
@@ -168,6 +176,7 @@ namespace RemindSME.Desktop.ViewModels
             {
                 return;
             }
+
             socket.Disconnect();
             socket = null;
         }

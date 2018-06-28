@@ -13,6 +13,7 @@ namespace RemindSME.Desktop.Helpers
     {
         TimeSpan DefaultHibernationTime { get; set; }
         DateTime NextHibernationTime { get; }
+        bool HibernationOptIn { get; set; }
 
         void Hibernate();
         void Snooze();
@@ -48,6 +49,16 @@ namespace RemindSME.Desktop.Helpers
                 Settings.Default.Save();
 
                 eventAggregator.PublishOnUIThread(new NextHibernationTimeUpdatedEvent());
+            }
+        }
+ 
+        public bool HibernationOptIn
+        {
+            get => Settings.Default.HibernationOptIn;
+            set
+            {
+                Settings.Default.HibernationOptIn = value;
+                Settings.Default.Save();
             }
         }
 

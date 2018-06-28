@@ -39,6 +39,24 @@ namespace RemindSME.Desktop.ViewModels
             }
         }
 
+        public bool HibernationOptIn
+        {
+            get => hibernationManager.HibernationOptIn;
+            set
+            {
+                if (value == hibernationManager.HibernationOptIn)
+                {
+                    return;
+                }
+
+                hibernationManager.HibernationOptIn = value;
+                NotifyOfPropertyChange(() => HibernationOptIn);
+                NotifyOfPropertyChange(() => HibernationOptionIsVisible);
+            }
+        }
+
+        public bool HibernationOptionIsVisible => hibernationManager.HibernationOptIn;
+
         public IEnumerable<string> HibernateHours => Enumerable.Range(0, 24).Reverse().Select(x => x.ToString("D2"));
 
         public string SelectedHibernateHour
