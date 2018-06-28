@@ -11,14 +11,17 @@ namespace RemindSME.Desktop.ViewModels
 {
     public class HubViewModel : PropertyChangedBase, IHandle<NextHibernationTimeUpdatedEvent>
     {
+        private readonly IActionTracker actionTracker;
         private readonly IHibernationManager hibernationManager;
         private readonly IReminderManager reminderManager;
 
         public HubViewModel(
+            IActionTracker actionTracker,
             IEventAggregator eventAggregator,
             IHibernationManager hibernationManager,
             IReminderManager reminderManager)
         {
+            this.actionTracker = actionTracker;
             this.hibernationManager = hibernationManager;
             this.reminderManager = reminderManager;
 
@@ -35,6 +38,7 @@ namespace RemindSME.Desktop.ViewModels
                     return;
                 }
 
+                actionTracker.Log($"User opted {(value ? "in to" : "out of")} heating notifications.");
                 reminderManager.HeatingOptIn = value;
                 NotifyOfPropertyChange(() => HeatingOptIn);
             }
@@ -57,6 +61,7 @@ namespace RemindSME.Desktop.ViewModels
                     return;
                 }
 
+                actionTracker.Log($"User set hibernation time to {time}.");
                 hibernationManager.DefaultHibernationTime = time;
                 NotifyOfPropertyChange(() => SelectedHibernateHour);
             }
@@ -79,6 +84,7 @@ namespace RemindSME.Desktop.ViewModels
                     return;
                 }
 
+                actionTracker.Log($"User set hibernation time to {time}.");
                 hibernationManager.DefaultHibernationTime = time;
                 NotifyOfPropertyChange(() => SelectedHibernateMinute);
             }

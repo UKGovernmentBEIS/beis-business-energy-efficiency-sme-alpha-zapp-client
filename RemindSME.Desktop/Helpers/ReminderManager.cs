@@ -11,7 +11,7 @@ namespace RemindSME.Desktop.Helpers
         bool HeatingOptIn { get; set; }
         void HandleNetworkCountChange(int count);
         void MaybeShowLastManNotification();
-        void ShowHeatingNotification();
+        void ShowHeatingNotificationIfOptedIn();
     }
 
     public class ReminderManager : IReminderManager
@@ -19,6 +19,7 @@ namespace RemindSME.Desktop.Helpers
         private const int LastManThreshold = 3;
         private static readonly TimeSpan LastManMinimumTime = new TimeSpan(17, 00, 00);
 
+        private readonly IActionTracker actionTracker;
         private readonly INotificationManager notificationManager;
 
         // Don't show last man notification twice on the same day.
@@ -26,8 +27,9 @@ namespace RemindSME.Desktop.Helpers
 
         private int networkCount;
 
-        public ReminderManager(INotificationManager notificationManager)
+        public ReminderManager(IActionTracker actionTracker, INotificationManager notificationManager)
         {
+            this.actionTracker = actionTracker;
             this.notificationManager = notificationManager;
         }
 
@@ -58,7 +60,7 @@ namespace RemindSME.Desktop.Helpers
             }
         }
 
-        public void ShowHeatingNotification()
+        public void ShowHeatingNotificationIfOptedIn()
         {
             if (!HeatingOptIn)
             {
@@ -82,10 +84,13 @@ namespace RemindSME.Desktop.Helpers
 
         private void ShowNotification(string title, string message)
         {
+            actionTracker.Log($"Displayed '{title}' notification.");
+
             var model = IoC.Get<NotificationViewModel>();
             model.Title = title;
             model.Message = message;
-            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
+            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2),
+                onClose: () => actionTracker.Log($"User dismissed '{title}' notification."));
         }
     }
 }
