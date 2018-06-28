@@ -17,7 +17,7 @@ namespace RemindSME.Desktop
 
         protected override void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<NotificationManager>().As<INotificationManager>().SingleInstance();
         }
 
