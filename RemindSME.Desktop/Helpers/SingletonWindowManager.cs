@@ -6,7 +6,7 @@ namespace RemindSME.Desktop.Helpers
 {
     public interface ISingletonWindowManager
     {
-        void OpenOrFocusSingletonWindow<TView, TViewModel>();
+        void OpenOrActivateSingletonWindow<TView, TViewModel>();
     }
 
     public class SingletonWindowManager : ISingletonWindowManager
@@ -18,23 +18,30 @@ namespace RemindSME.Desktop.Helpers
             this.windowManager = windowManager;
         }
 
-        public void OpenOrFocusSingletonWindow<TView, TViewModel>()
+        public void OpenOrActivateSingletonWindow<TView, TViewModel>()
         {
-            var existingWindow = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window is TView);
-
-            if (existingWindow != null)
-            {
-                if (existingWindow.WindowState == WindowState.Minimized)
-                {
-                    existingWindow.WindowState = WindowState.Normal;
-                }
-                existingWindow.Activate();
-            }
-            else
+            if (!ActivateExistingWindow<TView>())
             {
                 var viewModel = IoC.Get<TViewModel>();
                 windowManager.ShowWindow(viewModel);
+                ActivateExistingWindow<TView>();
             }
+        }
+
+        private bool ActivateExistingWindow<TView>()
+        {
+            var existingWindow = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window is TView);
+            if (existingWindow == null)
+            {
+                return false;
+            }
+
+            if (existingWindow.WindowState == WindowState.Minimized)
+            {
+                existingWindow.WindowState = WindowState.Normal;
+            }
+            existingWindow.Activate();
+            return true;
         }
     }
 }

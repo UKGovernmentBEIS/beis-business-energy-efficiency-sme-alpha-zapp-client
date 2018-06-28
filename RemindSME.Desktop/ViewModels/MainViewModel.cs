@@ -55,7 +55,7 @@ namespace RemindSME.Desktop.ViewModels
 
         public void OpenHubWindow()
         {
-            singletonWindowManager.OpenOrFocusSingletonWindow<HubView, HubViewModel>();
+            singletonWindowManager.OpenOrActivateSingletonWindow<HubView, HubViewModel>();
         }
 
         public void Quit()
