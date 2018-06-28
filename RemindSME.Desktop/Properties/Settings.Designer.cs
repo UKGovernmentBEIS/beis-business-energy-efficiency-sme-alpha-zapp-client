@@ -70,5 +70,17 @@ namespace RemindSME.Desktop.Properties {
                 this["DefaultHibernationTime"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool HibernationOptIn {
+            get {
+                return ((bool)(this["HibernationOptIn"]));
+            }
+            set {
+                this["HibernationOptIn"] = value;
+            }
+        }
     }
 }
