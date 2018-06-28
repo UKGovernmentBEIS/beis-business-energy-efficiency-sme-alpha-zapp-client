@@ -57,6 +57,11 @@
                        TextWrapping="Wrap"
                        Width="400"
                        HorizontalAlignment="Left"/>
+            <TextBlock x:Name="Configuration"
+                       Margin="5,10,0,0"
+                       TextWrapping="Wrap"
+                       Width="400"
+                       HorizontalAlignment="Left"/>
         </StackPanel>
     </StackPanel>
 </Window>

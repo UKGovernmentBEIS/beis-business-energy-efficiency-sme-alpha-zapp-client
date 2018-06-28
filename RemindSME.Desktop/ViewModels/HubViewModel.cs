@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using Caliburn.Micro;
@@ -84,6 +85,8 @@ namespace RemindSME.Desktop.ViewModels
         }
 
         public string NextHibernationTime => $"Next scheduled hibernation: {hibernationManager.NextHibernationTime:f}";
+
+        public string Configuration => ConfigurationManager.AppSettings["Configuration"];
 
         public void Handle(NextHibernationTimeUpdatedEvent message)
         {

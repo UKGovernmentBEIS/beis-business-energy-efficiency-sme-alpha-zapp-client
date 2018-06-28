@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,9 +14,22 @@ namespace RemindSME.Desktop.Helpers
         Task UpdateAndRestart();
     }
 
+    public class DummyAppUpdateManager : IAppUpdateManager
+    {
+        public Task<bool> CheckForUpdate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAndRestart()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class AppUpdateManager : IAppUpdateManager
     {
-        private const string UpdateUrl = "https://reminds-me-server.herokuapp.com/Releases";
+        private static readonly string UpdateUrl = ConfigurationManager.AppSettings["UpdateUrl"];
 
         public async Task<bool> CheckForUpdate()
         {

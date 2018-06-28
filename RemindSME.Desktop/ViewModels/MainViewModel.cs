@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
@@ -17,7 +18,7 @@ namespace RemindSME.Desktop.ViewModels
 {
     public class MainViewModel : PropertyChangedBase, IHandle<NextHibernationTimeUpdatedEvent>
     {
-        private const string ServerUrl = "http://localhost:5000";
+        private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
 
         private readonly IHibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
@@ -50,7 +51,7 @@ namespace RemindSME.Desktop.ViewModels
             timer.Tick += Timer_Tick_Hibernation;
             timer.Start();
 
-            var updateTimer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(5) };
+            var updateTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
             updateTimer.Tick += UpdateTimer_TickAsync;
             updateTimer.Start();
 
