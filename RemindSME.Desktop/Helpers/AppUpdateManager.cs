@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Win32;
 using RemindSME.Desktop.Views;
 using Squirrel;
 
@@ -26,9 +27,45 @@ namespace RemindSME.Desktop.Helpers
         public void SetupInstallerEventHandlers()
         {
             SquirrelAwareApp.HandleEvents(
-                onInitialInstall: v => updateManager.CreateShortcutForThisExe(),
-                onAppUpdate: v => updateManager.CreateShortcutForThisExe(),
-                onAppUninstall: v => updateManager.RemoveShortcutForThisExe());
+                onInitialInstall: version => InstallActions(),
+                onAppUpdate: version => InstallActions(),
+                onAppUninstall: version => UninstallActions());
+        }
+
+        private void InstallActions()
+        {
+            updateManager.CreateShortcutForThisExe();
+            CreateRegistryEntryToLaunchOnStartup();
+        }
+
+        private void UninstallActions()
+        {
+            updateManager.RemoveShortcutForThisExe();
+            RemoveRegistryEntryToLaunchOnStartup();
+        }
+
+        private static void CreateRegistryEntryToLaunchOnStartup()
+        {
+            var startupKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
+            if (startupKey != null)
+            {
+                var appName = AppInfo.Title;
+                var executablePath = AppInfo.Location;
+
+                startupKey.SetValue(appName, executablePath);
+                startupKey.Close();
+            }
+        }
+
+        private static void RemoveRegistryEntryToLaunchOnStartup()
+        {
+            var startupKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
+            if (startupKey != null)
+            {
+                var appName = AppInfo.Title;
+                startupKey.DeleteValue(appName);
+                startupKey.Close();
+            }
         }
 
         public async Task<bool> CheckForUpdate()

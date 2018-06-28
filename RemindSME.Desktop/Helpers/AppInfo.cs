@@ -26,5 +26,7 @@ namespace RemindSME.Desktop.Helpers
                     : null;
             }
         }
+
+        public static string Location => Assembly.GetExecutingAssembly().Location;
     }
 }
