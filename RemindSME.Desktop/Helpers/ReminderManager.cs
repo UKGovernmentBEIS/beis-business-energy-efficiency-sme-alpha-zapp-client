@@ -11,7 +11,7 @@ namespace RemindSME.Desktop.Helpers
         bool HeatingOptIn { get; set; }
         void HandleNetworkCountChange(int count);
         void MaybeShowLastManNotification();
-        void ShowHeatingNotificationIfOptedIn();
+        void ShowHeatingNotificationIfOptedIn(string title, string message);
     }
 
     public class ReminderManager : IReminderManager
@@ -60,13 +60,15 @@ namespace RemindSME.Desktop.Helpers
             }
         }
 
-        public void ShowHeatingNotificationIfOptedIn()
+        public void ShowHeatingNotificationIfOptedIn(string title, string message)
         {
             if (!HeatingOptIn)
             {
                 return;
             }
-            ShowNotification("It's hot!", "Have you checked your AC settings?");
+            title = title ?? "It's hot!";
+            message = message ?? "Have you checked your AC settings?";
+            ShowNotification(title, message);
         }
 
         private void ShowLastManNotification()

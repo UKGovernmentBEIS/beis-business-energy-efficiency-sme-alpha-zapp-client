@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using Notifications.Wpf;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
+using RemindSME.Desktop.Helpers.Listeners;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Views;
 using Squirrel;
@@ -140,8 +141,8 @@ namespace RemindSME.Desktop.ViewModels
         private void Connect()
         {
             var socket = socketManager.Connect();
-            socket.On("network-count-change", arg => reminderManager.HandleNetworkCountChange(unchecked((int)(long)arg)));
-            socket.On("show-heating-notification", reminderManager.ShowHeatingNotificationIfOptedIn);
+            socket.On("network-count-change", new NetworkCountChangeListener(reminderManager));
+            socket.On("heating-notification", new HeatingNotificationListener(reminderManager));
         }
 
         private void Disconnect()
