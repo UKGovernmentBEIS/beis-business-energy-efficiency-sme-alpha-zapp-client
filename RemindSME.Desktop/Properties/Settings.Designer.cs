@@ -58,10 +58,10 @@ namespace RemindSME.Desktop.Properties {
                 this["LightingOptIn"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool HibernationOptIn {
             get {
                 return ((bool)(this["HibernationOptIn"]));
@@ -82,7 +82,7 @@ namespace RemindSME.Desktop.Properties {
                 this["DefaultHibernationTime"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
