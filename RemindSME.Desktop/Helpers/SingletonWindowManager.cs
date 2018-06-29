@@ -7,6 +7,7 @@ namespace RemindSME.Desktop.Helpers
     public interface ISingletonWindowManager
     {
         void OpenOrActivateSingletonWindow<TView, TViewModel>();
+        void OpenOrActivateSingletonDialog<TView, TViewModel>();
     }
 
     public class SingletonWindowManager : ISingletonWindowManager
@@ -24,6 +25,16 @@ namespace RemindSME.Desktop.Helpers
             {
                 var viewModel = IoC.Get<TViewModel>();
                 windowManager.ShowWindow(viewModel);
+                ActivateExistingWindow<TView>();
+            }
+        }
+
+        public void OpenOrActivateSingletonDialog<TView, TViewModel>()
+        {
+            if (!ActivateExistingWindow<TView>())
+            {
+                var viewModel = IoC.Get<TViewModel>();
+                windowManager.ShowDialog(viewModel);
                 ActivateExistingWindow<TView>();
             }
         }
