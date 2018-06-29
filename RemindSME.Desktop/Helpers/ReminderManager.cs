@@ -3,6 +3,7 @@ using Caliburn.Micro;
 using Notifications.Wpf;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.ViewModels;
+using static RemindSME.Desktop.Properties.Resources;
 
 namespace RemindSME.Desktop.Helpers
 {
@@ -10,19 +11,22 @@ namespace RemindSME.Desktop.Helpers
     {
         bool HeatingOptIn { get; set; }
         void HandleNetworkCountChange(int count);
-        void MaybeShowLastManNotification();
         void ShowHeatingNotificationIfOptedIn(string title, string message);
+        void MaybeShowTimeDependentNotifications();
     }
 
     public class ReminderManager : IReminderManager
     {
         private const int LastManThreshold = 3;
+
+        private static readonly TimeSpan FirstLoginMinimumTime = new TimeSpan(06, 00, 00);
+        private static readonly TimeSpan FirstLoginMaximumTime = new TimeSpan(11, 00, 00);
         private static readonly TimeSpan LastManMinimumTime = new TimeSpan(17, 00, 00);
 
         private readonly IActionTracker actionTracker;
         private readonly INotificationManager notificationManager;
 
-        // Don't show last man notification twice on the same day.
+        private DateTime? mostRecentFirstLoginHeatingNotification;
         private DateTime? mostRecentLastManNotification;
 
         private int networkCount;
@@ -48,18 +52,6 @@ namespace RemindSME.Desktop.Helpers
             networkCount = count;
         }
 
-        public void MaybeShowLastManNotification()
-        {
-            var lateEnough = DateTime.Now.TimeOfDay >= LastManMinimumTime;
-            var fewEnoughPeople = networkCount <= LastManThreshold;
-            var noNotificationYetToday = !HasSeenLastManNotificationToday();
-
-            if (lateEnough && fewEnoughPeople && noNotificationYetToday)
-            {
-                ShowLastManNotification();
-            }
-        }
-
         public void ShowHeatingNotificationIfOptedIn(string title, string message)
         {
             if (!HeatingOptIn)
@@ -71,17 +63,54 @@ namespace RemindSME.Desktop.Helpers
             ShowNotification(title, message);
         }
 
+        public void MaybeShowTimeDependentNotifications()
+        {
+            MaybeShowFirstLoginHeatingNotification();
+            MaybeShowLastManNotification();
+        }
+
+        private void MaybeShowFirstLoginHeatingNotification()
+        {
+            if (!HeatingOptIn)
+            {
+                return;
+            }
+
+            var time = DateTime.Now.TimeOfDay;
+            var notTooEarly = time >= FirstLoginMinimumTime;
+            var earlyEnough = time <= FirstLoginMaximumTime;
+            var noNotificationYetToday = mostRecentFirstLoginHeatingNotification?.Date != DateTime.Today;
+
+            if (earlyEnough && notTooEarly && noNotificationYetToday)
+            {
+                ShowFirstLoginHeatingNotification();
+            }
+        }
+
+        private void MaybeShowLastManNotification()
+        {
+            var lateEnough = DateTime.Now.TimeOfDay >= LastManMinimumTime;
+            var fewEnoughPeople = networkCount <= LastManThreshold;
+            var noNotificationYetToday = mostRecentLastManNotification?.Date != DateTime.Today;
+
+            if (lateEnough && fewEnoughPeople && noNotificationYetToday)
+            {
+                ShowLastManNotification();
+            }
+        }
+
+        private void ShowFirstLoginHeatingNotification()
+        {
+            mostRecentFirstLoginHeatingNotification = DateTime.Now;
+            ShowNotification(FirstLoginHeatingNotificationTitle, FirstLoginHeatingNotificationMessage);
+        }
+
         private void ShowLastManNotification()
         {
             const string title = "Staying a bit later?";
             const string message = "Don't forget to switch off the lights and heating if you're the last one out tonight!";
             mostRecentLastManNotification = DateTime.Now;
             ShowNotification(title, message);
-        }
-
-        private bool HasSeenLastManNotificationToday()
-        {
-            return mostRecentLastManNotification?.Date == DateTime.Today;
         }
 
         private void ShowNotification(string title, string message)
@@ -91,7 +120,7 @@ namespace RemindSME.Desktop.Helpers
             var model = IoC.Get<NotificationViewModel>();
             model.Title = title;
             model.Message = message;
-            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2),
+            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(12),
                 onClose: () => actionTracker.Log($"User dismissed '{title}' notification."));
         }
     }

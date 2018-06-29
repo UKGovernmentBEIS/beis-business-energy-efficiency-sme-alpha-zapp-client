@@ -85,7 +85,7 @@ namespace RemindSME.Desktop.ViewModels
 
         private void Timer_Tick_Reminders(object sender, EventArgs e)
         {
-            reminderManager.MaybeShowLastManNotification();
+            reminderManager.MaybeShowTimeDependentNotifications();
         }
 
         private void Timer_Tick_Hibernation(object sender, EventArgs e)
