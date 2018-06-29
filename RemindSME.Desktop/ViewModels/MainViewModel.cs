@@ -55,7 +55,7 @@ namespace RemindSME.Desktop.ViewModels
             updateTimer.Tick += UpdateTimer_TickAsync;
             updateTimer.Start();
 
-            SquirrelAwareApp.HandleEvents(onFirstRun: OpenHubWindow);
+            SquirrelAwareApp.HandleEvents(onFirstRun: OpenWelcomeWindow);
 
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
             Connect();
@@ -64,6 +64,11 @@ namespace RemindSME.Desktop.ViewModels
         public void Handle(NextHibernationTimeUpdatedEvent e)
         {
             hibernationPromptHasBeenShown = false;
+        }
+
+        public void OpenWelcomeWindow()
+        {
+            singletonWindowManager.OpenOrActivateSingletonWindow<WelcomeView, WelcomeViewModel>();
         }
 
         public void OpenHubWindow(string userAction)

@@ -74,7 +74,7 @@ namespace RemindSME.Desktop.Helpers
 
             if (Debugger.IsAttached)
             {
-                MessageBox.Show("Hibernate", "RemindS ME",
+                MessageBox.Show("Hibernate", "Zapp",
                     MessageBoxButton.OK,
                     MessageBoxImage.None,
                     MessageBoxResult.OK,

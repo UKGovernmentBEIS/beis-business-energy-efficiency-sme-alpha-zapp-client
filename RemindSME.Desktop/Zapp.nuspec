@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>RemindSME</id>
+    <id>Zapp</id>
     <!-- version will be replaced by MSBuild -->
     <version>0.0.0.0</version>
-    <title>RemindSME</title>
-    <description>RemindSME app.</description>
+    <title>Zapp</title>
+    <description>BEIS Zapp</description>
     <authors>Softwire</authors>
-    <iconUrl>https://reminds-me-server.herokuapp.com/Releases/AppIcon.ico</iconUrl>
+    <iconUrl>https://www.beis-zapp.com/Releases/AppIcon.ico</iconUrl>
     <dependencies />
   </metadata>
   <files>

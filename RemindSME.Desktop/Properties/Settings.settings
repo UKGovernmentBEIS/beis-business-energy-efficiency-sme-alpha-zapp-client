@@ -11,14 +11,17 @@
     <Setting Name="LightingOptIn" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="HibernationOptIn" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
     <Setting Name="DefaultHibernationTime" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">18:15:00</Value>
     </Setting>
+    <Setting Name="DisplaySettingExplanations" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
     <Setting Name="Pseudonym" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="HibernationOptIn" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -32,11 +32,13 @@ namespace RemindSME.Desktop.Helpers
     {
         private readonly IUpdateManager updateManager;
         private readonly IRegistryManager registryManager;
+        private readonly IAppConfigurationManager configurationManager;
 
-        public AppUpdateManager(IUpdateManager updateManager, IRegistryManager registryManager)
+        public AppUpdateManager(IUpdateManager updateManager, IRegistryManager registryManager, IAppConfigurationManager configurationManager)
         {
             this.updateManager = updateManager;
             this.registryManager = registryManager;
+            this.configurationManager = configurationManager;
 
             SquirrelAwareApp.HandleEvents(
                 onInitialInstall: version => PerformInstallActions(),
@@ -48,6 +50,7 @@ namespace RemindSME.Desktop.Helpers
         {
             updateManager.CreateShortcutForThisExe();
             registryManager.CreateEntryToLaunchOnStartup();
+            configurationManager.RestoreSettings();
         }
 
         private void PerformUninstallActions()
@@ -64,6 +67,7 @@ namespace RemindSME.Desktop.Helpers
 
         public async Task UpdateAndRestart()
         {
+            configurationManager.BackupSettings();
             await updateManager.UpdateApp();
             RestartWhenAllWindowsClosed();
         }

@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>RemindSME.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=4.2.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.2.0\lib\net45\Autofac.dll</HintPath>
@@ -186,6 +189,7 @@
     <Compile Include="Events\NextHibernationTimeUpdatedEvent.cs" />
     <Compile Include="Helpers\IActionTracker.cs" />
     <Compile Include="Helpers\AppInfo.cs" />
+    <Compile Include="Helpers\AppConfigurationManager.cs" />
     <Compile Include="Helpers\AppUpdateManager.cs" />
     <Compile Include="Helpers\HibernationManager.cs" />
     <Compile Include="Helpers\HibernationSettings.cs" />
@@ -215,6 +219,7 @@
     <Compile Include="ViewModels\HibernationPromptViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\WelcomeViewModel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -258,6 +263,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\WelcomeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="RemindSME.ico" />
@@ -272,7 +281,7 @@
       <SquirrelExe Include="..\packages\Squirrel.Windows.*\tools\squirrel.exe" />
     </ItemGroup>
     <PropertyGroup>
-      <PackageName>RemindSME</PackageName>
+      <PackageName>Zapp</PackageName>
       <ReleaseDir>..\Releases\</ReleaseDir>
       <SquirrelParams>--no-msi</SquirrelParams>
       <SemVerNumber>$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3))</SemVerNumber>
