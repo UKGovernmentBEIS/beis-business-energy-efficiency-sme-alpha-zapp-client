@@ -11,14 +11,16 @@ namespace RemindSME.Desktop.Helpers
         void RestoreSettings();
     }
 
-    public class AppAppConfigurationManager : IAppConfigurationManager
+    public class AppConfigurationManager : IAppConfigurationManager
     {
-        private static string SettingsFilePath => System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
-        private static string BackupFilePath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\..\\backup.config";
+        private static readonly string SettingsFilePath = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+        private static readonly string BackupFilePath = Path.Combine(
+            Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName,
+            "backup.config");
 
         private readonly IActionTracker actionTracker;
 
-        public AppAppConfigurationManager(IActionTracker actionTracker)
+        public AppConfigurationManager(IActionTracker actionTracker)
         {
             this.actionTracker = actionTracker;
         }
@@ -42,28 +44,12 @@ namespace RemindSME.Desktop.Helpers
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(destFile));
-            }
-            catch (Exception)
-            {
-                actionTracker.Log("ERROR: Failed to locate settings file folder during restore.");
-            }
-
-            try
-            {
                 File.Copy(sourceFile, destFile, true);
-            }
-            catch (Exception)
-            {
-                actionTracker.Log("ERROR: Failed to copy backup settings file during restore.");
-            }
-
-            try
-            {
                 File.Delete(sourceFile);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                actionTracker.Log("ERROR: Failed to delete backup settings file during restore.");
+                actionTracker.Log($"Error occurred while restoring settings: {e.Message}");
             }
         }
     }
