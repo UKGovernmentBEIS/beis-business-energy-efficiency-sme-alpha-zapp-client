@@ -122,7 +122,7 @@
                        TextWrapping="Wrap"
                        FontWeight="Bold"
                        HorizontalAlignment="Left"/>
-            <TextBlock x:Name="Configuration"
+            <TextBlock x:Name="AppVersion"
                        Margin="0,20,0,0"
                        Foreground="#BBBBBB" />
         </StackPanel>

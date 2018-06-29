@@ -130,7 +130,7 @@ namespace RemindSME.Desktop.ViewModels
             }
         } 
 
-        public string Configuration => ConfigurationManager.AppSettings["Configuration"];
+        public string AppVersion => $"Current version: {AppInfo.Version} ({ConfigurationManager.AppSettings["Configuration"]})";
 
         public void Handle(NextHibernationTimeUpdatedEvent message)
         {
