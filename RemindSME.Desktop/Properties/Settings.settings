@@ -14,6 +14,9 @@
     <Setting Name="DefaultHibernationTime" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">18:15:00</Value>
     </Setting>
+    <Setting Name="Pseudonym" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
     <Setting Name="HibernationOptIn" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>

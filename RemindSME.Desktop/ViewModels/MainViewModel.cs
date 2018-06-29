@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Configuration;
-using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
 using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Net;
 using Notifications.Wpf;
-using Quobject.SocketIoClientDotNet.Client;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
@@ -19,31 +15,33 @@ namespace RemindSME.Desktop.ViewModels
 {
     public class MainViewModel : PropertyChangedBase, IHandle<NextHibernationTimeUpdatedEvent>
     {
-        private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
-
+        private readonly IActionTracker actionTracker;
         private readonly IHibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
         private readonly IReminderManager reminderManager;
         private readonly ISingletonWindowManager singletonWindowManager;
+        private readonly ISocketManager socketManager;
         private readonly IAppUpdateManager updateManager;
 
         private bool hibernationPromptHasBeenShown;
 
-        private Socket socket;
-
         public MainViewModel(
+            IActionTracker actionTracker,
+            IAppUpdateManager updateManager,
             IEventAggregator eventAggregator,
             IHibernationManager hibernationManager,
             INotificationManager notificationManager,
             IReminderManager reminderManager,
-            IAppUpdateManager updateManager,
-            ISingletonWindowManager singletonWindowManager)
+            ISingletonWindowManager singletonWindowManager,
+            ISocketManager socketManager)
         {
+            this.actionTracker = actionTracker;
             this.hibernationManager = hibernationManager;
             this.notificationManager = notificationManager;
             this.reminderManager = reminderManager;
             this.updateManager = updateManager;
             this.singletonWindowManager = singletonWindowManager;
+            this.socketManager = socketManager;
 
             eventAggregator.Subscribe(this);
 
@@ -62,9 +60,15 @@ namespace RemindSME.Desktop.ViewModels
             Connect();
         }
 
-        public void Handle(NextHibernationTimeUpdatedEvent message)
+        public void Handle(NextHibernationTimeUpdatedEvent e)
         {
             hibernationPromptHasBeenShown = false;
+        }
+
+        public void OpenHubWindow(string userAction)
+        {
+            actionTracker.Log($"User opened Hub window via taskbar {userAction}.");
+            OpenHubWindow();
         }
 
         public void OpenHubWindow()
@@ -74,6 +78,7 @@ namespace RemindSME.Desktop.ViewModels
 
         public void Quit()
         {
+            actionTracker.Log("User quit the app via taskbar menu click.");
             Application.Current.Shutdown();
         }
 
@@ -113,6 +118,7 @@ namespace RemindSME.Desktop.ViewModels
 
         private void ShowHibernationPrompt()
         {
+            actionTracker.Log("Showed hibernation prompt.");
             hibernationPromptHasBeenShown = true;
             var model = IoC.Get<HibernationPromptViewModel>();
             notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
@@ -131,6 +137,18 @@ namespace RemindSME.Desktop.ViewModels
             }
         }
 
+        private void Connect()
+        {
+            var socket = socketManager.Connect();
+            socket.On("network-count-change", arg => reminderManager.HandleNetworkCountChange(unchecked((int)(long)arg)));
+            socket.On("show-heating-notification", reminderManager.ShowHeatingNotificationIfOptedIn);
+        }
+
+        private void Disconnect()
+        {
+            socketManager.Disconnect();
+        }
+
         private async void UpdateTimer_TickAsync(object sender, EventArgs e)
         {
             var updateIsAvailable = await updateManager.CheckForUpdate();
@@ -138,35 +156,6 @@ namespace RemindSME.Desktop.ViewModels
             {
                 await updateManager.UpdateAndRestart();
             }
-        }
-
-        private void Connect()
-        {
-            if (socket != null)
-            {
-                return;
-            }
-
-            socket = IO.Socket(ServerUrl, new IO.Options { AutoConnect = false });
-            socket.On("connect", () =>
-            {
-                var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
-                socket.Emit("join", network, reminderManager.HeatingOptIn);
-            });
-            socket.On("network-count-change", arg => reminderManager.HandleNetworkCountChange(unchecked((int)(long)arg)));
-            socket.On("show-heating-notification", reminderManager.ShowHeatingNotification);
-            socket.Connect();
-        }
-
-        private void Disconnect()
-        {
-            if (socket == null)
-            {
-                return;
-            }
-
-            socket.Disconnect();
-            socket = null;
         }
     }
 }

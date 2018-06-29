@@ -39,6 +39,9 @@
     <Reference Include="Autofac, Version=4.2.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.2.0\lib\net45\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Bogus, Version=22.1.4.0, Culture=neutral, PublicKeyToken=fa1bb3f3f218129a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bogus.22.1.4\lib\net40\Bogus.dll</HintPath>
+    </Reference>
     <Reference Include="Caliburn.Micro, Version=3.2.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.Core.3.2.0\lib\net45\Caliburn.Micro.dll</HintPath>
     </Reference>
@@ -181,11 +184,13 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Events\NextHibernationTimeUpdatedEvent.cs" />
+    <Compile Include="Helpers\IActionTracker.cs" />
     <Compile Include="Helpers\HibernationSettings.cs" />
     <Compile Include="Helpers\ReminderManager.cs" />
     <Compile Include="Helpers\SingletonWindowManager.cs" />
     <Compile Include="Helpers\HibernationManager.cs" />
     <Compile Include="Helpers\AppUpdateManager.cs" />
+    <Compile Include="Helpers\SocketManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
