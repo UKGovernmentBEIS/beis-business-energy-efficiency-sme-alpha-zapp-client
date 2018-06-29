@@ -193,6 +193,7 @@
     <Compile Include="Helpers\Listeners\HeatingNotificationListener.cs" />
     <Compile Include="Helpers\Listeners\NetworkCountChangeListener.cs" />
     <Compile Include="Helpers\Listeners\SocketListener.cs" />
+    <Compile Include="Helpers\NetworkFinder.cs" />
     <Compile Include="Helpers\RegistryManager.cs" />
     <Compile Include="Helpers\ReminderManager.cs" />
     <Compile Include="Helpers\SingletonWindowManager.cs" />

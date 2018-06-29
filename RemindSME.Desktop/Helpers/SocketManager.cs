@@ -16,10 +16,15 @@ namespace RemindSME.Desktop.Helpers
     public class SocketManager : ISocketManager, IActionTracker
     {
         private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
-
         private readonly Queue<string> trackingMessages = new Queue<string>();
+        private readonly INetworkFinder networkFinder;
 
         private Socket socket;
+
+        public SocketManager(INetworkFinder networkFinder)
+        {
+            this.networkFinder = networkFinder;
+        }
 
         public void Log(string message)
         {
@@ -42,7 +47,7 @@ namespace RemindSME.Desktop.Helpers
             socket = IO.Socket(ServerUrl, new IO.Options { AutoConnect = false });
             socket.On("connect", () =>
             {
-                var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
+                var network = networkFinder.GetNetworkAddress();
                 socket.Emit("join", network, Settings.Default.Pseudonym);
                 while (trackingMessages.Any())
                 {
