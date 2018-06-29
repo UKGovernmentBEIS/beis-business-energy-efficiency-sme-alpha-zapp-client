@@ -61,20 +61,56 @@ namespace RemindSME.Desktop.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Perhaps consider opening the windows instead of puttin on the air conditioning?.
+        /// </summary>
+        internal static string Notification_HeatingDefault_Message {
+            get {
+                return ResourceManager.GetString("Notification_HeatingDefault_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It&apos;s hot today!.
+        /// </summary>
+        internal static string Notification_HeatingDefault_Title {
+            get {
+                return ResourceManager.GetString("Notification_HeatingDefault_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please make sure the heating / air conditioning is set to a sensible temperature for today&apos;s weather. If it&apos;s hot, can you open windows instead?.
         /// </summary>
-        internal static string FirstLoginHeatingNotificationMessage {
+        internal static string Notification_HeatingFirstLogin_Message {
             get {
-                return ResourceManager.GetString("FirstLoginHeatingNotificationMessage", resourceCulture);
+                return ResourceManager.GetString("Notification_HeatingFirstLogin_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Good morning!.
         /// </summary>
-        internal static string FirstLoginHeatingNotificationTitle {
+        internal static string Notification_HeatingFirstLogin_Title {
             get {
-                return ResourceManager.GetString("FirstLoginHeatingNotificationTitle", resourceCulture);
+                return ResourceManager.GetString("Notification_HeatingFirstLogin_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string Notification_LastOut_Message {
+            get {
+                return ResourceManager.GetString("Notification_LastOut_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string Notification_LastOut_Title {
+            get {
+                return ResourceManager.GetString("Notification_LastOut_Title", resourceCulture);
             }
         }
     }

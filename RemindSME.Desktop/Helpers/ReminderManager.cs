@@ -58,9 +58,7 @@ namespace RemindSME.Desktop.Helpers
             {
                 return;
             }
-            title = title ?? "It's hot!";
-            message = message ?? "Have you checked your AC settings?";
-            ShowNotification(title, message);
+            ShowNotification(title ?? Notification_HeatingDefault_Title, message ?? Notification_HeatingDefault_Message);
         }
 
         public void MaybeShowTimeDependentNotifications()
@@ -75,7 +73,6 @@ namespace RemindSME.Desktop.Helpers
             {
                 return;
             }
-
             var time = DateTime.Now.TimeOfDay;
             var notTooEarly = time >= FirstLoginMinimumTime;
             var earlyEnough = time <= FirstLoginMaximumTime;
@@ -102,15 +99,13 @@ namespace RemindSME.Desktop.Helpers
         private void ShowFirstLoginHeatingNotification()
         {
             mostRecentFirstLoginHeatingNotification = DateTime.Now;
-            ShowNotification(FirstLoginHeatingNotificationTitle, FirstLoginHeatingNotificationMessage);
+            ShowNotification(Notification_HeatingFirstLogin_Title, Notification_HeatingFirstLogin_Message);
         }
 
         private void ShowLastOutNotification()
         {
-            const string title = "Staying a bit later?";
-            const string message = "Don't forget to switch off the lights and heating if you're the last one out tonight!";
             mostRecentLastOutNotification = DateTime.Now;
-            ShowNotification(title, message);
+            ShowNotification(Notification_LastOut_Title, Notification_LastOut_Message);
         }
 
         private void ShowNotification(string title, string message)
