@@ -5,7 +5,7 @@
         Icon="../RemindSME.ico"
         Title="Welcome to Zapp"
         SizeToContent="Height"
-        Width="480">
+        Width="635">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="FontSize" Value="14"/>
@@ -36,7 +36,7 @@
     </Window.Resources>
     <StackPanel>
         <Label
-            Content="Welcome to Zapp"
+            Content="Welcome to Zapp!"
             Height="75"
             Background="#EF103C"
             HorizontalContentAlignment="Center"
@@ -45,20 +45,24 @@
             FontWeight="Bold"
             Foreground="White"/>
         <StackPanel Margin="40">
-            <TextBlock
-                Text="Thanks for installing Zapp!"
-                FontSize="24"
-                Margin="0, 0, 0, 0" />
-            <TextBlock Text="This app will help you to stay energy-conscious by reminding you to do things like hibernate your computer when you leave each day, and adjust the heating when it's hot outside."
-                       Margin="0, 10, 0, 0"
+            <TextBlock Text="This app helps you avoid wasting energy in the workplace."
+                       Margin="0, 0, 0, 0"
                        TextWrapping="Wrap"
                        HorizontalAlignment="Left"/>
-            <TextBlock Text="Let's get started by setting up your preferences. You'll be able to opt in or out of certain types of notification and choose a time to be prompted to hibernate your machine when you usually leave for the day."
-                       Margin="0, 10, 0, 0"
+            <TextBlock Text="It'll hibernate your machine when you're done working for the day, so it doesn't use energy overnight. (Hibernation keeps your work open so you won't lose your place when it wakes up the next morning.)"
+                       Margin="0, 15, 0, 0"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Left"/>
+            <TextBlock Text="It'll also remind the last people in the building to switch off lights, machines and heating when they leave, and it'll prompt volunteers to adjust the heating to make sure it's running efficiently given the outside temperature."
+                       Margin="0, 15, 0, 0"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Left"/>
+            <TextBlock Text="Let's get started by setting up your preferences."
+                       Margin="0, 15, 0, 0"
                        TextWrapping="Wrap"
                        HorizontalAlignment="Left"/>
             <Button Content="Next" cal:Message.Attach="OpenHubWindow"
-                    Margin="0, 20, 0, 0"
+                    Margin="0, 35, 0, 0"
                     HorizontalAlignment="Left"/>
         </StackPanel>
     </StackPanel>
