@@ -2,9 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:cal="http://www.caliburnproject.org"
-        xmlns:controls="clr-namespace:Notifications.Wpf.Controls;assembly=Notifications.Wpf"
         Icon="../RemindSME.ico"
-        Title="Welcome to RemindS ME"
+        Title="Welcome to Zapp"
         SizeToContent="Height"
         Width="480">
     <Window.Resources>
@@ -37,7 +36,7 @@
     </Window.Resources>
     <StackPanel>
         <Label
-            Content="Welcome to RemindS ME"
+            Content="Welcome to Zapp"
             Height="75"
             Background="#EF103C"
             HorizontalContentAlignment="Center"
@@ -46,19 +45,17 @@
             FontWeight="Bold"
             Foreground="White"/>
         <StackPanel Margin="40">
-            <Label
-                Content="Thanks for installing the RemindS ME app!"
-                FontSize="20"
+            <TextBlock
+                Text="Thanks for installing Zapp!"
+                FontSize="24"
                 Margin="0, 0, 0, 0" />
             <TextBlock Text="This app will help you to stay energy-conscious by reminding you to do things like hibernate your computer when you leave each day, and adjust the heating when it's hot outside."
                        Margin="0, 10, 0, 0"
                        TextWrapping="Wrap"
-                       Width="400"
                        HorizontalAlignment="Left"/>
             <TextBlock Text="Let's get started by setting up your preferences. You'll be able to opt in or out of certain types of notification and choose a time to be prompted to hibernate your machine when you usually leave for the day."
                        Margin="0, 10, 0, 0"
                        TextWrapping="Wrap"
-                       Width="400"
                        HorizontalAlignment="Left"/>
             <Button Content="Next" cal:Message.Attach="OpenHubWindow"
                     Margin="0, 20, 0, 0"

@@ -4,7 +4,7 @@
         xmlns:cal="http://www.caliburnproject.org"
         cal:Message.Attach="[Event Closing] = [Action OnClose]"
         Icon="../RemindSME.ico"
-        Title="RemindS Me Custom Hub"
+        Title="Zapp Hub"
         SizeToContent="Height"
         MinHeight="550"
         Width="750">
@@ -26,7 +26,7 @@
     </Window.Resources>
     <StackPanel>
         <Label
-            Content="RemindS ME Custom Hub"
+            Content="Zapp Hub"
             Height="75"
             Background="#EF103C"
             VerticalContentAlignment="Center"

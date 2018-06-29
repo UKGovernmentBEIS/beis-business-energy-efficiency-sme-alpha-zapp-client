@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>RemindSME.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=4.2.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.2.0\lib\net45\Autofac.dll</HintPath>
@@ -277,7 +280,7 @@
       <SquirrelExe Include="..\packages\Squirrel.Windows.*\tools\squirrel.exe" />
     </ItemGroup>
     <PropertyGroup>
-      <PackageName>RemindSME</PackageName>
+      <PackageName>Zapp</PackageName>
       <ReleaseDir>..\Releases\</ReleaseDir>
       <SquirrelParams>--no-msi</SquirrelParams>
       <SemVerNumber>$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3))</SemVerNumber>
