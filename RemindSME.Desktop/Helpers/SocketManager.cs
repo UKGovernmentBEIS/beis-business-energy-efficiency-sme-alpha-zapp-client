@@ -17,6 +17,8 @@ namespace RemindSME.Desktop.Helpers
     {
         private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
 
+        private readonly Queue<string> trackingMessages = new Queue<string>();
+
         private Socket socket;
 
         public void Log(string message)
@@ -24,6 +26,10 @@ namespace RemindSME.Desktop.Helpers
             if (socket != null)
             {
                 socket.Emit("track", message);
+            }
+            else
+            {
+                trackingMessages.Enqueue(message);
             }
         }
 
@@ -38,6 +44,10 @@ namespace RemindSME.Desktop.Helpers
             {
                 var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
                 socket.Emit("join", network, Settings.Default.Pseudonym);
+                while (trackingMessages.Any())
+                {
+                    Log(trackingMessages.Dequeue());
+                }
             });
             socket.Connect();
             return socket;
