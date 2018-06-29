@@ -14,10 +14,9 @@ namespace RemindSME.Desktop.ViewModels
             this.hibernationManager = hibernationManager;
         }
 
-        public void DoItNow()
+        public void Sure()
         {
-            actionTracker.Log("User clicked 'Do it now!' on hibernation prompt.");
-            hibernationManager.Hibernate();
+            actionTracker.Log("User clicked 'Sure!' on hibernation prompt.");
         }
 
         public void Snooze()

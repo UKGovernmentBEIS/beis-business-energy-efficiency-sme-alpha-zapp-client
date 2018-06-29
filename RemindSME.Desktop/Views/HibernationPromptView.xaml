@@ -48,7 +48,7 @@
                 <DockPanel LastChildFill="False" DockPanel.Dock="Bottom" Margin="0,8,0,0">
                     <Button Content="Not tonight" DockPanel.Dock="Right" cal:Message.Attach="NotTonight" controls:Notification.CloseOnClick="True" Margin="5,0,0,0"/>
                     <Button Content="Snooze" DockPanel.Dock="Right" cal:Message.Attach="Snooze" controls:Notification.CloseOnClick="True" Margin="5,0,0,0"/>
-                    <Button Content="Do it now!" DockPanel.Dock="Right" cal:Message.Attach="DoItNow" controls:Notification.CloseOnClick="True" Margin="5,0,0,0"/>
+                    <Button Content="Sure!" DockPanel.Dock="Right" cal:Message.Attach="Sure" controls:Notification.CloseOnClick="True" Margin="5,0,0,0"/>
                 </DockPanel>
                 <TextBlock Text="You've scheduled your computer to hibernate within the next 15 minutes" TextWrapping="Wrap" Opacity=".8" Margin="0,8,0,0"/>
             </DockPanel>
