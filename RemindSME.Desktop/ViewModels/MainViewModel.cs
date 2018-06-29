@@ -65,15 +65,20 @@ namespace RemindSME.Desktop.ViewModels
             hibernationPromptHasBeenShown = false;
         }
 
+        public void OpenHubWindow(string userAction)
+        {
+            actionTracker.Log($"User opened Hub window via taskbar {userAction}.");
+            OpenHubWindow();
+        }
+
         public void OpenHubWindow()
         {
-            actionTracker.Log("User opened Hub from taskbar icon click.");
             singletonWindowManager.OpenOrActivateSingletonWindow<HubView, HubViewModel>();
         }
 
         public void Quit()
         {
-            actionTracker.Log("User quit the app from taskbar icon click.");
+            actionTracker.Log("User quit the app via taskbar menu click.");
             Application.Current.Shutdown();
         }
 

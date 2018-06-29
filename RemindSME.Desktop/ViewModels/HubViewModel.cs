@@ -122,5 +122,10 @@ namespace RemindSME.Desktop.ViewModels
         {
             Process.Start(new ProcessStartInfo(url));
         }
+
+        public void OnClose()
+        {
+            actionTracker.Log("User closed Hub window.");
+        }
     }
 }
