@@ -35,7 +35,6 @@ namespace RemindSME.Desktop
         protected override void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<SocketManager>().As<ISocketManager>().SingleInstance().WithParameter(new NamedParameter("pseudonym", Settings.Default.Pseudonym));
 
             builder.RegisterType<NotificationManager>().As<INotificationManager>().SingleInstance();
 

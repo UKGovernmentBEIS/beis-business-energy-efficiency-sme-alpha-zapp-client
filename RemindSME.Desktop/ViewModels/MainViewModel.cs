@@ -57,7 +57,7 @@ namespace RemindSME.Desktop.ViewModels
             SquirrelAwareApp.HandleEvents(onFirstRun: OpenHubWindow);
 
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
-            socketManager.Connect();
+            Connect();
         }
 
         public void Handle(NextHibernationTimeUpdatedEvent e)
@@ -124,12 +124,24 @@ namespace RemindSME.Desktop.ViewModels
             switch (e.Reason)
             {
                 case SessionSwitchReason.SessionUnlock:
-                    socketManager.Connect();
+                    Connect();
                     break;
                 case SessionSwitchReason.SessionLock:
-                    socketManager.Disconnect();
+                    Disconnect();
                     break;
             }
+        }
+
+        private void Connect()
+        {
+            var socket = socketManager.Connect();
+            socket.On("network-count-change", arg => reminderManager.HandleNetworkCountChange(unchecked((int)(long)arg)));
+            socket.On("show-heating-notification", reminderManager.ShowHeatingNotificationIfOptedIn);
+        }
+
+        private void Disconnect()
+        {
+            socketManager.Disconnect();
         }
 
         private async void UpdateTimer_TickAsync(object sender, EventArgs e)

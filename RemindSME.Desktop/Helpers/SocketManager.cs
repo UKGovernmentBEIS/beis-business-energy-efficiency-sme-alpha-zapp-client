@@ -1,50 +1,46 @@
-﻿using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
-using Caliburn.Micro;
 using Microsoft.WindowsAPICodePack.Net;
 using Quobject.SocketIoClientDotNet.Client;
-using RemindSME.Desktop.Events;
+using RemindSME.Desktop.Properties;
 
 namespace RemindSME.Desktop.Helpers
 {
     public interface ISocketManager
     {
-        void Connect();
+        Socket Connect();
         void Disconnect();
     }
 
-    public class SocketManager : ISocketManager, IHandle<TrackActionEvent>
+    public class SocketManager : ISocketManager, IActionTracker
     {
         private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
 
-        private readonly IReminderManager reminderManager;
-        private readonly string pseudonym;
-
         private Socket socket;
 
-        public SocketManager(IEventAggregator eventAggregator, IReminderManager reminderManager, string pseudonym)
-        {
-            this.reminderManager = reminderManager;
-            this.pseudonym = pseudonym;
-
-            eventAggregator.Subscribe(this);
-        }
-
-        public void Connect()
+        public void Log(string message)
         {
             if (socket != null)
             {
-                return;
+                socket.Emit("track", message);
+            }
+        }
+
+        public Socket Connect()
+        {
+            if (socket != null)
+            {
+                return socket;
             }
             socket = IO.Socket(ServerUrl, new IO.Options { AutoConnect = false });
             socket.On("connect", () =>
             {
                 var network = NetworkListManager.GetNetworks(NetworkConnectivityLevels.Connected).FirstOrDefault()?.Name;
-                socket.Emit("join", network, pseudonym, reminderManager.HeatingOptIn);
+                socket.Emit("join", network, Settings.Default.Pseudonym);
             });
-            socket.On("network-count-change", arg => reminderManager.HandleNetworkCountChange(unchecked((int)(long)arg)));
-            socket.On("show-heating-notification", reminderManager.ShowHeatingNotificationIfOptedIn);
             socket.Connect();
+            return socket;
         }
 
         public void Disconnect()
@@ -55,11 +51,6 @@ namespace RemindSME.Desktop.Helpers
             }
             socket.Disconnect();
             socket = null;
-        }
-
-        public void Handle(TrackActionEvent e)
-        {
-            socket?.Emit("track", e.Message);
         }
     }
 }

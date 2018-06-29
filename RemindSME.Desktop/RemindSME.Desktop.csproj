@@ -184,8 +184,7 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Events\NextHibernationTimeUpdatedEvent.cs" />
-    <Compile Include="Events\TrackActionEvent.cs" />
-    <Compile Include="Helpers\ActionTracker.cs" />
+    <Compile Include="Helpers\IActionTracker.cs" />
     <Compile Include="Helpers\HibernationSettings.cs" />
     <Compile Include="Helpers\ReminderManager.cs" />
     <Compile Include="Helpers\SingletonWindowManager.cs" />
