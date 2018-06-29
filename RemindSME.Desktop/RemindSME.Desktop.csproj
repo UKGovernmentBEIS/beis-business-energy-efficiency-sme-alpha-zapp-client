@@ -237,9 +237,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="RemindSME.nuspec">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="Zapp.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
