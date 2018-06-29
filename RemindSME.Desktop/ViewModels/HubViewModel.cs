@@ -113,21 +113,19 @@ namespace RemindSME.Desktop.ViewModels
         {
             get
             {
-                var message = "";
-                if (hibernationManager.NextHibernationTime.Date == DateTime.Today)
-                {
-                    message = $"Next scheduled hibernation: Today at {hibernationManager.NextHibernationTime:t}";
-                }
-                else if (hibernationManager.NextHibernationTime.Date == DateTime.Today.AddDays(1))
-                {
-                    message = $"Next scheduled hibernation: Tomorrow at {hibernationManager.NextHibernationTime:t}";
-                }
-                else
-                {
-                    return $"Next scheduled hibernation: {hibernationManager.NextHibernationTime:f}";
-                }
+                var nextHibernationTime = hibernationManager.NextHibernationTime;
+                var time = nextHibernationTime.ToShortTimeString();
+                var date = nextHibernationTime.Date;
 
-                return message;
+                if (date == DateTime.Today)
+                {
+                   return $"Today at {time}";
+                }
+                if (date == DateTime.Today.AddDays(1))
+                {
+                    return $"Tomorrow at {time}";
+                }
+                return $"{date:d} at {time}";
             }
         } 
 
