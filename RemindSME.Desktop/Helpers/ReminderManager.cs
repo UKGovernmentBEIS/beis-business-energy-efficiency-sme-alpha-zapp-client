@@ -17,17 +17,17 @@ namespace RemindSME.Desktop.Helpers
 
     public class ReminderManager : IReminderManager
     {
-        private const int LastManThreshold = 3;
+        private const int LastOutThreshold = 3;
 
         private static readonly TimeSpan FirstLoginMinimumTime = new TimeSpan(06, 00, 00);
         private static readonly TimeSpan FirstLoginMaximumTime = new TimeSpan(11, 00, 00);
-        private static readonly TimeSpan LastManMinimumTime = new TimeSpan(17, 00, 00);
+        private static readonly TimeSpan LastOutMinimumTime = new TimeSpan(17, 00, 00);
 
         private readonly IActionTracker actionTracker;
         private readonly INotificationManager notificationManager;
 
         private DateTime? mostRecentFirstLoginHeatingNotification;
-        private DateTime? mostRecentLastManNotification;
+        private DateTime? mostRecentLastOutNotification;
 
         private int networkCount;
 
@@ -66,7 +66,7 @@ namespace RemindSME.Desktop.Helpers
         public void MaybeShowTimeDependentNotifications()
         {
             MaybeShowFirstLoginHeatingNotification();
-            MaybeShowLastManNotification();
+            MaybeShowLastOutNotification();
         }
 
         private void MaybeShowFirstLoginHeatingNotification()
@@ -87,15 +87,15 @@ namespace RemindSME.Desktop.Helpers
             }
         }
 
-        private void MaybeShowLastManNotification()
+        private void MaybeShowLastOutNotification()
         {
-            var lateEnough = DateTime.Now.TimeOfDay >= LastManMinimumTime;
-            var fewEnoughPeople = networkCount <= LastManThreshold;
-            var noNotificationYetToday = mostRecentLastManNotification?.Date != DateTime.Today;
+            var lateEnough = DateTime.Now.TimeOfDay >= LastOutMinimumTime;
+            var fewEnoughPeople = networkCount <= LastOutThreshold;
+            var noNotificationYetToday = mostRecentLastOutNotification?.Date != DateTime.Today;
 
             if (lateEnough && fewEnoughPeople && noNotificationYetToday)
             {
-                ShowLastManNotification();
+                ShowLastOutNotification();
             }
         }
 
@@ -105,11 +105,11 @@ namespace RemindSME.Desktop.Helpers
             ShowNotification(FirstLoginHeatingNotificationTitle, FirstLoginHeatingNotificationMessage);
         }
 
-        private void ShowLastManNotification()
+        private void ShowLastOutNotification()
         {
             const string title = "Staying a bit later?";
             const string message = "Don't forget to switch off the lights and heating if you're the last one out tonight!";
-            mostRecentLastManNotification = DateTime.Now;
+            mostRecentLastOutNotification = DateTime.Now;
             ShowNotification(title, message);
         }
 
