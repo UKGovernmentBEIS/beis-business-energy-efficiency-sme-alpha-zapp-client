@@ -5,35 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Notifications.Wpf.Controls;assembly=Notifications.Wpf"
              mc:Ignorable="d"
-             Foreground="White"
-             d:DesignHeight="120" d:DesignWidth="300">
-    <UserControl.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="#22FFFFFF"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Label Content="{TemplateBinding Content}"
-                           Foreground="{TemplateBinding Foreground}"
-                           Background="{TemplateBinding Background}"
-                           HorizontalContentAlignment="Center"
-                           MinWidth="80"/>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#11FFFFFF"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#11000000"/>
-                                <Setter Property="Foreground" Value="#FFAAAAAA"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
-    <Border Padding="12" MinHeight="20" Background="#EF103C">
+             d:DesignHeight="120" d:DesignWidth="300"
+             Style="{StaticResource NotificationStyle}">
+    <Border Style="{StaticResource NotificationBorderStyle}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -45,7 +19,7 @@
             <DockPanel Grid.Column="1">
                 <TextBlock DockPanel.Dock="Top" Text="{Binding Title}" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
                 <DockPanel LastChildFill="False" DockPanel.Dock="Bottom" Margin="0,8,0,0">
-                    <Button Content="OK" DockPanel.Dock="Right" controls:Notification.CloseOnClick="True"/>
+                    <Button Content="OK" DockPanel.Dock="Right" controls:Notification.CloseOnClick="True" Style="{StaticResource NotificationButtonStyle}"/>
                 </DockPanel>
                 <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Opacity=".8" Margin="0,8,0,0"/>
             </DockPanel>
