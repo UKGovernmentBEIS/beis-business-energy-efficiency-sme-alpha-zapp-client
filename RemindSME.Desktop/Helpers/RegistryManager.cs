@@ -11,23 +11,26 @@ namespace RemindSME.Desktop.Helpers
     public class RegistryManager : IRegistryManager
     {
         private const string StartupKeyName = @"Software\Microsoft\Windows\CurrentVersion\Run";
+        private const string AppKeyName = "BEIS Zapp";
+
+        private static RegistryKey StartupRegistryKey => Registry.CurrentUser.OpenSubKey(StartupKeyName, true);
 
         public void CreateEntryToLaunchOnStartup()
         {
-            var startupKey = Registry.CurrentUser.OpenSubKey(StartupKeyName, true);
+            var startupKey = StartupRegistryKey;
             if (startupKey != null)
             {
-                startupKey.SetValue(AppInfo.Title, AppInfo.Location);
+                startupKey.SetValue(AppKeyName, AppInfo.Location);
                 startupKey.Close();
             }
         }
 
         public void RemoveEntryToLaunchOnStartup()
         {
-            var startupKey = Registry.CurrentUser.OpenSubKey(StartupKeyName, true);
+            var startupKey = StartupRegistryKey;
             if (startupKey != null)
             {
-                startupKey.DeleteValue(AppInfo.Title);
+                startupKey.DeleteValue(AppKeyName);
                 startupKey.Close();
             }
         }
