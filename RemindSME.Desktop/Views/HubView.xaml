@@ -24,107 +24,123 @@
         </Style>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
     </Window.Resources>
-    <StackPanel>
-        <Label
-            Content="Zapp Hub"
-            Height="75"
-            Background="#EF103C"
-            VerticalContentAlignment="Center"
-            FontSize="30"
-            FontWeight="Bold"
-            Foreground="White"
-            Padding="40, 0 0, 0" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="60" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0" Grid.Row="0">
+            <Label Content="Zapp Hub"
+                   Height="75"
+                   Background="#EF103C"
+                   VerticalContentAlignment="Center"
+                   FontSize="30"
+                   FontWeight="Bold"
+                   Foreground="White"
+                   Padding="40, 0 0, 0" />
+            <StackPanel Margin="40, 40, 40, 20">
+                <Grid>
+                    <Grid.Resources>
+                        <Style TargetType="{x:Type CheckBox}">
+                            <Style.Resources>
+                                <Style TargetType="{x:Type Path}">
+                                    <Setter Property="FlowDirection" Value="LeftToRight" />
+                                </Style>
+                            </Style.Resources>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
 
-        <StackPanel Margin="40">
-            <TextBlock
-                Text="Choose settings that suit you:"
-                FontSize="24"
-                Margin="0 0 0 30" />
-            <Grid>
-                <Grid.Resources>
-                    <Style TargetType="{x:Type CheckBox}">
-                        <Style.Resources>
-                            <Style TargetType="{x:Type Path}">
-                                <Setter Property="FlowDirection" Value="LeftToRight" />
-                            </Style>
-                        </Style.Resources>
-                    </Style>
-                </Grid.Resources>
+                    <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Vertical">
+                        <TextBlock Text="Hibernating overnight" FontWeight="Bold" />
+                        <TextBlock Text="Avoid waste by letting your computer hibernate overnight. You won't lose your place, as it'll wake up in the morning exactly where you left off."
+                                   Visibility="{Binding ShowExplanationText, Converter={StaticResource BoolToVisibility}}"
+                                   Margin="0, 10, 0, 0" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Hibernate my machine overnight" />
+                    <CheckBox Grid.Column="1" Grid.Row="1" x:Name="HibernationOptIn"
+                          VerticalContentAlignment="Center"
+                          VerticalAlignment="Center" />
+                </Grid>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="1*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="50" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="50" />
-                </Grid.RowDefinitions>
-                <TextBlock Text="Heating notifications help to remind you to turn off the heating in hot weather, or at the end of the week. You can choose whether you want to receive these notifications."
-                           Visibility="{Binding ShowExplanationText, Converter={StaticResource BoolToVisibility}}"
-                           Grid.ColumnSpan="2"
-                           Foreground="#EF103C"
-                           TextWrapping="Wrap"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Left"/>
-                <TextBlock Grid.Row="1" Text="Volunteer to monitor heating controls" />
-                <CheckBox Grid.Column="1" Grid.Row="1" x:Name="HeatingOptIn" VerticalContentAlignment="Center"
-                          VerticalAlignment="Center" />
-                <TextBlock Grid.Row="2" Text="Hibernating your computer when you leave for the day can really help to cut down on energy consumption. You can set a time to automatically hibernate your computer when you leave (don't worry, you'll be given the option to snooze or cancel at the time), or you can choose to opt out."
-                           Visibility="{Binding ShowExplanationText, Converter={StaticResource BoolToVisibility}}"
-                           Grid.ColumnSpan="2"
-                           Foreground="#EF103C"
-                           TextWrapping="Wrap"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Left"/>
-                <TextBlock Grid.Row="3" Text="Hibernate my machine overnight" />
-                <CheckBox Grid.Column="1" Grid.Row="3" x:Name="HibernationOptIn" VerticalContentAlignment="Center"
-                          VerticalAlignment="Center" />
-            </Grid>
-            <Grid Name="HibernationOptionIsVisible">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="1*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50" />
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="50" />
-                </Grid.RowDefinitions>
-                <TextBlock Text="What time should I hibernate your machine each day?"
+                <Grid Name="HibernationOptionIsVisible">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="50" />
+                        <RowDefinition Height="40" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="What time should I hibernate your machine each day?"
                            VerticalAlignment="Center"
                            Margin="0,0,0,0" />
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <ComboBox x:Name="HibernateHours"
+                    <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
+                        <ComboBox x:Name="HibernateHours"
                               Width="50px"
                               VerticalAlignment="Center" />
-                    <TextBlock Text=":"
+                        <TextBlock Text=":"
                                VerticalAlignment="Center"
                                Margin="5,0,5,3" />
-                    <ComboBox x:Name="HibernateMinutes"
+                        <ComboBox x:Name="HibernateMinutes"
                               Width="50px"
                               VerticalAlignment="Center" />
-                </StackPanel>
-                <TextBlock Grid.Row="1" Text="e.g. 15 minutes after you normally leave work."
-                           Margin="0,0,0,25"
-                           FontSize="12"
-                           FontStyle="Italic" />
-                <StackPanel Grid.Row="2" Orientation="Horizontal">
-                    <TextBlock Text="Next scheduled hibernation: " />
-                    <TextBlock x:Name="NextHibernationTime" />
-                </StackPanel>
-            </Grid>
-            <TextBlock Text="You'll also be reminded to turn off the lights if you're working late and there aren't many people left in the office."
-                       Visibility="{Binding ShowExplanationText, Converter={StaticResource BoolToVisibility}}"
-                       Grid.ColumnSpan="2"
-                       Foreground="#EF103C"
-                       TextWrapping="Wrap"
-                       FontWeight="Bold"
-                       HorizontalAlignment="Left"/>
-            <TextBlock x:Name="AppVersion"
-                       Margin="0,20,0,0"
-                       Foreground="#BBBBBB" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+                               Text="e.g. 15 minutes after you normally leave work. You'll be able to snooze this if you're not quite ready to leave then, or cancel it altogether if you do need to leave it on overnight."
+                               FontStyle="Italic"
+                               FontSize="12"
+                               Margin="0, 0, 70, 0"/>
+                    <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal">
+                        <TextBlock Text="Next scheduled hibernation: " />
+                        <TextBlock x:Name="NextHibernationTime" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid>
+                    <Grid.Resources>
+                        <Style TargetType="{x:Type CheckBox}">
+                            <Style.Resources>
+                                <Style TargetType="{x:Type Path}">
+                                    <Setter Property="FlowDirection" Value="LeftToRight" />
+                                </Style>
+                            </Style.Resources>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Vertical" Margin="0, 40, 0, 0">
+                        <TextBlock Text="Heating and Air Conditioning" FontWeight="Bold" />
+                        <TextBlock Text="If you want to help more, opt in to heating notifications, which will remind you to keep the heating working efficiently."
+                                   Visibility="{Binding ShowExplanationText, Converter={StaticResource BoolToVisibility}}"
+                                   Margin="0 10 0 0"/>
+                    </StackPanel>
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Volunteer to monitor heating controls" />
+                    <CheckBox Grid.Column="1" Grid.Row="1" x:Name="HeatingOptIn"
+                          VerticalContentAlignment="Center"
+                          VerticalAlignment="Center" />
+                </Grid>
+            </StackPanel>
         </StackPanel>
-    </StackPanel>
+        <TextBlock Grid.Column="0" Grid.Row="1"
+                   x:Name="AppVersion"
+                   Text="Version: 0.0.0.0"
+                   Foreground="#BBBBBB"
+                   Margin="40, 0, 0, 40" />
+    </Grid>
 </Window>
