@@ -4,7 +4,22 @@
         xmlns:cal="http://www.caliburnproject.org"
         cal:Message.Attach="[Event Closing] = [Action OnClose]"
         Icon="../RemindSME.ico"
-        Title="RemindS Me Custom Hub" Height="500" Width="650">
+        Title="RemindS Me Custom Hub" Height="550" Width="750">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FlowDirection" Value="LeftToRight" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="FlowDirection" Value="RightToLeft" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
     <StackPanel>
         <Label
             Content="RemindS ME Custom Hub"
@@ -15,75 +30,75 @@
             FontWeight="Bold"
             Foreground="White"
             Padding="40, 0 0, 0" />
+
         <StackPanel Margin="40">
-            <Label
-                Content="Choose settings that suit you:"
-                FontSize="20"
-                Margin="0 0 0 20" />
-            <CheckBox x:Name="HeatingOptIn"
-                      FlowDirection="RightToLeft"
-                      VerticalAlignment="Center"
-                      HorizontalAlignment="Left"
-                      Margin="0,0,0,10">
-                <CheckBox.Resources>
-                    <Style TargetType="{x:Type Path}">
-                        <Setter Property="FlowDirection"
-                                Value="LeftToRight" />
+            <TextBlock
+                Text="Choose settings that suit you:"
+                FontSize="24"
+                Margin="0 0 0 30" />
+            <Grid>
+                <Grid.Resources>
+                    <Style TargetType="{x:Type CheckBox}">
+                        <Style.Resources>
+                            <Style TargetType="{x:Type Path}">
+                                <Setter Property="FlowDirection" Value="LeftToRight" />
+                            </Style>
+                        </Style.Resources>
                     </Style>
-                </CheckBox.Resources>
-                <Label Content="Opt-in for heating notifications"
-                       FlowDirection="LeftToRight"
-                       VerticalAlignment="Center"
-                       Margin="0,-5,0,0" />
-            </CheckBox>
-            <CheckBox x:Name="HibernationOptIn"
-                      FlowDirection="RightToLeft"
-                      VerticalAlignment="Center"
-                      HorizontalAlignment="Left"
-                      Margin="0,0,0,10">
-                <CheckBox.Resources>
-                    <Style TargetType="{x:Type Path}">
-                        <Setter Property="FlowDirection"
-                                Value="LeftToRight" />
-                    </Style>
-                </CheckBox.Resources>
-                <Label Content="Opt-in for automatic computer hibernation"
-                       FlowDirection="LeftToRight"
-                       VerticalAlignment="Center"
-                       Margin="0,-5,0,0" />
-            </CheckBox>
-            <StackPanel Name="HibernationOptionIsVisible">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="What time do you normally leave?"
-                               VerticalAlignment="Center"
-                               Margin="5,0,0,10" />
+                </Grid.Resources>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Volunteer to monitor heating controls" />
+                <CheckBox Grid.Column="1" x:Name="HeatingOptIn" VerticalContentAlignment="Center"
+                          VerticalAlignment="Center" />
+                <TextBlock Grid.Row="1" Text="Hibernate my machine overnight" />
+                <CheckBox Grid.Column="1" Grid.Row="1" x:Name="HibernationOptIn" VerticalContentAlignment="Center"
+                          VerticalAlignment="Center" />
+            </Grid>
+            <Grid Name="HibernationOptionIsVisible">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="What time should I hibernate your machine each day?"
+                           VerticalAlignment="Center"
+                           Margin="0,0,0,0" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+
                     <ComboBox x:Name="HibernateHours"
                               Width="50px"
-                              Margin="10,0,0,10" />
+                              VerticalAlignment="Center" />
                     <TextBlock Text=":"
                                VerticalAlignment="Center"
-                               Margin="5,0,5,10" />
+                               Margin="5,0,5,3" />
                     <ComboBox x:Name="HibernateMinutes"
                               Width="50px"
-                              Margin="0,0,0,10" />
+                              VerticalAlignment="Center" />
                 </StackPanel>
-                <TextBlock
-                    Text="If this is set to a time that has already past today or is within the next 15 minutes, the first scheduled hibernation will happen tomorrow."
-                    Margin="5,10,0,0"
-                    TextWrapping="Wrap"
-                    Width="400"
-                    HorizontalAlignment="Left" />
-                <TextBlock x:Name="NextHibernationTime"
-                           Margin="5,10,0,0"
-                           TextWrapping="Wrap"
-                           Width="400"
-                           HorizontalAlignment="Left" />
-                <TextBlock x:Name="Configuration"
-                           Margin="5,10,0,0"
-                           TextWrapping="Wrap"
-                           Width="400"
-                           HorizontalAlignment="Left"/>
-            </StackPanel>
+                <TextBlock Grid.Row="1" Text="e.g. 15 minutes after you normally leave work."
+                           Margin="0,0,0,25"
+                           FontSize="12"
+                           FontStyle="Italic" />
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                    <TextBlock Text="Next scheduled hibernation: " />
+                    <TextBlock x:Name="NextHibernationTime" />
+                </StackPanel>
+
+            </Grid>
+            <TextBlock x:Name="Configuration"
+                       Margin="0,10,0,0" />
         </StackPanel>
     </StackPanel>
 </Window>

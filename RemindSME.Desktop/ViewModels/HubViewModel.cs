@@ -109,7 +109,25 @@ namespace RemindSME.Desktop.ViewModels
             }
         }
 
-        public string NextHibernationTime => $"Next scheduled hibernation: {hibernationManager.NextHibernationTime:f}";
+        public string NextHibernationTime
+        {
+            get
+            {
+                var nextHibernationTime = hibernationManager.NextHibernationTime;
+                var time = nextHibernationTime.ToShortTimeString();
+                var date = nextHibernationTime.Date;
+
+                if (date == DateTime.Today)
+                {
+                   return $"Today at {time}";
+                }
+                if (date == DateTime.Today.AddDays(1))
+                {
+                    return $"Tomorrow at {time}";
+                }
+                return $"{date:d} at {time}";
+            }
+        } 
 
         public string Configuration => ConfigurationManager.AppSettings["Configuration"];
 

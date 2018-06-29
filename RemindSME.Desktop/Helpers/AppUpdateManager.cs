@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,15 +31,29 @@ namespace RemindSME.Desktop.Helpers
     public class AppUpdateManager : IAppUpdateManager, IDisposable
     {
         private readonly IUpdateManager updateManager;
+        private readonly IRegistryManager registryManager;
 
-        public AppUpdateManager(IUpdateManager updateManager)
+        public AppUpdateManager(IUpdateManager updateManager, IRegistryManager registryManager)
         {
             this.updateManager = updateManager;
+            this.registryManager = registryManager;
 
             SquirrelAwareApp.HandleEvents(
-                onInitialInstall: v => updateManager.CreateShortcutForThisExe(),
-                onAppUpdate: v => updateManager.CreateShortcutForThisExe(),
-                onAppUninstall: v => updateManager.RemoveShortcutForThisExe());
+                onInitialInstall: version => PerformInstallActions(),
+                onAppUpdate: version => PerformInstallActions(),
+                onAppUninstall: version => PerformUninstallActions());
+        }
+
+        private void PerformInstallActions()
+        {
+            updateManager.CreateShortcutForThisExe();
+            registryManager.CreateEntryToLaunchOnStartup();
+        }
+
+        private void PerformUninstallActions()
+        {
+            updateManager.RemoveShortcutForThisExe();
+            registryManager.RemoveEntryToLaunchOnStartup();
         }
 
         public async Task<bool> CheckForUpdate()
