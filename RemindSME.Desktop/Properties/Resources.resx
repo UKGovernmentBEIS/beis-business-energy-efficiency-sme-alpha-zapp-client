@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Notification_HeatingDefault_Message" xml:space="preserve">
-    <value>Perhaps consider opening the windows instead of puttin on the air conditioning?</value>
+    <value>Perhaps consider opening the windows instead of putting on the air conditioning?</value>
   </data>
   <data name="Notification_HeatingDefault_Title" xml:space="preserve">
     <value>It's hot today!</value>
@@ -130,9 +130,9 @@
     <value>Good morning!</value>
   </data>
   <data name="Notification_LastOut_Message" xml:space="preserve">
-    <value />
+    <value>Don't forget to switch off the lights and heating if you're the last one out tonight!</value>
   </data>
   <data name="Notification_LastOut_Title" xml:space="preserve">
-    <value />
+    <value>Staying a bit later?</value>
   </data>
 </root>

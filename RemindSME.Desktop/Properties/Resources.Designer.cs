@@ -61,7 +61,7 @@ namespace RemindSME.Desktop.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Perhaps consider opening the windows instead of puttin on the air conditioning?.
+        ///   Looks up a localized string similar to Perhaps consider opening the windows instead of putting on the air conditioning?.
         /// </summary>
         internal static string Notification_HeatingDefault_Message {
             get {
@@ -97,7 +97,7 @@ namespace RemindSME.Desktop.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Don&apos;t forget to switch off the lights and heating if you&apos;re the last one out tonight!.
         /// </summary>
         internal static string Notification_LastOut_Message {
             get {
@@ -106,7 +106,7 @@ namespace RemindSME.Desktop.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Staying a bit later?.
         /// </summary>
         internal static string Notification_LastOut_Title {
             get {
