@@ -15,11 +15,9 @@ namespace RemindSME.Desktop.ViewModels
             this.singletonWindowManager = singletonWindowManager;
         }
 
-        private Window Window => GetView() as Window;
-
         public void OpenHubWindow()
         {
-            Window.Close();
+            (GetView() as Window)?.Close();
 
             Settings.Default.DisplaySettingExplanations = true;
             Settings.Default.Save();
