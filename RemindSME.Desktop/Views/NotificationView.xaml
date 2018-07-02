@@ -18,9 +18,11 @@
             </ContentControl>
             <DockPanel Grid.Column="1">
                 <TextBlock DockPanel.Dock="Top" Text="{Binding Title}" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
-                <DockPanel LastChildFill="False" DockPanel.Dock="Bottom" Margin="0,8,0,0">
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
                     <Button Content="OK" DockPanel.Dock="Right" controls:Notification.CloseOnClick="True" Style="{StaticResource NotificationButtonStyle}"/>
-                </DockPanel>
+                </StackPanel>
+
                 <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Opacity=".8" Margin="0,8,0,0"/>
             </DockPanel>
         </Grid>
