@@ -97,7 +97,7 @@ namespace RemindSME.Desktop.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t forget to switch off the lights and heating if you&apos;re the last one out tonight!.
+        ///   Looks up a localized string similar to Don&apos;t forget to switch off the lights and heating / air conditioning if you&apos;re the last one out tonight!.
         /// </summary>
         internal static string Notification_LastOut_Message {
             get {

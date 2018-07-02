@@ -130,7 +130,7 @@
     <value>Good morning!</value>
   </data>
   <data name="Notification_LastOut_Message" xml:space="preserve">
-    <value>Don't forget to switch off the lights and heating if you're the last one out tonight!</value>
+    <value>Don't forget to switch off the lights and heating / air conditioning if you're the last one out tonight!</value>
   </data>
   <data name="Notification_LastOut_Title" xml:space="preserve">
     <value>Staying a bit later?</value>
