@@ -100,7 +100,7 @@ namespace RemindSME.Desktop.ViewModels
                 return;
             }
 
-            var nextHibernationTime = Settings.Default.NextHibernationTime;
+            var nextHibernationTime = hibernationManager.NextHibernationTime;
 
             // Next hibernation time is yesterday or earlier, so should be updated.
             if (nextHibernationTime.Date < DateTime.Today)
