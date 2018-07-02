@@ -24,8 +24,8 @@
 
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
                     <Button controls:Notification.CloseOnClick="True" Margin="5,0,0,0"
-                            Style="{StaticResource NotificationButtonStyle}" Content="Do it now!"
-                            cal:Message.Attach="DoItNow" />
+                            Style="{StaticResource NotificationButtonStyle}" Content="Sure!"
+                            cal:Message.Attach="Sure" />
                     <Button controls:Notification.CloseOnClick="True" Margin="5,0,0,0"
                             Style="{StaticResource NotificationButtonStyle}" Content="Snooze"
                             cal:Message.Attach="Snooze" />
