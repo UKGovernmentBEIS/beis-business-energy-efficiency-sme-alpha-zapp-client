@@ -15,6 +15,14 @@
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="Margin" Value="0 10 0 20" />
         </Style>
+        <Style x:Key="FaqBulletStyle" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="10 10 0 0" />
+        </Style>
+        <Style x:Key="FaqBulletTextStyle" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="10 10 0 0" />
+        </Style>
     </Window.Resources>
     <StackPanel>
         <Label
@@ -26,26 +34,42 @@
                 Style="{StaticResource FaqQuestionStyle}" />
             <TextBlock
                 Text="You'll receive notifications based on the preferences you set up in the Hub. You can change these at any time. There are three types of notification:"
-                Margin="0, 10, 0, 0"
+                Margin="0, 10, 0, 10"
                 TextWrapping="Wrap"
                 HorizontalAlignment="Left" />
-            <StackPanel>
+            <Grid Name="HibernationOptionIsVisible">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="10*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
                 <TextBlock
-                    Text="•	You'll receive a notification that your computer will hibernate at the time you chose in the hub; your computer will then hibernate automatically 15 minutes after this."
-                    Margin="10, 10, 0, 0"
-                    TextWrapping="Wrap"
-                    HorizontalAlignment="Left" />
+                    Text="•"
+                    Style="{StaticResource FaqBulletStyle}"
+                    Grid.Column="0" Grid.Row="0" />
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                           Text="You'll receive a notification that your computer will hibernate at the time you chose in the hub; your computer will then hibernate automatically 15 minutes after this."
+                           Style="{StaticResource FaqBulletTextStyle}" />
                 <TextBlock
-                    Text="•	If you're one of the last 3 people in the office, you'll receive a notification at the end of the day to remind you to turn out the lights and turn off the heating/air conditioning before leaving the office."
-                    Margin="10, 10, 0, 0"
-                    TextWrapping="Wrap"
-                    HorizontalAlignment="Left" />
+                    Text="•"
+                    Style="{StaticResource FaqBulletStyle}"
+                    Grid.Column="0" Grid.Row="1" />
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                           Text="If you're one of the last 3 people in the office, you'll receive a notification at the end of the day to remind you to turn out the lights and turn off the heating/air conditioning before leaving the office."
+                           Style="{StaticResource FaqBulletTextStyle}" />
                 <TextBlock
-                    Text="•	You can opt into notifications to adjust the heating/air conditioning during the day, and these will be sent to you based on changes to the temperature outside."
-                    Margin="10, 10, 0, 20"
-                    TextWrapping="Wrap"
-                    HorizontalAlignment="Left" />
-            </StackPanel>
+                    Text="•"
+                    Style="{StaticResource FaqBulletStyle}"
+                    Grid.Column="0" Grid.Row="2" />
+                <TextBlock Grid.Column="1" Grid.Row="2"
+                           Text="You can opt into notifications to adjust the heating/air conditioning during the day, and these will be sent to you based on changes to the temperature outside."
+                           Style="{StaticResource FaqBulletTextStyle}"
+                           Margin="10 10 0 20" />
+            </Grid>
             <TextBlock
                 Text="2. Can I stop my computer hibernating automatically?"
                 Style="{StaticResource FaqQuestionStyle}" />
