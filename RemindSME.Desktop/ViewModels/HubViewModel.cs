@@ -7,24 +7,28 @@ using Caliburn.Micro;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
+using RemindSME.Desktop.Views;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class HubViewModel : PropertyChangedBase, IHandle<NextHibernationTimeUpdatedEvent>
+    public class HubViewModel : Screen, IHandle<NextHibernationTimeUpdatedEvent>
     {
         private readonly IActionTracker actionTracker;
         private readonly IHibernationManager hibernationManager;
         private readonly IReminderManager reminderManager;
+        private readonly ISingletonWindowManager singletonWindowManager;
 
         public HubViewModel(
             IActionTracker actionTracker,
             IEventAggregator eventAggregator,
             IHibernationManager hibernationManager,
-            IReminderManager reminderManager)
+            IReminderManager reminderManager,
+            ISingletonWindowManager singletonWindowManager)
         {
             this.actionTracker = actionTracker;
             this.hibernationManager = hibernationManager;
             this.reminderManager = reminderManager;
+            this.singletonWindowManager = singletonWindowManager;
 
             eventAggregator.Subscribe(this);
         }
@@ -146,6 +150,12 @@ namespace RemindSME.Desktop.ViewModels
         {
             actionTracker.Log("User closed Hub window.");
             ShowExplanationText = false;
+        }
+
+        public void OpenFaqWindow()
+        {
+            TryClose();
+            singletonWindowManager.OpenOrActivateSingletonWindow<FaqView, FaqViewModel>();
         }
 
         public bool ShowExplanationText

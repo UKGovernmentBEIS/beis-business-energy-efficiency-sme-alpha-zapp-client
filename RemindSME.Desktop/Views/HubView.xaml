@@ -28,6 +28,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="60" />
+            <RowDefinition Height="60" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0">
             <Label Content="Zapp Hub"
@@ -142,5 +143,9 @@
                    Text="Version: 0.0.0.0"
                    Foreground="#BBBBBB"
                    Margin="40, 0, 0, 40" />
+        <Button Grid.Column="0" Grid.Row="2"
+            Content="FAQs" cal:Message.Attach="OpenFaqWindow"
+                Margin="40, 0, 40, 40"
+                HorizontalAlignment="Right"/>
     </Grid>
 </Window>
