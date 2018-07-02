@@ -154,7 +154,6 @@ namespace RemindSME.Desktop.ViewModels
 
         public void OpenFaqWindow()
         {
-            TryClose();
             singletonWindowManager.OpenOrActivateSingletonWindow<FaqView, FaqViewModel>();
         }
 

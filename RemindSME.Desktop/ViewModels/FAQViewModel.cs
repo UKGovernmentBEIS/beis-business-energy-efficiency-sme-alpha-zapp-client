@@ -1,28 +1,9 @@
-﻿using System.Windows;
-using Caliburn.Micro;
-using RemindSME.Desktop.Helpers;
-using RemindSME.Desktop.Properties;
-using RemindSME.Desktop.Views;
+﻿using Caliburn.Micro;
 
 namespace RemindSME.Desktop.ViewModels
 {
     public class FaqViewModel : ViewAware
     {
-        private readonly ISingletonWindowManager singletonWindowManager;
-
-        public FaqViewModel(ISingletonWindowManager singletonWindowManager)
-        {
-            this.singletonWindowManager = singletonWindowManager;
-        }
-
-        public void OpenHubWindow()
-        {
-            (GetView() as Window)?.Close();
-
-            Settings.Default.DisplaySettingExplanations = true;
-            Settings.Default.Save();
-
-            singletonWindowManager.OpenOrActivateSingletonWindow<HubView, HubViewModel>();
-        }
+        public FaqViewModel() { }
     }
 }
