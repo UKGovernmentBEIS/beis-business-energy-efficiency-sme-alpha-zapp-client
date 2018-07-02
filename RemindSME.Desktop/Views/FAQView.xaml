@@ -74,7 +74,7 @@
                 Text="2. Can I stop my computer hibernating automatically?"
                 Style="{StaticResource FaqQuestionStyle}" />
             <TextBlock
-                Text="Yes! We know there are some days you're working later, so when the notification comes up you can either snooze it, or disable it for that night."
+                Text="Yes! We know there are some days you're working later, so when the notification comes up you can either snooze it, or disable it for that night. You can also opt-out of hibernation entirely."
                 Style="{StaticResource FaqAnswerStyle}" />
             <TextBlock
                 Text="3. Why I am I receiving notifications?"
@@ -83,16 +83,16 @@
                 Text="Because your management team wants to reduce your company's energy bills. Changing behaviours in the office is a great first step to doing this!"
                 Style="{StaticResource FaqAnswerStyle}" />
             <TextBlock
-                Text="4.	What can I do to have a bigger impact on our energy bills?"
+                Text="4. What can I do to have a bigger impact on our energy bills?"
                 Style="{StaticResource FaqQuestionStyle}" />
             <TextBlock
                 Text="There are lots of other things offices can do to reduce their bills, look at the Carbon Trust website for more information."
                 Style="{StaticResource FaqAnswerStyle}" />
             <TextBlock
-                Text="5.	How do I uninstall Zapp?"
+                Text="5. How do I uninstall Zapp?"
                 Style="{StaticResource FaqQuestionStyle}" />
             <TextBlock
-                Text="We hope you don't, but if you really want to you can uninstall the app by right clicking on the Zapp icon in your system tray and choosing 'uninstall'."
+                Text="We hope you don't, but if you really want to you can uninstall the app via 'Add or remove programs' in your Control Panel."
                 Style="{StaticResource FaqAnswerStyle}" />
         </StackPanel>
     </StackPanel>
