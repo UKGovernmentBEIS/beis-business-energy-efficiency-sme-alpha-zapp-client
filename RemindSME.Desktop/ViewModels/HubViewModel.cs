@@ -7,24 +7,28 @@ using Caliburn.Micro;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
+using RemindSME.Desktop.Views;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class HubViewModel : PropertyChangedBase, IHandle<NextHibernationTimeUpdatedEvent>
+    public class HubViewModel : Screen, IHandle<NextHibernationTimeUpdatedEvent>
     {
         private readonly IActionTracker actionTracker;
         private readonly IHibernationManager hibernationManager;
         private readonly IReminderManager reminderManager;
+        private readonly ISingletonWindowManager singletonWindowManager;
 
         public HubViewModel(
             IActionTracker actionTracker,
             IEventAggregator eventAggregator,
             IHibernationManager hibernationManager,
-            IReminderManager reminderManager)
+            IReminderManager reminderManager,
+            ISingletonWindowManager singletonWindowManager)
         {
             this.actionTracker = actionTracker;
             this.hibernationManager = hibernationManager;
             this.reminderManager = reminderManager;
+            this.singletonWindowManager = singletonWindowManager;
 
             eventAggregator.Subscribe(this);
         }
@@ -148,6 +152,11 @@ namespace RemindSME.Desktop.ViewModels
             ShowExplanationText = false;
         }
 
+        public void OpenFaqWindow()
+        {
+            singletonWindowManager.OpenOrActivateSingletonWindow<FaqView, FaqViewModel>();
+        }
+
         public bool ShowExplanationText
         {
             get => Settings.Default.DisplaySettingExplanations;
@@ -156,6 +165,12 @@ namespace RemindSME.Desktop.ViewModels
                 Settings.Default.DisplaySettingExplanations = value;
                 Settings.Default.Save();
             }
+        }
+
+        public void CloseWindow()
+        {
+            actionTracker.Log("User dismissed Hub window by clicking OK button.");
+            TryClose();
         }
     }
 }

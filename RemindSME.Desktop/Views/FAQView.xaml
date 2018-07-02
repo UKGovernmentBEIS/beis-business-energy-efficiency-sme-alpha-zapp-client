@@ -1,0 +1,75 @@
+﻿<Window x:Class="RemindSME.Desktop.Views.FaqView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:cal="http://www.caliburnproject.org"
+        Icon="../RemindSME.ico"
+        Title="Welcome to Zapp"
+        SizeToContent="Height"
+        Width="635">
+    <Window.Resources>
+        <Style x:Key="FaqQuestionStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style x:Key="FaqAnswerStyle" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0 10 0 20" />
+        </Style>
+    </Window.Resources>
+    <StackPanel>
+        <Label
+            Content="Zapp FAQs"
+            Style="{StaticResource WindowHeaderLabelStyle}" />
+        <StackPanel Margin="40">
+            <TextBlock
+                Text="1. Which notifications will I receive from Zapp?"
+                Style="{StaticResource FaqQuestionStyle}" />
+            <TextBlock
+                Text="You'll receive notifications based on the preferences you set up in the Hub. You can change these at any time. There are three types of notification:"
+                Margin="0, 10, 0, 0"
+                TextWrapping="Wrap"
+                HorizontalAlignment="Left" />
+            <StackPanel>
+                <TextBlock
+                    Text="•	You'll receive a notification that your computer will hibernate at the time you chose in the hub; your computer will then hibernate automatically 15 minutes after this."
+                    Margin="10, 10, 0, 0"
+                    TextWrapping="Wrap"
+                    HorizontalAlignment="Left" />
+                <TextBlock
+                    Text="•	If you're one of the last 3 people in the office, you'll receive a notification at the end of the day to remind you to turn out the lights and turn off the heating/air conditioning before leaving the office."
+                    Margin="10, 10, 0, 0"
+                    TextWrapping="Wrap"
+                    HorizontalAlignment="Left" />
+                <TextBlock
+                    Text="•	You can opt into notifications to adjust the heating/air conditioning during the day, and these will be sent to you based on changes to the temperature outside."
+                    Margin="10, 10, 0, 20"
+                    TextWrapping="Wrap"
+                    HorizontalAlignment="Left" />
+            </StackPanel>
+            <TextBlock
+                Text="2. Can I stop my computer hibernating automatically?"
+                Style="{StaticResource FaqQuestionStyle}" />
+            <TextBlock
+                Text="Yes! We know there are some days you're working later, so when the notification comes up you can either snooze it, or disable it for that night."
+                Style="{StaticResource FaqAnswerStyle}" />
+            <TextBlock
+                Text="3. Why I am I receiving notifications?"
+                Style="{StaticResource FaqQuestionStyle}" />
+            <TextBlock
+                Text="Because your management team wants to reduce your company's energy bills. Changing behaviours in the office is a great first step to doing this!"
+                Style="{StaticResource FaqAnswerStyle}" />
+            <TextBlock
+                Text="4.	What can I do to have a bigger impact on our energy bills?"
+                Style="{StaticResource FaqQuestionStyle}" />
+            <TextBlock
+                Text="There are lots of other things offices can do to reduce their bills, look at the Carbon Trust website for more information."
+                Style="{StaticResource FaqAnswerStyle}" />
+            <TextBlock
+                Text="5.	How do I uninstall Zapp?"
+                Style="{StaticResource FaqQuestionStyle}" />
+            <TextBlock
+                Text="We hope you don't, but if you really want to you can uninstall the app by right clicking on the Zapp icon in your system tray and choosing 'uninstall'."
+                Style="{StaticResource FaqAnswerStyle}" />
+        </StackPanel>
+    </StackPanel>
+</Window>

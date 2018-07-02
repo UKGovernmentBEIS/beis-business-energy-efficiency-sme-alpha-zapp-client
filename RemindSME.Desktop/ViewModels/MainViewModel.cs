@@ -82,6 +82,12 @@ namespace RemindSME.Desktop.ViewModels
             singletonWindowManager.OpenOrActivateSingletonWindow<HubView, HubViewModel>();
         }
 
+        public void OpenFaqWindow()
+        {
+            actionTracker.Log($"User opened FAQ window.");
+            singletonWindowManager.OpenOrActivateSingletonWindow<FaqView, FaqViewModel>();
+        }
+
         public void Quit()
         {
             actionTracker.Log("User quit the app via taskbar menu click.");
