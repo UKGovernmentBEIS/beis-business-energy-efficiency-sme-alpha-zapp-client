@@ -32,13 +32,8 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0">
             <Label Content="Zapp Hub"
-                   Height="75"
-                   Background="#EF103C"
-                   VerticalContentAlignment="Center"
-                   FontSize="30"
-                   FontWeight="Bold"
-                   Foreground="White"
-                   Padding="40, 0 0, 0" />
+                   Style="{StaticResource WindowHeaderLabelStyle}"
+                   />
             <StackPanel Margin="40, 40, 40, 20">
                 <Grid>
                     <Grid.Resources>
@@ -146,18 +141,17 @@
                    Text="Version: 0.0.0.0"
                    Foreground="#BBBBBB"
                    Margin="40, 0, 0, 40" />
-        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right">
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Button
                 Content="FAQs" cal:Message.Attach="OpenFaqWindow"
-                Margin="40, 0, 40, 40"
-                Height="25"
-                Width="55" />
+                Style="{StaticResource WindowButtonStyle}"
+                Margin="0, 5, 20, 30"
+                VerticalContentAlignment="Top"/>
             <Button
-                Content="OK"
-                Margin="0, 0, 40, 40"
-                Height="25"
-                Width="55"
-                x:Name="CloseWindow" />
+                Content="OK" x:Name="CloseWindow"
+                Style="{StaticResource WindowButtonStyle}"
+                Margin="0, 5, 40, 30"
+                 />
         </StackPanel>
 
 

@@ -6,44 +6,12 @@
         Title="Welcome to Zapp"
         SizeToContent="Height"
         Width="635">
-    <Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="#EF103C"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Label Content="{TemplateBinding Content}"
-                               Foreground="{TemplateBinding Foreground}"
-                               Background="{TemplateBinding Background}"
-                               HorizontalContentAlignment="Center"
-                               MinWidth="80"/>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#F02049"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#DF0F38"/>
-                                <Setter Property="Foreground" Value="#AAAAAA"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
     <StackPanel>
         <Label
             Content="Welcome to Zapp!"
-            Height="75"
-            Background="#EF103C"
+            Style="{StaticResource WindowHeaderLabelStyle}"
             HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center"
-            FontSize="30"
-            FontWeight="Bold"
-            Foreground="White"/>
+            Padding="0 0 0 0"/>
         <StackPanel Margin="40">
             <TextBlock Text="This app helps you avoid wasting energy in the workplace."
                        Margin="0, 0, 0, 0"
@@ -63,7 +31,8 @@
                        HorizontalAlignment="Left"/>
             <Button Content="Next" cal:Message.Attach="OpenHubWindow"
                     Margin="0, 35, 0, 0"
-                    HorizontalAlignment="Left"/>
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource WindowButtonStyle}"/>
         </StackPanel>
     </StackPanel>
 </Window>
