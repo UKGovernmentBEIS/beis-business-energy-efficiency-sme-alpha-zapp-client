@@ -123,9 +123,9 @@
 
                     <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Vertical"
                                 Margin="0, 40, 0, 0">
-                        <TextBlock Text="Heating and Air Conditioning" FontWeight="Bold" />
+                        <TextBlock Text="Air Conditioning and Heating" FontWeight="Bold" />
                         <TextBlock
-                            Text="If you want to help more, opt in to heating notifications, which will remind you to keep the heating working efficiently."
+                            Text="If you want to help more, opt in to these notifications to keep the temperature controlled more efficiently."
                             Visibility="{Binding ShowExplanationText, Converter={StaticResource BoolToVisibility}}"
                             Margin="0 10 0 0" />
                     </StackPanel>
