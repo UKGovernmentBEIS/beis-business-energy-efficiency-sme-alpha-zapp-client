@@ -82,14 +82,9 @@ namespace RemindSME.Desktop.ViewModels
             singletonWindowManager.OpenOrActivateSingletonWindow<HubView, HubViewModel>();
         }
 
-        public void OpenFaqWindow(string userAction)
-        {
-            actionTracker.Log($"User opened FAQ window via taskbar {userAction}.");
-            OpenFaqWindow();
-        }
-
         public void OpenFaqWindow()
         {
+            actionTracker.Log($"User opened FAQ window.");
             singletonWindowManager.OpenOrActivateSingletonWindow<FaqView, FaqViewModel>();
         }
 
