@@ -10,6 +10,7 @@ using Notifications.Wpf;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.ViewModels;
+using RemindSME.Desktop.Views;
 using Squirrel;
 
 namespace RemindSME.Desktop
@@ -74,7 +75,7 @@ namespace RemindSME.Desktop
 
         private void InstanceAwareApplication_StartupNextInstance(object sender, StartupNextInstanceEventArgs e)
         {
-            Application.MainWindow?.Activate();
+            Container.Resolve<ISingletonWindowManager>().OpenOrActivateSingletonWindow<HubView, HubViewModel>();
         }
     }
 }
