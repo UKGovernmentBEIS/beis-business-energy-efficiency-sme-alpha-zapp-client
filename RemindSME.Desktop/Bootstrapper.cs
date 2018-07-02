@@ -1,9 +1,11 @@
+using System;
 using System.Configuration;
 using System.Reflection;
 using System.Windows;
 using Autofac;
 using Bogus;
 using Caliburn.Micro.Autofac;
+using Custom.Windows;
 using Notifications.Wpf;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
@@ -19,6 +21,13 @@ namespace RemindSME.Desktop
         public Bootstrapper()
         {
             Initialize();
+        }
+
+        protected override void PrepareApplication()
+        {
+            var instanceAwareApplication = (InstanceAwareApplication)Application;
+            instanceAwareApplication.StartupNextInstance += InstanceAwareApplication_StartupNextInstance;
+            base.PrepareApplication();
         }
 
         protected override void ConfigureBootstrapper()
@@ -53,8 +62,19 @@ namespace RemindSME.Desktop
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            var instanceAwareApplication = (InstanceAwareApplication)Application;
+            if (!instanceAwareApplication.IsFirstInstance.GetValueOrDefault())
+            {
+                Environment.Exit(0);
+            }
+
             Container.Resolve<IHibernationManager>().UpdateNextHiberationTime();
             DisplayRootViewFor<MainViewModel>();
+        }
+
+        private void InstanceAwareApplication_StartupNextInstance(object sender, StartupNextInstanceEventArgs e)
+        {
+            Application.MainWindow?.Activate();
         }
     }
 }
