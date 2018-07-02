@@ -167,5 +167,11 @@ namespace RemindSME.Desktop.ViewModels
                 Settings.Default.Save();
             }
         }
+
+        public void CloseWindow()
+        {
+            actionTracker.Log("User dismissed Hub window by clicking OK button.");
+            TryClose();
+        }
     }
 }

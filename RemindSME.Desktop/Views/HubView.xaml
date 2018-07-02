@@ -22,13 +22,13 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="60" />
-            <RowDefinition Height="60" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="70" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0">
             <Label Content="Zapp Hub"
@@ -61,14 +61,15 @@
 
                     <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Vertical">
                         <TextBlock Text="Hibernating overnight" FontWeight="Bold" />
-                        <TextBlock Text="Avoid waste by letting your computer hibernate overnight. You won't lose your place, as it'll wake up in the morning exactly where you left off."
-                                   Visibility="{Binding ShowExplanationText, Converter={StaticResource BoolToVisibility}}"
-                                   Margin="0, 10, 0, 0" />
+                        <TextBlock
+                            Text="Avoid waste by letting your computer hibernate overnight. You won't lose your place, as it'll wake up in the morning exactly where you left off."
+                            Visibility="{Binding ShowExplanationText, Converter={StaticResource BoolToVisibility}}"
+                            Margin="0, 10, 0, 0" />
                     </StackPanel>
                     <TextBlock Grid.Column="0" Grid.Row="1" Text="Hibernate my machine overnight" />
                     <CheckBox Grid.Column="1" Grid.Row="1" x:Name="HibernationOptIn"
-                          VerticalContentAlignment="Center"
-                          VerticalAlignment="Center" />
+                              VerticalContentAlignment="Center"
+                              VerticalAlignment="Center" />
                 </Grid>
 
                 <Grid Name="HibernationOptionIsVisible">
@@ -82,24 +83,24 @@
                         <RowDefinition Height="40" />
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Column="0" Grid.Row="0" Text="What time should I hibernate your machine each day?"
-                           VerticalAlignment="Center"
-                           Margin="0,0,0,0" />
+                               VerticalAlignment="Center"
+                               Margin="0,0,0,0" />
                     <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
                         <ComboBox x:Name="HibernateHours"
-                              Width="50px"
-                              VerticalAlignment="Center" />
+                                  Width="50px"
+                                  VerticalAlignment="Center" />
                         <TextBlock Text=":"
-                               VerticalAlignment="Center"
-                               Margin="5,0,5,3" />
+                                   VerticalAlignment="Center"
+                                   Margin="5,0,5,3" />
                         <ComboBox x:Name="HibernateMinutes"
-                              Width="50px"
-                              VerticalAlignment="Center" />
+                                  Width="50px"
+                                  VerticalAlignment="Center" />
                     </StackPanel>
                     <TextBlock Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
                                Text="e.g. 15 minutes after you normally leave work. You'll be able to snooze this if you're not quite ready to leave then, or cancel it altogether if you do need to leave it on overnight."
                                FontStyle="Italic"
                                FontSize="12"
-                               Margin="0, 0, 70, 0"/>
+                               Margin="0, 0, 70, 0" />
                     <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal">
                         <TextBlock Text="Next scheduled hibernation: " />
                         <TextBlock x:Name="NextHibernationTime" />
@@ -125,16 +126,18 @@
                         <RowDefinition Height="50" />
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Vertical" Margin="0, 40, 0, 0">
+                    <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Vertical"
+                                Margin="0, 40, 0, 0">
                         <TextBlock Text="Heating and Air Conditioning" FontWeight="Bold" />
-                        <TextBlock Text="If you want to help more, opt in to heating notifications, which will remind you to keep the heating working efficiently."
-                                   Visibility="{Binding ShowExplanationText, Converter={StaticResource BoolToVisibility}}"
-                                   Margin="0 10 0 0"/>
+                        <TextBlock
+                            Text="If you want to help more, opt in to heating notifications, which will remind you to keep the heating working efficiently."
+                            Visibility="{Binding ShowExplanationText, Converter={StaticResource BoolToVisibility}}"
+                            Margin="0 10 0 0" />
                     </StackPanel>
                     <TextBlock Grid.Column="0" Grid.Row="1" Text="Volunteer to monitor heating controls" />
                     <CheckBox Grid.Column="1" Grid.Row="1" x:Name="HeatingOptIn"
-                          VerticalContentAlignment="Center"
-                          VerticalAlignment="Center" />
+                              VerticalContentAlignment="Center"
+                              VerticalAlignment="Center" />
                 </Grid>
             </StackPanel>
         </StackPanel>
@@ -143,9 +146,20 @@
                    Text="Version: 0.0.0.0"
                    Foreground="#BBBBBB"
                    Margin="40, 0, 0, 40" />
-        <Button Grid.Column="0" Grid.Row="2"
-            Content="FAQs" cal:Message.Attach="OpenFaqWindow"
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right">
+            <Button
+                Content="FAQs" cal:Message.Attach="OpenFaqWindow"
                 Margin="40, 0, 40, 40"
-                HorizontalAlignment="Right"/>
+                Height="25"
+                Width="55" />
+            <Button
+                Content="OK"
+                Margin="0, 0, 40, 40"
+                Height="25"
+                Width="55"
+                x:Name="CloseWindow" />
+        </StackPanel>
+
+
     </Grid>
 </Window>
