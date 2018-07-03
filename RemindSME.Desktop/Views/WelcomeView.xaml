@@ -1,11 +1,12 @@
-﻿<Window x:Class="RemindSME.Desktop.Views.WelcomeView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:cal="http://www.caliburnproject.org"
-        Icon="../RemindSME.ico"
-        Title="Welcome to Zapp"
-        SizeToContent="Height"
-        Width="635">
+﻿<views:AppWindow x:Class="RemindSME.Desktop.Views.WelcomeView"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:cal="http://www.caliburnproject.org" 
+                 xmlns:views="clr-namespace:RemindSME.Desktop.Views"
+                 Icon="../RemindSME.ico"
+                 Title="Welcome to Zapp"
+                 SizeToContent="Height"
+                 Width="635">
     <StackPanel>
         <Label
             Content="Welcome to Zapp!"
@@ -35,4 +36,4 @@
                     Style="{StaticResource WindowButtonStyle}"/>
         </StackPanel>
     </StackPanel>
-</Window>
+</views:AppWindow>
