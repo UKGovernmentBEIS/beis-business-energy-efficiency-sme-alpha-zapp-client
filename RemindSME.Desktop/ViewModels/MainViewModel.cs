@@ -25,6 +25,7 @@ namespace RemindSME.Desktop.ViewModels
         private readonly IAppUpdateManager updateManager;
 
         private bool hibernationPromptHasBeenShown;
+        private bool hibernationWarningHasBeenShown;
 
         public MainViewModel(
             IActionTracker actionTracker,
@@ -64,6 +65,7 @@ namespace RemindSME.Desktop.ViewModels
         public void Handle(NextHibernationTimeUpdatedEvent e)
         {
             hibernationPromptHasBeenShown = false;
+            hibernationWarningHasBeenShown = false;
         }
 
         public void OpenWelcomeWindow()
@@ -121,6 +123,11 @@ namespace RemindSME.Desktop.ViewModels
                 ShowHibernationPrompt();
             }
 
+            if (!hibernationWarningHasBeenShown && timeUntilHibernation <= HibernationWarningPeriod)
+            {
+                ShowHibernationWarning();
+            }
+
             // It is time to hibernate!
             if (nextHibernationTime <= DateTime.Now)
             {
@@ -134,6 +141,13 @@ namespace RemindSME.Desktop.ViewModels
             hibernationPromptHasBeenShown = true;
             var model = IoC.Get<HibernationPromptViewModel>();
             notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
+        }
+
+        private void ShowHibernationWarning()
+        {
+            actionTracker.Log("Showed hibernation warning.");
+            singletonWindowManager.OpenOrActivateSingletonDialog<HibernationWarningView, HibernationWarningViewModel>();
+            hibernationWarningHasBeenShown = true;
         }
 
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
