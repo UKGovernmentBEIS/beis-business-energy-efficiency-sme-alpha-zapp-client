@@ -8,11 +8,11 @@ namespace RemindSME.Desktop.ViewModels
 {
     public class WelcomeViewModel : ViewAware
     {
-        private readonly ISingletonWindowManager singletonWindowManager;
+        private readonly IAppWindowManager appWindowManager;
 
-        public WelcomeViewModel(ISingletonWindowManager singletonWindowManager)
+        public WelcomeViewModel(IAppWindowManager appWindowManager)
         {
-            this.singletonWindowManager = singletonWindowManager;
+            this.appWindowManager = appWindowManager;
         }
 
         public void OpenHubWindow()
@@ -22,7 +22,7 @@ namespace RemindSME.Desktop.ViewModels
             Settings.Default.DisplaySettingExplanations = true;
             Settings.Default.Save();
 
-            singletonWindowManager.OpenOrActivateSingletonWindow<HubView, HubViewModel>();
+            appWindowManager.OpenOrActivateWindow<HubView, HubViewModel>();
         }
     }
 }
