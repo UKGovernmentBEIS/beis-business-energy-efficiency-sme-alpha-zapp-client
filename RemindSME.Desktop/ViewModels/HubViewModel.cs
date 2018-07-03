@@ -68,7 +68,7 @@ namespace RemindSME.Desktop.ViewModels
 
         public bool HibernationOptionIsVisible => hibernationManager.HibernationOptIn;
 
-        public IEnumerable<string> HibernateHours => Enumerable.Range(0, 24).Reverse().Select(x => x.ToString("D2"));
+        public IEnumerable<string> HibernateHours => Enumerable.Range(0, 24).Select(x => x.ToString("D2"));
 
         public string SelectedHibernateHour
         {
