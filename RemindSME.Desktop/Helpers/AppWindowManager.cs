@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
 using Caliburn.Micro;
+using RemindSME.Desktop.Views;
 
 namespace RemindSME.Desktop.Helpers
 {
@@ -8,6 +9,7 @@ namespace RemindSME.Desktop.Helpers
     {
         void OpenOrActivateWindow<TView, TViewModel>();
         void OpenOrActivateDialog<TView, TViewModel>();
+        bool AnyAppWindowIsOpen();
     }
 
     public class AppWindowManager : IAppWindowManager
@@ -39,6 +41,11 @@ namespace RemindSME.Desktop.Helpers
             }
         }
 
+        public bool AnyAppWindowIsOpen()
+        {
+            return Application.Current.Windows.Cast<Window>().Any(window => window.GetType().IsSubclassOf(typeof(AppWindow)));
+        }
+
         private bool ActivateExistingWindow<TView>()
         {
             var existingWindow = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window is TView);
@@ -51,6 +58,7 @@ namespace RemindSME.Desktop.Helpers
             {
                 existingWindow.WindowState = WindowState.Normal;
             }
+
             existingWindow.Activate();
             return true;
         }
