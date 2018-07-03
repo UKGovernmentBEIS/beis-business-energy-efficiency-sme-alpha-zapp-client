@@ -16,19 +16,19 @@ namespace RemindSME.Desktop.ViewModels
         private readonly IActionTracker actionTracker;
         private readonly IHibernationManager hibernationManager;
         private readonly IReminderManager reminderManager;
-        private readonly ISingletonWindowManager singletonWindowManager;
+        private readonly IAppWindowManager appWindowManager;
 
         public HubViewModel(
             IActionTracker actionTracker,
             IEventAggregator eventAggregator,
             IHibernationManager hibernationManager,
             IReminderManager reminderManager,
-            ISingletonWindowManager singletonWindowManager)
+            IAppWindowManager appWindowManager)
         {
             this.actionTracker = actionTracker;
             this.hibernationManager = hibernationManager;
             this.reminderManager = reminderManager;
-            this.singletonWindowManager = singletonWindowManager;
+            this.appWindowManager = appWindowManager;
 
             eventAggregator.Subscribe(this);
         }
@@ -154,7 +154,7 @@ namespace RemindSME.Desktop.ViewModels
 
         public void OpenFaqWindow()
         {
-            singletonWindowManager.OpenOrActivateSingletonWindow<FaqView, FaqViewModel>();
+            appWindowManager.OpenOrActivateWindow<FaqView, FaqViewModel>();
         }
 
         public bool ShowExplanationText

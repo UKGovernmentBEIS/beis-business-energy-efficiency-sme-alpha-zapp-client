@@ -4,22 +4,22 @@ using Caliburn.Micro;
 
 namespace RemindSME.Desktop.Helpers
 {
-    public interface ISingletonWindowManager
+    public interface IAppWindowManager
     {
-        void OpenOrActivateSingletonWindow<TView, TViewModel>();
-        void OpenOrActivateSingletonDialog<TView, TViewModel>();
+        void OpenOrActivateWindow<TView, TViewModel>();
+        void OpenOrActivateDialog<TView, TViewModel>();
     }
 
-    public class SingletonWindowManager : ISingletonWindowManager
+    public class AppWindowManager : IAppWindowManager
     {
         private readonly IWindowManager windowManager;
 
-        public SingletonWindowManager(IWindowManager windowManager)
+        public AppWindowManager(IWindowManager windowManager)
         {
             this.windowManager = windowManager;
         }
 
-        public void OpenOrActivateSingletonWindow<TView, TViewModel>()
+        public void OpenOrActivateWindow<TView, TViewModel>()
         {
             if (!ActivateExistingWindow<TView>())
             {
@@ -29,7 +29,7 @@ namespace RemindSME.Desktop.Helpers
             }
         }
 
-        public void OpenOrActivateSingletonDialog<TView, TViewModel>()
+        public void OpenOrActivateDialog<TView, TViewModel>()
         {
             if (!ActivateExistingWindow<TView>())
             {

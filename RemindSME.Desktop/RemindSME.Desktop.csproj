@@ -203,7 +203,7 @@
     <Compile Include="Helpers\NetworkFinder.cs" />
     <Compile Include="Helpers\RegistryManager.cs" />
     <Compile Include="Helpers\ReminderManager.cs" />
-    <Compile Include="Helpers\SingletonWindowManager.cs" />
+    <Compile Include="Helpers\AppWindowManager.cs" />
     <Compile Include="Helpers\SocketManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
