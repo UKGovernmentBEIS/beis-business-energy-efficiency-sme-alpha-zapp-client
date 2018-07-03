@@ -87,9 +87,6 @@ namespace RemindSME.Desktop.Helpers
             UpdateManager.RestartApp();
             Application.Current.Shutdown();
         }
-
-        
-
         public void Dispose()
         {
             updateManager?.Dispose();
