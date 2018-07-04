@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using Microsoft.WindowsAPICodePack.Net;
 using Quobject.SocketIoClientDotNet.Client;
+using RemindSME.Desktop.Helpers.Listeners;
 using RemindSME.Desktop.Properties;
 
 namespace RemindSME.Desktop.Helpers
@@ -16,14 +16,21 @@ namespace RemindSME.Desktop.Helpers
     public class SocketManager : ISocketManager, IActionTracker
     {
         private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
-        private readonly Queue<string> trackingMessages = new Queue<string>();
+        private readonly HeatingNotificationListener heatingNotificationListener;
+        private readonly NetworkCountChangeListener networkCountChangeListener;
         private readonly INetworkFinder networkFinder;
+        private readonly Queue<string> trackingMessages = new Queue<string>();
 
         private Socket socket;
 
-        public SocketManager(INetworkFinder networkFinder)
+        public SocketManager(
+            INetworkFinder networkFinder,
+            NetworkCountChangeListener networkCountChangeListener,
+            HeatingNotificationListener heatingNotificationListener)
         {
             this.networkFinder = networkFinder;
+            this.networkCountChangeListener = networkCountChangeListener;
+            this.heatingNotificationListener = heatingNotificationListener;
         }
 
         public void Log(string message)
@@ -54,6 +61,8 @@ namespace RemindSME.Desktop.Helpers
                     Log(trackingMessages.Dequeue());
                 }
             });
+            socket.On("network-count-change", networkCountChangeListener);
+            socket.On("heating-notification", heatingNotificationListener);
             socket.Connect();
             return socket;
         }

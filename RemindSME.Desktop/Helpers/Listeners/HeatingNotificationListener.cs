@@ -1,19 +1,17 @@
-﻿namespace RemindSME.Desktop.Helpers.Listeners
+﻿using Caliburn.Micro;
+using RemindSME.Desktop.Events;
+
+namespace RemindSME.Desktop.Helpers.Listeners
 {
     public class HeatingNotificationListener : SocketListener
     {
-        private readonly IReminderManager reminderManager;
-
-        public HeatingNotificationListener(IReminderManager reminderManager)
-        {
-            this.reminderManager = reminderManager;
-        }
+        public HeatingNotificationListener(IEventAggregator eventAggregator) : base(eventAggregator) { }
 
         public override void Call(params object[] args)
         {
             var title = args.GetArgument<string>(0);
             var message = args.GetArgument<string>(1);
-            reminderManager.ShowHeatingNotificationIfOptedIn(title, message);
+            EventAggregator.PublishOnUIThread(new HeatingNotificationEvent(title, message));
         }
     }
 }

@@ -189,6 +189,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Configuration\ISettings.cs" />
+    <Compile Include="Configuration\Settings.cs" />
+    <Compile Include="Events\HeatingNotificationEvent.cs" />
+    <Compile Include="Events\NetworkCountChangeEvent.cs" />
     <Compile Include="Events\NextHibernationTimeUpdatedEvent.cs" />
     <Compile Include="Helpers\IActionTracker.cs" />
     <Compile Include="Helpers\AppInfo.cs" />
@@ -202,7 +206,6 @@
     <Compile Include="Helpers\Listeners\SocketListener.cs" />
     <Compile Include="Helpers\NetworkFinder.cs" />
     <Compile Include="Helpers\RegistryManager.cs" />
-    <Compile Include="Helpers\ReminderManager.cs" />
     <Compile Include="Helpers\AppWindowManager.cs" />
     <Compile Include="Helpers\SocketManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -218,6 +221,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Services\IService.cs" />
+    <Compile Include="Services\ReminderService.cs" />
     <Compile Include="ViewModels\FaqViewModel.cs" />
     <Compile Include="ViewModels\HubViewModel.cs" />
     <Compile Include="ViewModels\HibernationPromptViewModel.cs" />
@@ -283,6 +288,7 @@
   <ItemGroup>
     <Resource Include="RemindSME.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release'">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">

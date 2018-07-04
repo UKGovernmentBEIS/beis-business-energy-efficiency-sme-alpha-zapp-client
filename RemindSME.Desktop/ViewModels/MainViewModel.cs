@@ -6,7 +6,6 @@ using Microsoft.Win32;
 using Notifications.Wpf;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
-using RemindSME.Desktop.Helpers.Listeners;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Views;
 using Squirrel;
@@ -17,10 +16,9 @@ namespace RemindSME.Desktop.ViewModels
     public class MainViewModel : PropertyChangedBase, IHandle<NextHibernationTimeUpdatedEvent>
     {
         private readonly IActionTracker actionTracker;
+        private readonly IAppWindowManager appWindowManager;
         private readonly IHibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
-        private readonly IReminderManager reminderManager;
-        private readonly IAppWindowManager appWindowManager;
         private readonly ISocketManager socketManager;
         private readonly IAppUpdateManager updateManager;
 
@@ -33,14 +31,12 @@ namespace RemindSME.Desktop.ViewModels
             IEventAggregator eventAggregator,
             IHibernationManager hibernationManager,
             INotificationManager notificationManager,
-            IReminderManager reminderManager,
             IAppWindowManager appWindowManager,
             ISocketManager socketManager)
         {
             this.actionTracker = actionTracker;
             this.hibernationManager = hibernationManager;
             this.notificationManager = notificationManager;
-            this.reminderManager = reminderManager;
             this.updateManager = updateManager;
             this.appWindowManager = appWindowManager;
             this.socketManager = socketManager;
@@ -48,7 +44,6 @@ namespace RemindSME.Desktop.ViewModels
             eventAggregator.Subscribe(this);
 
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            timer.Tick += Timer_Tick_Reminders;
             timer.Tick += Timer_Tick_Hibernation;
             timer.Start();
 
@@ -94,11 +89,6 @@ namespace RemindSME.Desktop.ViewModels
         {
             actionTracker.Log("User quit the app via taskbar menu click.");
             Application.Current.Shutdown();
-        }
-
-        private void Timer_Tick_Reminders(object sender, EventArgs e)
-        {
-            reminderManager.MaybeShowTimeDependentNotifications();
         }
 
         private void Timer_Tick_Hibernation(object sender, EventArgs e)
@@ -165,9 +155,7 @@ namespace RemindSME.Desktop.ViewModels
 
         private void Connect()
         {
-            var socket = socketManager.Connect();
-            socket.On("network-count-change", new NetworkCountChangeListener(reminderManager));
-            socket.On("heating-notification", new HeatingNotificationListener(reminderManager));
+            socketManager.Connect();
         }
 
         private void Disconnect()

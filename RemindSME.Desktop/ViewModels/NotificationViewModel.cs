@@ -2,7 +2,7 @@
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class NotificationViewModel : PropertyChangedBase
+    public class NotificationViewModel : Screen
     {
         public string Title { get; set; }
         public string Message { get; set; }
