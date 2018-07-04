@@ -223,11 +223,12 @@
     </Compile>
     <Compile Include="Services\IService.cs" />
     <Compile Include="Services\ReminderService.cs" />
+    <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\FaqViewModel.cs" />
     <Compile Include="ViewModels\HubViewModel.cs" />
     <Compile Include="ViewModels\HibernationPromptViewModel.cs" />
     <Compile Include="ViewModels\HibernationWarningViewModel.cs" />
-    <Compile Include="ViewModels\NotificationViewModel.cs" />
+    <Compile Include="ViewModels\ReminderViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\WelcomeViewModel.cs" />
     <Compile Include="Views\AppWindow.cs" />
@@ -268,7 +269,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\NotificationView.xaml">
+    <Page Include="Views\ReminderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

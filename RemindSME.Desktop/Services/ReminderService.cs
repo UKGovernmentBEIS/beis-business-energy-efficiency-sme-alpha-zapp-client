@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
+using Microsoft.Win32;
 using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
@@ -132,10 +134,10 @@ namespace RemindSME.Desktop.Services
         {
             actionTracker.Log($"Displayed '{title}' notification.");
 
-            var model = IoC.Get<NotificationViewModel>();
+            var model = IoC.Get<ReminderViewModel>();
             model.Title = title;
             model.Message = message;
-            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2),
+            notificationManager.Show(model, expirationTime: TimeSpan.FromMinutes(15),
                 onClose: () => actionTracker.Log($"User dismissed '{title}' notification."));
         }
     }

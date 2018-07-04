@@ -1,10 +1,24 @@
-﻿using Caliburn.Micro;
+﻿using System.Windows;
+using Caliburn.Micro;
+using Microsoft.Win32;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class NotificationViewModel : Screen
+    public abstract class NotificationViewModel : ViewAware
     {
-        public string Title { get; set; }
-        public string Message { get; set; }
+        protected NotificationViewModel()
+        {
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+        }
+
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            if (e.Mode != PowerModes.Suspend)
+            {
+                return;
+            }
+            var view = (DependencyObject)GetView();
+            Window.GetWindow(view)?.Close();
+        }
     }
 }
