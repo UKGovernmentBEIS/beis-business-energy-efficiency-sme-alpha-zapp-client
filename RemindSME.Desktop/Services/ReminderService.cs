@@ -26,6 +26,7 @@ namespace RemindSME.Desktop.Services
         private readonly IEventAggregator eventAggregator;
         private readonly ILog log;
         private readonly INotificationManager notificationManager;
+        private readonly IWeatherDataService weatherDataService;
         private readonly ISettings settings;
         private readonly DispatcherTimer timer;
 
@@ -37,6 +38,7 @@ namespace RemindSME.Desktop.Services
         public ReminderService(
             ILog log,
             INotificationManager notificationManager,
+            IWeatherDataService weatherDataService,
             IAppWindowManager appWindowManager,
             IEventAggregator eventAggregator,
             ISettings settings,
@@ -44,6 +46,7 @@ namespace RemindSME.Desktop.Services
         {
             this.log = log;
             this.notificationManager = notificationManager;
+            this.weatherDataService = weatherDataService;
             this.appWindowManager = appWindowManager;
             this.eventAggregator = eventAggregator;
             this.settings = settings;
@@ -119,12 +122,16 @@ namespace RemindSME.Desktop.Services
                    settings.MostRecentFirstLoginReminderDismissal.Date != DateTime.Today; // Has not dismissed today.
         }
 
-        private void ShowFirstLoginReminder()
+        private async void ShowFirstLoginReminder()
         {
             isShowingFirstLoginReminder = true;
+            var weatherData = await weatherDataService.GetWeatherData("London");
+            var message = !string.IsNullOrEmpty(weatherData?.Name)
+                ? $"The current temperature in {weatherData.Name} is {weatherData.Main.Temp:F1}°C."
+                : Resources.Reminder_HeatingFirstLogin_Message;
             ShowReminder(
                 Resources.Reminder_HeatingFirstLogin_Title,
-                Resources.Reminder_HeatingFirstLogin_Message,
+                message,
                 () => isShowingFirstLoginReminder = false,
                 new ReminderViewModel.Button("Done!", FirstLoginReminder_Done));
         }
