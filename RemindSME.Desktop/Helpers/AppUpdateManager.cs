@@ -85,7 +85,6 @@ namespace RemindSME.Desktop.Helpers
                 await Task.Delay(TimeSpan.FromSeconds(5));
             }
             UpdateManager.RestartApp();
-            Application.Current.Shutdown();
         }
         public void Dispose()
         {
