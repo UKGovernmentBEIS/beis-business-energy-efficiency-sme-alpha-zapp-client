@@ -28,8 +28,8 @@ namespace RemindSME.Desktop.ViewModels
 
         public string CompanyCode
         {
-            get => Settings.Default.CompanyCode == 0 ? "" : Settings.Default.CompanyCode.ToString();
-            set => Settings.Default.CompanyCode = Int32.Parse(value);
+            get => Settings.Default.CompanyId == 0 ? "" : Settings.Default.CompanyId.ToString();
+            set => Settings.Default.CompanyId = Int32.Parse(value);
             // if it is a work network
             // if X digits long, do a GET request to verify
             // if verified, show company name, otherwise show error and contact us message 

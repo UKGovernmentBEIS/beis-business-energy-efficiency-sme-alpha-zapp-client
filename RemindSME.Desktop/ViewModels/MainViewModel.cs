@@ -162,7 +162,7 @@ namespace RemindSME.Desktop.ViewModels
         private void Connect()
         {
             var socket = socketManager.Connect();
-            socket.On("network-count-change", new NetworkCountChangeListener(reminderManager));
+            socket.On("company-count-change", new CompanyCountChangeListener(reminderManager));
             socket.On("heating-notification", new HeatingNotificationListener(reminderManager));
         }
 

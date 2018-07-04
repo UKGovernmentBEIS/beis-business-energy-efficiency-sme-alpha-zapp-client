@@ -2,11 +2,11 @@
 
 namespace RemindSME.Desktop.Helpers.Listeners
 {
-    public class NetworkCountChangeListener : SocketListener
+    public class CompanyCountChangeListener : SocketListener
     {
         private readonly IReminderManager reminderManager;
 
-        public NetworkCountChangeListener(IReminderManager reminderManager)
+        public CompanyCountChangeListener(IReminderManager reminderManager)
         {
             this.reminderManager = reminderManager;
         }

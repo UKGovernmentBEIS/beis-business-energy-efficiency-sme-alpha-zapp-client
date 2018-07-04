@@ -98,12 +98,12 @@ namespace RemindSME.Desktop.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int CompanyCode {
+        public int CompanyId {
             get {
-                return ((int)(this["CompanyCode"]));
+                return ((int)(this["CompanyId"]));
             }
             set {
-                this["CompanyCode"] = value;
+                this["CompanyId"] = value;
             }
         }
     }

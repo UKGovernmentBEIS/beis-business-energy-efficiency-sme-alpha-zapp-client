@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using Microsoft.WindowsAPICodePack.Net;
 using Quobject.SocketIoClientDotNet.Client;
 using RemindSME.Desktop.Properties;
 
@@ -17,14 +16,10 @@ namespace RemindSME.Desktop.Helpers
     {
         private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
         private readonly Queue<string> trackingMessages = new Queue<string>();
-        private readonly INetworkFinder networkFinder;
 
         private Socket socket;
 
-        public SocketManager(INetworkFinder networkFinder)
-        {
-            this.networkFinder = networkFinder;
-        }
+        public SocketManager() { }
 
         public void Log(string message)
         {
@@ -47,8 +42,7 @@ namespace RemindSME.Desktop.Helpers
             socket = IO.Socket(ServerUrl, new IO.Options { AutoConnect = false });
             socket.On("connect", () =>
             {
-                var network = networkFinder.GetNetworkAddress();
-                socket.Emit("join", network, Settings.Default.Pseudonym);
+                socket.Emit("join", Settings.Default.CompanyId, Settings.Default.Pseudonym);
                 while (trackingMessages.Any())
                 {
                     Log(trackingMessages.Dequeue());
