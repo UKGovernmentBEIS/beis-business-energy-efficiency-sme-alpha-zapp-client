@@ -1,7 +1,8 @@
-﻿<Window x:Class="RemindSME.Desktop.Views.HubView"
+﻿<views:AppWindow x:Class="RemindSME.Desktop.Views.HubView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:cal="http://www.caliburnproject.org"
+        xmlns:views="clr-namespace:RemindSME.Desktop.Views"
         cal:Message.Attach="[Event Closing] = [Action OnClose]"
         Icon="../RemindSME.ico"
         Title="Zapp Hub"
@@ -156,4 +157,4 @@
 
 
     </Grid>
-</Window>
+</views:AppWindow>

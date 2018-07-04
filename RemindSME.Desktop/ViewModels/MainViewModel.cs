@@ -20,7 +20,7 @@ namespace RemindSME.Desktop.ViewModels
         private readonly IHibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
         private readonly IReminderManager reminderManager;
-        private readonly ISingletonWindowManager singletonWindowManager;
+        private readonly IAppWindowManager appWindowManager;
         private readonly ISocketManager socketManager;
         private readonly IAppUpdateManager updateManager;
 
@@ -34,7 +34,7 @@ namespace RemindSME.Desktop.ViewModels
             IHibernationManager hibernationManager,
             INotificationManager notificationManager,
             IReminderManager reminderManager,
-            ISingletonWindowManager singletonWindowManager,
+            IAppWindowManager appWindowManager,
             ISocketManager socketManager)
         {
             this.actionTracker = actionTracker;
@@ -42,7 +42,7 @@ namespace RemindSME.Desktop.ViewModels
             this.notificationManager = notificationManager;
             this.reminderManager = reminderManager;
             this.updateManager = updateManager;
-            this.singletonWindowManager = singletonWindowManager;
+            this.appWindowManager = appWindowManager;
             this.socketManager = socketManager;
 
             eventAggregator.Subscribe(this);
@@ -66,7 +66,7 @@ namespace RemindSME.Desktop.ViewModels
 
         public void OpenWelcomeWindow()
         {
-            singletonWindowManager.OpenOrActivateSingletonWindow<WelcomeView, WelcomeViewModel>();
+            appWindowManager.OpenOrActivateWindow<WelcomeView, WelcomeViewModel>();
         }
 
         public void OpenHubWindow(string userAction)
@@ -77,13 +77,13 @@ namespace RemindSME.Desktop.ViewModels
 
         public void OpenHubWindow()
         {
-            singletonWindowManager.OpenOrActivateSingletonWindow<HubView, HubViewModel>();
+            appWindowManager.OpenOrActivateWindow<HubView, HubViewModel>();
         }
 
         public void OpenFaqWindow()
         {
             actionTracker.Log($"User opened FAQ window.");
-            singletonWindowManager.OpenOrActivateSingletonWindow<FaqView, FaqViewModel>();
+            appWindowManager.OpenOrActivateWindow<FaqView, FaqViewModel>();
         }
 
         public void Quit()
@@ -142,7 +142,7 @@ namespace RemindSME.Desktop.ViewModels
         private void ShowHibernationWarning()
         {
             actionTracker.Log("Showed hibernation warning.");
-            singletonWindowManager.OpenOrActivateSingletonDialog<HibernationWarningView, HibernationWarningViewModel>();
+            appWindowManager.OpenOrActivateDialog<HibernationWarningView, HibernationWarningViewModel>();
             hibernationWarningHasBeenShown = true;
         }
 

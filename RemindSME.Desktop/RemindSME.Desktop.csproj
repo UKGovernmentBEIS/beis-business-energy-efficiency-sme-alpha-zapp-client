@@ -203,7 +203,7 @@
     <Compile Include="Helpers\NetworkFinder.cs" />
     <Compile Include="Helpers\RegistryManager.cs" />
     <Compile Include="Helpers\ReminderManager.cs" />
-    <Compile Include="Helpers\SingletonWindowManager.cs" />
+    <Compile Include="Helpers\AppWindowManager.cs" />
     <Compile Include="Helpers\SocketManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -225,6 +225,7 @@
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\WelcomeViewModel.cs" />
+    <Compile Include="Views\AppWindow.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

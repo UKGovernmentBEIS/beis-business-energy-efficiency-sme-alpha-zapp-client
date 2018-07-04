@@ -25,16 +25,21 @@ namespace RemindSME.Desktop.Helpers
 
         private readonly IActionTracker actionTracker;
         private readonly INotificationManager notificationManager;
+        private readonly IAppWindowManager appWindowManager;
 
         private DateTime? mostRecentFirstLoginHeatingNotification;
         private DateTime? mostRecentLastOutNotification;
 
         private int networkCount;
 
-        public ReminderManager(IActionTracker actionTracker, INotificationManager notificationManager)
+        public ReminderManager(
+            IActionTracker actionTracker, 
+            INotificationManager notificationManager,
+            IAppWindowManager appWindowManager)
         {
             this.actionTracker = actionTracker;
             this.notificationManager = notificationManager;
+            this.appWindowManager = appWindowManager;
         }
 
         public bool HeatingOptIn
@@ -63,6 +68,11 @@ namespace RemindSME.Desktop.Helpers
 
         public void MaybeShowTimeDependentNotifications()
         {
+            if (appWindowManager.AnyAppWindowIsOpen())
+            {
+                return;
+            }
+
             MaybeShowFirstLoginHeatingNotification();
             MaybeShowLastOutNotification();
         }

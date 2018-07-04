@@ -33,12 +33,18 @@ namespace RemindSME.Desktop.Helpers
         private readonly IUpdateManager updateManager;
         private readonly IRegistryManager registryManager;
         private readonly IAppConfigurationManager configurationManager;
+        private readonly IAppWindowManager appWindowManager;
 
-        public AppUpdateManager(IUpdateManager updateManager, IRegistryManager registryManager, IAppConfigurationManager configurationManager)
+        public AppUpdateManager(
+            IUpdateManager updateManager, 
+            IRegistryManager registryManager, 
+            IAppConfigurationManager configurationManager,
+            IAppWindowManager appWindowManager)
         {
             this.updateManager = updateManager;
             this.registryManager = registryManager;
             this.configurationManager = configurationManager;
+            this.appWindowManager = appWindowManager;
 
             SquirrelAwareApp.HandleEvents(
                 onInitialInstall: version => PerformInstallActions(),
@@ -72,21 +78,15 @@ namespace RemindSME.Desktop.Helpers
             RestartWhenAllWindowsClosed();
         }
 
-        private static async void RestartWhenAllWindowsClosed()
+        private async void RestartWhenAllWindowsClosed()
         {
-            while (AnyWindowIsOpen())
+            while (appWindowManager.AnyAppWindowIsOpen())
             {
                 await Task.Delay(TimeSpan.FromSeconds(5));
             }
             UpdateManager.RestartApp();
             Application.Current.Shutdown();
         }
-
-        private static bool AnyWindowIsOpen()
-        {
-            return Application.Current.Windows.Cast<Window>().Any(window => window is HubView);
-        }
-
         public void Dispose()
         {
             updateManager?.Dispose();

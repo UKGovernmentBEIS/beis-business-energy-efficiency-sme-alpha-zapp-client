@@ -1,25 +1,27 @@
 ﻿using System.Linq;
 using System.Windows;
 using Caliburn.Micro;
+using RemindSME.Desktop.Views;
 
 namespace RemindSME.Desktop.Helpers
 {
-    public interface ISingletonWindowManager
+    public interface IAppWindowManager
     {
-        void OpenOrActivateSingletonWindow<TView, TViewModel>();
-        void OpenOrActivateSingletonDialog<TView, TViewModel>();
+        void OpenOrActivateWindow<TView, TViewModel>();
+        void OpenOrActivateDialog<TView, TViewModel>();
+        bool AnyAppWindowIsOpen();
     }
 
-    public class SingletonWindowManager : ISingletonWindowManager
+    public class AppWindowManager : IAppWindowManager
     {
         private readonly IWindowManager windowManager;
 
-        public SingletonWindowManager(IWindowManager windowManager)
+        public AppWindowManager(IWindowManager windowManager)
         {
             this.windowManager = windowManager;
         }
 
-        public void OpenOrActivateSingletonWindow<TView, TViewModel>()
+        public void OpenOrActivateWindow<TView, TViewModel>()
         {
             if (!ActivateExistingWindow<TView>())
             {
@@ -29,7 +31,7 @@ namespace RemindSME.Desktop.Helpers
             }
         }
 
-        public void OpenOrActivateSingletonDialog<TView, TViewModel>()
+        public void OpenOrActivateDialog<TView, TViewModel>()
         {
             if (!ActivateExistingWindow<TView>())
             {
@@ -37,6 +39,11 @@ namespace RemindSME.Desktop.Helpers
                 windowManager.ShowDialog(viewModel);
                 ActivateExistingWindow<TView>();
             }
+        }
+
+        public bool AnyAppWindowIsOpen()
+        {
+            return Application.Current.Windows.Cast<Window>().Any(window => window.GetType().IsSubclassOf(typeof(AppWindow)));
         }
 
         private bool ActivateExistingWindow<TView>()
@@ -51,6 +58,7 @@ namespace RemindSME.Desktop.Helpers
             {
                 existingWindow.WindowState = WindowState.Normal;
             }
+
             existingWindow.Activate();
             return true;
         }

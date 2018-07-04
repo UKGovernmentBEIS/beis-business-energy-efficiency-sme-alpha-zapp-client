@@ -75,7 +75,7 @@ namespace RemindSME.Desktop
 
         private void InstanceAwareApplication_StartupNextInstance(object sender, StartupNextInstanceEventArgs e)
         {
-            Container.Resolve<ISingletonWindowManager>().OpenOrActivateSingletonWindow<HubView, HubViewModel>();
+            Container.Resolve<IAppWindowManager>().OpenOrActivateWindow<HubView, HubViewModel>();
         }
     }
 }
