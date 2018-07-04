@@ -1,5 +1,6 @@
 using System;
 using System.Configuration;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using Autofac;
@@ -64,7 +65,7 @@ namespace RemindSME.Desktop
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             var instanceAwareApplication = (InstanceAwareApplication)Application;
-            if (!instanceAwareApplication.IsFirstInstance.GetValueOrDefault())
+            if (!instanceAwareApplication.IsFirstInstance.GetValueOrDefault() && !IsRelaunchAfterUpdate(Environment.GetCommandLineArgs()))
             {
                 Environment.Exit(0);
             }
@@ -75,7 +76,15 @@ namespace RemindSME.Desktop
 
         private void InstanceAwareApplication_StartupNextInstance(object sender, StartupNextInstanceEventArgs e)
         {
-            Container.Resolve<IAppWindowManager>().OpenOrActivateWindow<HubView, HubViewModel>();
+            if (!IsRelaunchAfterUpdate(e.Args))
+            {
+                Container.Resolve<IAppWindowManager>().OpenOrActivateWindow<HubView, HubViewModel>();
+            }
+        }
+
+        private static bool IsRelaunchAfterUpdate(string[] commandLineArgs)
+        {
+            return commandLineArgs.Any(arg => arg.Contains("--squirrel"));
         }
     }
 }
