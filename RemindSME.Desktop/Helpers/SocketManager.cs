@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using Microsoft.Win32;
@@ -19,7 +20,7 @@ namespace RemindSME.Desktop.Helpers
         private readonly NetworkCountChangeListener networkCountChangeListener;
         private readonly INetworkFinder networkFinder;
 
-        private readonly Queue<string> trackingMessages = new Queue<string>();
+        private readonly Queue<QueuedMessage> trackingMessages = new Queue<QueuedMessage>();
 
         private Socket socket;
 
@@ -41,7 +42,7 @@ namespace RemindSME.Desktop.Helpers
             }
             else
             {
-                trackingMessages.Enqueue(message);
+                trackingMessages.Enqueue(new QueuedMessage(message));
             }
         }
 
@@ -77,7 +78,8 @@ namespace RemindSME.Desktop.Helpers
                 socket.Emit("join", network, Settings.Default.Pseudonym);
                 while (trackingMessages.Any())
                 {
-                    Log(trackingMessages.Dequeue());
+                    var queuedMessage = trackingMessages.Dequeue();
+                    Log($"{queuedMessage.Message} (at {queuedMessage.Timestamp:R})");
                 }
             });
             socket.On("network-count-change", networkCountChangeListener);
@@ -93,6 +95,18 @@ namespace RemindSME.Desktop.Helpers
             }
             socket.Disconnect();
             socket = null;
+        }
+
+        private class QueuedMessage
+        {
+            internal DateTime Timestamp { get; }
+            internal string Message { get; }
+
+            internal QueuedMessage(string message)
+            {
+                Timestamp = DateTime.Now;
+                Message = message;
+            }
         }
     }
 }
