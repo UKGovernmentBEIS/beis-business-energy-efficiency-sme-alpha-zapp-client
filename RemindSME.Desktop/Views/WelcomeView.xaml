@@ -35,11 +35,14 @@
 
             <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left" Margin="0 30 0 0">
                 <Label Content="Please enter your company registration code:" Margin="-5 0 10 0"></Label>
-                <TextBox Name="CompanyIdInput" Width="100" />
-               
+                <TextBox Name="CompanyIdInput" Width="100" VerticalContentAlignment="Center" />
+                <TextBlock x:Name="CompanyName" HorizontalAlignment="Left" Margin="10 0 0 0" VerticalAlignment="Center"/>
             </StackPanel>
-            <TextBlock x:Name="CompanyName" HorizontalAlignment="Left"/>
-
+            <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left" Margin="0 30 0 0">
+                <Label Content="Are you currently on your work network?" Margin="-5 0 10 0"></Label>
+                <Button Style="{StaticResource WindowButtonStyle}"  Content="Yes" Margin="10 0 0 0" />
+                <Button Style="{StaticResource WindowButtonStyle}"  Content="No" Margin="10 0 0 0" />
+            </StackPanel>
             <Button x:Name="OpenHubWindow" Content="Next" 
                     Margin="0, 35, 0, 0"
                     HorizontalAlignment="Right"
