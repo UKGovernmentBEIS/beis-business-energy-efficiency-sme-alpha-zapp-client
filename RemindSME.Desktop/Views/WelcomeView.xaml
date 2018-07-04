@@ -40,7 +40,7 @@
             </StackPanel>
             <TextBlock x:Name="CompanyName" HorizontalAlignment="Left"/>
 
-            <Button Content="Next" cal:Message.Attach="OpenHubWindow"
+            <Button x:Name="OpenHubWindow" Content="Next" 
                     Margin="0, 35, 0, 0"
                     HorizontalAlignment="Right"
                     Style="{StaticResource WindowButtonStyle}" />

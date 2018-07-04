@@ -36,6 +36,7 @@ namespace RemindSME.Desktop.ViewModels
                 {
                     companyApiClient.UpdateCompanyName(int.Parse(value));
                     NotifyOfPropertyChange(() => CompanyName);
+                    NotifyOfPropertyChange(() => CanOpenHubWindow);
 
                 }
                 Settings.Default.CompanyId = value.Length == 0 ? 0 : int.Parse(value);
@@ -45,5 +46,7 @@ namespace RemindSME.Desktop.ViewModels
         }
 
         public string CompanyName => Settings.Default.CompanyName ?? "Company not found";
+
+        public bool CanOpenHubWindow => Settings.Default.CompanyName != null;
     }
 }
