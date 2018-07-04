@@ -12,28 +12,36 @@
             Content="Welcome to Zapp!"
             Style="{StaticResource WindowHeaderLabelStyle}"
             HorizontalContentAlignment="Center"
-            Padding="0 0 0 0"/>
+            Padding="0 0 0 0" />
         <StackPanel Margin="40">
             <TextBlock Text="This app helps you avoid wasting energy in the workplace."
                        Margin="0, 0, 0, 0"
                        TextWrapping="Wrap"
-                       HorizontalAlignment="Left"/>
-            <TextBlock Text="It'll hibernate your machine when you're done working for the day, so it doesn't use energy overnight. (Hibernation keeps your work open so you won't lose your place when it wakes up the next morning.)"
-                       Margin="0, 15, 0, 0"
-                       TextWrapping="Wrap"
-                       HorizontalAlignment="Left"/>
-            <TextBlock Text="It'll also remind the last people in the building to switch off lights, machines and heating when they leave, and it'll prompt volunteers to adjust the heating to make sure it's running efficiently given the outside temperature."
-                       Margin="0, 15, 0, 0"
-                       TextWrapping="Wrap"
-                       HorizontalAlignment="Left"/>
+                       HorizontalAlignment="Left" />
+            <TextBlock
+                Text="It'll hibernate your machine when you're done working for the day, so it doesn't use energy overnight. (Hibernation keeps your work open so you won't lose your place when it wakes up the next morning.)"
+                Margin="0, 15, 0, 0"
+                TextWrapping="Wrap"
+                HorizontalAlignment="Left" />
+            <TextBlock
+                Text="It'll also remind the last people in the building to switch off lights, machines and heating when they leave, and it'll prompt volunteers to adjust the heating to make sure it's running efficiently given the outside temperature."
+                Margin="0, 15, 0, 0"
+                TextWrapping="Wrap"
+                HorizontalAlignment="Left" />
             <TextBlock Text="Let's get started by setting up your preferences."
                        Margin="0, 15, 0, 0"
                        TextWrapping="Wrap"
-                       HorizontalAlignment="Left"/>
+                       HorizontalAlignment="Left" />
+
+            <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left" Margin="0 30 0 0">
+                <Label Content="Please enter your company registration code:" Margin="-5 0 10 0"></Label>
+                <TextBox Name="CompanyCode" Width="100" />
+            </StackPanel>
+
             <Button Content="Next" cal:Message.Attach="OpenHubWindow"
                     Margin="0, 35, 0, 0"
                     HorizontalAlignment="Right"
-                    Style="{StaticResource WindowButtonStyle}"/>
+                    Style="{StaticResource WindowButtonStyle}" />
         </StackPanel>
     </StackPanel>
 </views:AppWindow>
