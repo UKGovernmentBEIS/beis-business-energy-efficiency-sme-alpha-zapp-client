@@ -52,6 +52,10 @@ namespace RemindSME.Desktop.ViewModels
             timer.Tick += Timer_Tick_Hibernation;
             timer.Start();
 
+            var updateTimer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(5) };
+            updateTimer.Tick += UpdateTimer_TickAsync;
+            updateTimer.Start();
+
             SquirrelAwareApp.HandleEvents(onFirstRun: OpenWelcomeWindow);
 
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
