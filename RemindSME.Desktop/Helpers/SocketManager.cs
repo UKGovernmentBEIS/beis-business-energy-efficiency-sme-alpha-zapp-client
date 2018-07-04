@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using Microsoft.Win32;
 using Quobject.SocketIoClientDotNet.Client;
 using RemindSME.Desktop.Helpers.Listeners;
 using RemindSME.Desktop.Properties;
+using RemindSME.Desktop.Services;
 
 namespace RemindSME.Desktop.Helpers
 {
-    public interface ISocketManager
-    {
-        Socket Connect();
-        void Disconnect();
-    }
+    public interface ISocketManager : IService { }
 
     public class SocketManager : ISocketManager, IActionTracker
     {
         private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
+
         private readonly HeatingNotificationListener heatingNotificationListener;
         private readonly NetworkCountChangeListener networkCountChangeListener;
         private readonly INetworkFinder networkFinder;
+
         private readonly Queue<string> trackingMessages = new Queue<string>();
 
         private Socket socket;
@@ -45,11 +45,30 @@ namespace RemindSME.Desktop.Helpers
             }
         }
 
-        public Socket Connect()
+        public void Initialize()
+        {
+            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+            Connect();
+        }
+
+        private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            switch (e.Reason)
+            {
+                case SessionSwitchReason.SessionUnlock:
+                    Connect();
+                    break;
+                case SessionSwitchReason.SessionLock:
+                    Disconnect();
+                    break;
+            }
+        }
+
+        private void Connect()
         {
             if (socket != null)
             {
-                return socket;
+                return;
             }
             socket = IO.Socket(ServerUrl, new IO.Options { AutoConnect = false });
             socket.On("connect", () =>
@@ -64,10 +83,9 @@ namespace RemindSME.Desktop.Helpers
             socket.On("network-count-change", networkCountChangeListener);
             socket.On("heating-notification", heatingNotificationListener);
             socket.Connect();
-            return socket;
         }
 
-        public void Disconnect()
+        private void Disconnect()
         {
             if (socket == null)
             {

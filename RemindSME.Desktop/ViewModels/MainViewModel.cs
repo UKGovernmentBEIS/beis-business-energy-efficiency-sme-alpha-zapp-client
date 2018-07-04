@@ -19,7 +19,6 @@ namespace RemindSME.Desktop.ViewModels
         private readonly IAppWindowManager appWindowManager;
         private readonly IHibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
-        private readonly ISocketManager socketManager;
         private readonly IAppUpdateManager updateManager;
 
         private bool hibernationPromptHasBeenShown;
@@ -31,15 +30,13 @@ namespace RemindSME.Desktop.ViewModels
             IEventAggregator eventAggregator,
             IHibernationManager hibernationManager,
             INotificationManager notificationManager,
-            IAppWindowManager appWindowManager,
-            ISocketManager socketManager)
+            IAppWindowManager appWindowManager)
         {
             this.actionTracker = actionTracker;
             this.hibernationManager = hibernationManager;
             this.notificationManager = notificationManager;
             this.updateManager = updateManager;
             this.appWindowManager = appWindowManager;
-            this.socketManager = socketManager;
 
             eventAggregator.Subscribe(this);
 
@@ -52,9 +49,6 @@ namespace RemindSME.Desktop.ViewModels
             updateTimer.Start();
 
             SquirrelAwareApp.HandleEvents(onFirstRun: OpenWelcomeWindow);
-
-            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
-            Connect();
         }
 
         public void Handle(NextHibernationTimeUpdatedEvent e)
@@ -138,29 +132,6 @@ namespace RemindSME.Desktop.ViewModels
             actionTracker.Log("Showed hibernation warning.");
             appWindowManager.OpenOrActivateDialog<HibernationWarningView, HibernationWarningViewModel>();
             hibernationWarningHasBeenShown = true;
-        }
-
-        private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
-        {
-            switch (e.Reason)
-            {
-                case SessionSwitchReason.SessionUnlock:
-                    Connect();
-                    break;
-                case SessionSwitchReason.SessionLock:
-                    Disconnect();
-                    break;
-            }
-        }
-
-        private void Connect()
-        {
-            socketManager.Connect();
-        }
-
-        private void Disconnect()
-        {
-            socketManager.Disconnect();
         }
 
         private async void UpdateTimer_TickAsync(object sender, EventArgs e)
