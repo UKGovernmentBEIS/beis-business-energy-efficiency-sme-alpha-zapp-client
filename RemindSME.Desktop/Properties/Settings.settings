@@ -20,11 +20,11 @@
     <Setting Name="Pseudonym" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="CompanyId" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="CompanyId" Type="System.String" Scope="User">
+      <Value Profile="(Default)">null</Value>
     </Setting>
     <Setting Name="CompanyName" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">null</Value>
     </Setting>
   </Settings>
 </SettingsFile>

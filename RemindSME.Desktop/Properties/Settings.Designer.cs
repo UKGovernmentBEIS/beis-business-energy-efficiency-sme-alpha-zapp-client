@@ -97,10 +97,10 @@ namespace RemindSME.Desktop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int CompanyId {
+        [global::System.Configuration.DefaultSettingValueAttribute("null")]
+        public string CompanyId {
             get {
-                return ((int)(this["CompanyId"]));
+                return ((string)(this["CompanyId"]));
             }
             set {
                 this["CompanyId"] = value;
