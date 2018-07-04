@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using Caliburn.Micro;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
@@ -10,10 +9,12 @@ namespace RemindSME.Desktop.ViewModels
     public class WelcomeViewModel : ViewAware
     {
         private readonly IAppWindowManager appWindowManager;
+        private readonly ICompanyApiClient companyApiClient;
 
-        public WelcomeViewModel(IAppWindowManager appWindowManager)
+        public WelcomeViewModel(IAppWindowManager appWindowManager, ICompanyApiClient companyApiClient)
         {
             this.appWindowManager = appWindowManager;
+            this.companyApiClient = companyApiClient;
         }
 
         public void OpenHubWindow()
@@ -26,14 +27,23 @@ namespace RemindSME.Desktop.ViewModels
             appWindowManager.OpenOrActivateWindow<HubView, HubViewModel>();
         }
 
-        public string CompanyCode
+        public string CompanyIdInput
         {
             get => Settings.Default.CompanyId == 0 ? "" : Settings.Default.CompanyId.ToString();
-            set => Settings.Default.CompanyId = Int32.Parse(value);
+            set
+            {
+                if (value.Length == 6)
+                {
+                    companyApiClient.UpdateCompanyName(int.Parse(value));
+                    NotifyOfPropertyChange(() => CompanyName);
+
+                }
+                Settings.Default.CompanyId = value.Length == 0 ? 0 : int.Parse(value);
+            }
             // if it is a work network
-            // if X digits long, do a GET request to verify
-            // if verified, show company name, otherwise show error and contact us message 
             // then add to system settings
         }
+
+        public string CompanyName => Settings.Default.CompanyName ?? "Company not found";
     }
 }
