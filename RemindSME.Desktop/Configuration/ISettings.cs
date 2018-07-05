@@ -10,7 +10,5 @@ namespace RemindSME.Desktop.Configuration
         bool HibernationOptIn { get; set; }
         DateTime NextHibernationTime { get; set; }
         string Pseudonym { get; set; }
-
-        void Save();
     }
 }
