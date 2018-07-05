@@ -210,6 +210,7 @@
     <Compile Include="Helpers\DummyUpdateManager.cs" />
     <Compile Include="Helpers\AppInfo.cs" />
     <Compile Include="Helpers\AppConfigurationManager.cs" />
+    <Compile Include="Helpers\HeatingRecommendationHelper.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Events\TrackingEvent.cs" />
@@ -223,7 +224,7 @@
     <Compile Include="Helpers\RegistryManager.cs" />
     <Compile Include="Helpers\AppWindowManager.cs" />
     <Compile Include="Services\SocketManager.cs" />
-    <Compile Include="Helpers\WeatherDataService.cs" />
+    <Compile Include="Helpers\WeatherApiClient.cs" />
     <Compile Include="Models\WeatherData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

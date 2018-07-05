@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 using Caliburn.Micro;
 using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
-using RemindSME.Desktop.Models;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.ViewModels;
 using Action = System.Action;
@@ -29,7 +26,7 @@ namespace RemindSME.Desktop.Services
         private readonly IEventAggregator eventAggregator;
         private readonly ILog log;
         private readonly INotificationManager notificationManager;
-        private readonly IWeatherApiClient weatherApiClient;
+        private readonly IHeatingRecommendationHelper heatingRecommendationHelper;
         private readonly ISettings settings;
         private readonly DispatcherTimer timer;
 
@@ -41,7 +38,7 @@ namespace RemindSME.Desktop.Services
         public ReminderService(
             ILog log,
             INotificationManager notificationManager,
-            IWeatherApiClient weatherApiClient,
+            IHeatingRecommendationHelper heatingRecommendationHelper,
             IAppWindowManager appWindowManager,
             IEventAggregator eventAggregator,
             ISettings settings,
@@ -49,7 +46,7 @@ namespace RemindSME.Desktop.Services
         {
             this.log = log;
             this.notificationManager = notificationManager;
-            this.weatherApiClient = weatherApiClient;
+            this.heatingRecommendationHelper = heatingRecommendationHelper;
             this.appWindowManager = appWindowManager;
             this.eventAggregator = eventAggregator;
             this.settings = settings;
@@ -128,28 +125,12 @@ namespace RemindSME.Desktop.Services
         private async void ShowFirstLoginReminder()
         {
             isShowingFirstLoginReminder = true;
-            var message = await GetWeatherDependentMessage();
+            var message = await heatingRecommendationHelper.GetWeatherDependentMessage();
             ShowReminder(
                 Resources.Reminder_HeatingFirstLogin_Title,
                 message,
                 () => isShowingFirstLoginReminder = false,
                 new ReminderViewModel.Button("Done!", FirstLoginReminder_Done));
-        }
-
-        private async Task<string> GetWeatherDependentMessage()
-        {
-            var forecast = await weatherApiClient.GetWeatherForecastForLocation("London,UK");
-            var peakTemperature = GetPeakTemperatureForToday(forecast);
-            return peakTemperature != null
-                ? $"Looks like it's going to be hot today ({peakTemperature:F0}°C)! Please make sure the air conditioning is set to a sensible temperature for today's weather. Can you open windows instead?"
-                : Resources.Reminder_HeatingFirstLogin_Message;
-        }
-
-        private double? GetPeakTemperatureForToday(WeatherForecast weatherForecast)
-        {
-            return weatherForecast?.Forecasts
-                .Where(forecast => forecast.Time < DateTime.Today.AddDays(1))
-                .Max(forecast => forecast.Measurements.Temperature);
         }
 
         private void FirstLoginReminder_Done()
