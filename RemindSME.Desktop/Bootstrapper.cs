@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
@@ -41,6 +42,7 @@ namespace RemindSME.Desktop
         {
             var assembly = Assembly.GetExecutingAssembly();
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces().SingleInstance();
+
             builder.RegisterAssemblyTypes(assembly).Where(t => t.IsAssignableTo<IService>()).AsSelf().SingleInstance();
             builder.RegisterAssemblyTypes(assembly).Where(t => t.IsAssignableTo<SocketListener>()).AsSelf().SingleInstance();
 
@@ -51,11 +53,10 @@ namespace RemindSME.Desktop
             if (!string.IsNullOrEmpty(UpdateUrl))
             {
                 builder.RegisterInstance(new UpdateManager(UpdateUrl)).As<IUpdateManager>().SingleInstance();
-                builder.RegisterType<AppUpdateManager>().As<IAppUpdateManager>().SingleInstance();
             }
             else
             {
-                builder.RegisterType<DummyAppUpdateManager>().As<IAppUpdateManager>().SingleInstance();
+                builder.RegisterType<DummyUpdateManager>().As<IUpdateManager>().SingleInstance();
             }
 
             base.ConfigureContainer(builder);
@@ -106,7 +107,7 @@ namespace RemindSME.Desktop
             }
         }
 
-        private static bool IsRelaunchAfterUpdate(string[] commandLineArgs)
+        private static bool IsRelaunchAfterUpdate(IEnumerable<string> commandLineArgs)
         {
             return commandLineArgs.Any(arg => arg.Contains("--squirrel"));
         }

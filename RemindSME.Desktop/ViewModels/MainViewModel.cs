@@ -6,7 +6,6 @@ using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
-using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Views;
 using Squirrel;
 using static RemindSME.Desktop.Helpers.HibernationSettings;
@@ -17,17 +16,15 @@ namespace RemindSME.Desktop.ViewModels
     {
         private readonly IActionTracker actionTracker;
         private readonly IAppWindowManager appWindowManager;
-        private readonly ISettings settings;
         private readonly IHibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
-        private readonly IAppUpdateManager updateManager;
+        private readonly ISettings settings;
 
         private bool hibernationPromptHasBeenShown;
         private bool hibernationWarningHasBeenShown;
 
         public MainViewModel(
             IActionTracker actionTracker,
-            IAppUpdateManager updateManager,
             IEventAggregator eventAggregator,
             IHibernationManager hibernationManager,
             INotificationManager notificationManager,
@@ -37,7 +34,6 @@ namespace RemindSME.Desktop.ViewModels
             this.actionTracker = actionTracker;
             this.hibernationManager = hibernationManager;
             this.notificationManager = notificationManager;
-            this.updateManager = updateManager;
             this.appWindowManager = appWindowManager;
             this.settings = settings;
 
@@ -46,10 +42,6 @@ namespace RemindSME.Desktop.ViewModels
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             timer.Tick += Timer_Tick_Hibernation;
             timer.Start();
-
-            var updateTimer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(5) };
-            updateTimer.Tick += UpdateTimer_TickAsync;
-            updateTimer.Start();
 
             SquirrelAwareApp.HandleEvents(onFirstRun: OpenWelcomeWindow);
         }
@@ -135,15 +127,6 @@ namespace RemindSME.Desktop.ViewModels
             actionTracker.Log("Showed hibernation warning.");
             appWindowManager.OpenOrActivateDialog<HibernationWarningView, HibernationWarningViewModel>();
             hibernationWarningHasBeenShown = true;
-        }
-
-        private async void UpdateTimer_TickAsync(object sender, EventArgs e)
-        {
-            var updateIsAvailable = await updateManager.CheckForUpdate();
-            if (updateIsAvailable)
-            {
-                await updateManager.UpdateAndRestart();
-            }
         }
     }
 }
