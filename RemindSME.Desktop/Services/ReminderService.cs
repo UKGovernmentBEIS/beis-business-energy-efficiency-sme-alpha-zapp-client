@@ -25,10 +25,7 @@ namespace RemindSME.Desktop.Services
         private readonly ISettings settings;
         private readonly DispatcherTimer timer;
 
-        private DateTime? mostRecentFirstLoginHeatingNotification;
-        private DateTime? mostRecentLastOutNotification;
-
-        private int networkCount = int.MaxValue;
+        private int? networkCount;
 
         public ReminderService(
             ILog log,
@@ -104,25 +101,26 @@ namespace RemindSME.Desktop.Services
             return settings.HeatingOptIn && // Opted in.
                    time >= FirstLoginMinimumTime && // Not too early.
                    time <= FirstLoginMaximumTime && // Early enough.
-                   mostRecentFirstLoginHeatingNotification?.Date != DateTime.Today; // No notification yet today.
+                   settings.MostRecentFirstLoginNotification.Date != DateTime.Today; // No notification yet today.
         }
 
         private void ShowFirstLoginHeatingNotification()
         {
-            mostRecentFirstLoginHeatingNotification = DateTime.Now;
+            settings.MostRecentFirstLoginNotification = DateTime.Now;
             ShowNotification(Resources.Notification_HeatingFirstLogin_Title, Resources.Notification_HeatingFirstLogin_Message);
         }
 
         private bool ShouldShowLastToLeaveNotification()
         {
             return DateTime.Now.TimeOfDay >= LastToLeaveMinimumTime && // Late enough.
-                   networkCount <= LastOutThreshold && // Few enough people.
-                   mostRecentLastOutNotification?.Date != DateTime.Today; // No notification yet today.
+                   networkCount.HasValue && // Is on a counted network.
+                   networkCount.Value <= LastOutThreshold && // Few enough people.
+                   settings.MostRecentLastToLeaveNotification.Date != DateTime.Today; // No notification yet today.
         }
 
         private void ShowLastToLeaveNotification()
         {
-            mostRecentLastOutNotification = DateTime.Now;
+            settings.MostRecentLastToLeaveNotification = DateTime.Now;
             ShowNotification(Resources.Notification_LastOut_Title, Resources.Notification_LastOut_Message);
         }
 

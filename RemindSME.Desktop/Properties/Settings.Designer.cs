@@ -94,5 +94,29 @@ namespace RemindSME.Desktop.Properties {
                 this["Pseudonym"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime MostRecentFirstLoginNotification {
+            get {
+                return ((global::System.DateTime)(this["MostRecentFirstLoginNotification"]));
+            }
+            set {
+                this["MostRecentFirstLoginNotification"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime MostRecentLastToLeaveNotification {
+            get {
+                return ((global::System.DateTime)(this["MostRecentLastToLeaveNotification"]));
+            }
+            set {
+                this["MostRecentLastToLeaveNotification"] = value;
+            }
+        }
     }
 }
