@@ -211,7 +211,7 @@
     <Compile Include="Helpers\Listeners\HeatingNotificationListener.cs" />
     <Compile Include="Helpers\Listeners\CompanyCountChangeListener.cs" />
     <Compile Include="Helpers\Listeners\SocketListener.cs" />
-    <Compile Include="Helpers\NetworkFinder.cs" />
+    <Compile Include="Services\NetworkService.cs" />
     <Compile Include="Helpers\RegistryManager.cs" />
     <Compile Include="Helpers\AppWindowManager.cs" />
     <Compile Include="Services\SocketManager.cs" />

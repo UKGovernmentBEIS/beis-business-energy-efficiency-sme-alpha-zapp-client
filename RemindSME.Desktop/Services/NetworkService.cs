@@ -3,16 +3,33 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using RemindSME.Desktop.Properties;
 
-namespace RemindSME.Desktop.Helpers
+namespace RemindSME.Desktop.Services
 {
-    public interface INetworkFinder
+    public interface INetworkService : IService 
     {
         string GetNetworkAddress();
+        void AddNetwork(bool isWorkNetwork);
     }
 
-    public class NetworkFinder : INetworkFinder
+    public class NetworkService : INetworkService
     {
+        public void Initialize () { }
+        public void AddNetwork(bool isWorkNetwork)
+        {
+            var network = GetNetworkAddress();
+            if (isWorkNetwork)
+            {
+
+                Settings.Default.WorkNetworks.Add(network);
+            }
+            else
+            {
+                Settings.Default.OtherNetworks.Add(network);
+            }
+            Settings.Default.Save();
+        }
         public string GetNetworkAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());

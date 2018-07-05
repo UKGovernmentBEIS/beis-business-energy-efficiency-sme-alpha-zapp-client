@@ -3,6 +3,7 @@ using Caliburn.Micro;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Views;
+using RemindSME.Desktop.Services;
 
 namespace RemindSME.Desktop.ViewModels
 {
@@ -10,30 +11,26 @@ namespace RemindSME.Desktop.ViewModels
     {
         private readonly IAppWindowManager appWindowManager;
         private readonly ICompanyApiClient companyApiClient;
-        private readonly INetworkFinder networkFinder;
+        private readonly INetworkService networkService;
         
         private bool isWorkNetwork = true;
 
         public WelcomeViewModel(
             IAppWindowManager appWindowManager,
             ICompanyApiClient companyApiClient,
-            INetworkFinder networkFinder)
+            INetworkService networkService)
         {
             this.appWindowManager = appWindowManager;
             this.companyApiClient = companyApiClient;
-            this.networkFinder = networkFinder;
+            this.networkService = networkService;
         }
 
         public void OpenHubWindow()
         {
             (GetView() as Window)?.Close();
 
-            if (isWorkNetwork)
-            {
-                var network = networkFinder.GetNetworkAddress();
-                Settings.Default.WorkNetworks.Add(network);
-            }
-            
+            networkService.AddNetwork(isWorkNetwork);
+
             Settings.Default.DisplaySettingExplanations = true;
             Settings.Default.Save();
 

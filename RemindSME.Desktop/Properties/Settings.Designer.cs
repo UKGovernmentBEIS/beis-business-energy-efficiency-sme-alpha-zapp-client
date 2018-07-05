@@ -129,5 +129,16 @@ namespace RemindSME.Desktop.Properties {
                 this["WorkNetworks"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection OtherNetworks {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["OtherNetworks"]));
+            }
+            set {
+                this["OtherNetworks"] = value;
+            }
+        }
     }
 }
