@@ -1,39 +1,47 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Threading;
+using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Helpers;
+using RemindSME.Desktop.Services;
 
 namespace RemindSME.Desktop.ViewModels
 {
     public class HibernationWarningViewModel : Notification
     {
         private readonly IActionTracker actionTracker;
-        private readonly IHibernationManager hibernationManager;
+        private readonly IHibernationService hibernationService;
+        private readonly ISettings settings;
 
-        public HibernationWarningViewModel(IActionTracker actionTracker, IHibernationManager hibernationManager)
+        public HibernationWarningViewModel(
+            IActionTracker actionTracker,
+            IHibernationService hibernationService,
+            ISettings settings,
+            DispatcherTimer timer)
         {
             this.actionTracker = actionTracker;
-            this.hibernationManager = hibernationManager;
+            this.hibernationService = hibernationService;
+            this.settings = settings;
 
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += Timer_Tick_UpdateWindow;
             timer.Start();
         }
 
-        public string TimeToNextHibernation => FormatTimeSpan(hibernationManager.NextHibernationTime - DateTime.Now);
+        public string TimeToNextHibernation => FormatTimeSpan(settings.NextHibernationTime - DateTime.Now);
 
         public void Snooze()
         {
             CloseWindow();
             actionTracker.Log("User clicked 'Snooze' on hibernation warning modal.");
-            hibernationManager.Snooze();
+            hibernationService.Snooze();
         }
 
         public void NotTonight()
         {
             CloseWindow();
             actionTracker.Log("User clicked 'Not tonight' on hibernation warning modal.");
-            hibernationManager.NotTonight();
+            hibernationService.NotTonight();
         }
 
         private void CloseWindow()
@@ -43,7 +51,7 @@ namespace RemindSME.Desktop.ViewModels
 
         private void Timer_Tick_UpdateWindow(object sender, EventArgs e)
         {
-            var timeToHibernate = hibernationManager.NextHibernationTime - DateTime.Now;
+            var timeToHibernate = settings.NextHibernationTime - DateTime.Now;
             if (timeToHibernate < TimeSpan.FromSeconds(1))
             {
                 CloseWindow();

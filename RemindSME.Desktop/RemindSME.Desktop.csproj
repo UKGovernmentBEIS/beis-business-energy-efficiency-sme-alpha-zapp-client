@@ -193,13 +193,13 @@
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Events\HeatingNotificationEvent.cs" />
     <Compile Include="Events\NetworkCountChangeEvent.cs" />
-    <Compile Include="Events\NextHibernationTimeUpdatedEvent.cs" />
+    <Compile Include="Events\SettingChangedEvent.cs" />
     <Compile Include="Helpers\DummyUpdateManager.cs" />
     <Compile Include="Helpers\IActionTracker.cs" />
     <Compile Include="Helpers\AppInfo.cs" />
     <Compile Include="Helpers\AppConfigurationManager.cs" />
     <Compile Include="Services\AppUpdateService.cs" />
-    <Compile Include="Helpers\HibernationManager.cs" />
+    <Compile Include="Services\HibernationService.cs" />
     <Compile Include="Helpers\HibernationSettings.cs" />
     <Compile Include="Helpers\Listeners\ArgumentParser.cs" />
     <Compile Include="Helpers\Listeners\HeatingNotificationListener.cs" />

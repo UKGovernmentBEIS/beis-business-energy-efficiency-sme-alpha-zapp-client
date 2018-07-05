@@ -73,8 +73,6 @@ namespace RemindSME.Desktop
             InitializeSettings();
             RegisterServices();
 
-            Container.Resolve<IHibernationManager>().UpdateNextHiberationTime();
-
             DisplayRootViewFor<MainViewModel>();
 
             base.OnStartup(sender, e);

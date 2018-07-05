@@ -1,16 +1,17 @@
 ﻿using RemindSME.Desktop.Helpers;
+using RemindSME.Desktop.Services;
 
 namespace RemindSME.Desktop.ViewModels
 {
     public class HibernationPromptViewModel : Notification
     {
         private readonly IActionTracker actionTracker;
-        private readonly IHibernationManager hibernationManager;
+        private readonly IHibernationService hibernationService;
 
-        public HibernationPromptViewModel(IActionTracker actionTracker, IHibernationManager hibernationManager)
+        public HibernationPromptViewModel(IActionTracker actionTracker, IHibernationService hibernationService)
         {
             this.actionTracker = actionTracker;
-            this.hibernationManager = hibernationManager;
+            this.hibernationService = hibernationService;
         }
 
         public void Sure()
@@ -21,13 +22,13 @@ namespace RemindSME.Desktop.ViewModels
         public void Snooze()
         {
             actionTracker.Log("User clicked 'Snooze' on hibernation prompt.");
-            hibernationManager.Snooze();
+            hibernationService.Snooze();
         }
 
         public void NotTonight()
         {
             actionTracker.Log("User clicked 'Not tonight' on hibernation prompt.");
-            hibernationManager.NotTonight();
+            hibernationService.NotTonight();
         }
     }
 }
