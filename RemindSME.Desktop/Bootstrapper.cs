@@ -64,14 +64,14 @@ namespace RemindSME.Desktop
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            InitializeSettings();
+            InitializeServices();
+
             var instanceAwareApplication = (InstanceAwareApplication)Application;
             if (!instanceAwareApplication.IsFirstInstance.GetValueOrDefault() && !IsRelaunchAfterUpdate(Environment.GetCommandLineArgs()))
             {
-                Environment.Exit(0);
+                Application.Current.Shutdown();
             }
-
-            InitializeSettings();
-            RegisterServices();
 
             DisplayRootViewFor<MainViewModel>();
 
@@ -87,7 +87,7 @@ namespace RemindSME.Desktop
             }
         }
 
-        private void RegisterServices()
+        private void InitializeServices()
         {
             var serviceTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsInterface && type.IsAssignableTo<IService>());
             foreach (var serviceType in serviceTypes)
