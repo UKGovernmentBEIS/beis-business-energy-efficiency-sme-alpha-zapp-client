@@ -118,21 +118,21 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Notification_HeatingDefault_Message" xml:space="preserve">
-    <value>Perhaps consider opening the windows instead of putting on the air conditioning?</value>
+    <value>The temperature outside has changed, make sure air conditioning is set to a suitable temperature. If it is hot, can you open the windows instead of using the air con?</value>
   </data>
   <data name="Notification_HeatingDefault_Title" xml:space="preserve">
-    <value>It's hot today!</value>
+    <value>Check the air conditioning</value>
   </data>
   <data name="Notification_HeatingFirstLogin_Message" xml:space="preserve">
-    <value>Please make sure the heating / air conditioning is set to a sensible temperature for today's weather. If it's hot, can you open windows instead?</value>
+    <value>Looks like you're one of the first people in the office today, make sure the air conditioning is set to a suitable temperature for this morning's weather.</value>
   </data>
   <data name="Notification_HeatingFirstLogin_Title" xml:space="preserve">
-    <value>Good morning!</value>
+    <value>Check the air conditioning</value>
   </data>
-  <data name="Notification_LastOut_Message" xml:space="preserve">
-    <value>Don't forget to switch off the lights and heating / air conditioning if you're the last one out tonight!</value>
+  <data name="Notification_LastToLeave_Message" xml:space="preserve">
+    <value>Looks like you're one of the last in the office, don't forget to turn off the air conditioning and lights before you leave.</value>
   </data>
-  <data name="Notification_LastOut_Title" xml:space="preserve">
-    <value>Staying a bit later?</value>
+  <data name="Notification_LastToLeave_Title" xml:space="preserve">
+    <value>Switch everything off before you leave</value>
   </data>
 </root>

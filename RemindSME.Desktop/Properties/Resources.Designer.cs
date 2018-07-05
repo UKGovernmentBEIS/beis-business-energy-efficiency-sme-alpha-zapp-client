@@ -61,7 +61,7 @@ namespace RemindSME.Desktop.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Perhaps consider opening the windows instead of putting on the air conditioning?.
+        ///   Looks up a localized string similar to The temperature outside has changed, make sure air conditioning is set to a suitable temperature. If it is hot, can you open the windows instead of using the air con?.
         /// </summary>
         internal static string Notification_HeatingDefault_Message {
             get {
@@ -70,7 +70,7 @@ namespace RemindSME.Desktop.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It&apos;s hot today!.
+        ///   Looks up a localized string similar to Check the air conditioning.
         /// </summary>
         internal static string Notification_HeatingDefault_Title {
             get {
@@ -79,7 +79,7 @@ namespace RemindSME.Desktop.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please make sure the heating / air conditioning is set to a sensible temperature for today&apos;s weather. If it&apos;s hot, can you open windows instead?.
+        ///   Looks up a localized string similar to Looks like you&apos;re one of the first people in the office today, make sure the air conditioning is set to a suitable temperature for this morning&apos;s weather..
         /// </summary>
         internal static string Notification_HeatingFirstLogin_Message {
             get {
@@ -88,7 +88,7 @@ namespace RemindSME.Desktop.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Good morning!.
+        ///   Looks up a localized string similar to Check the air conditioning.
         /// </summary>
         internal static string Notification_HeatingFirstLogin_Title {
             get {
@@ -97,20 +97,20 @@ namespace RemindSME.Desktop.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t forget to switch off the lights and heating / air conditioning if you&apos;re the last one out tonight!.
+        ///   Looks up a localized string similar to Looks like you&apos;re one of the last in the office, don&apos;t forget to turn off the air conditioning and lights before you leave..
         /// </summary>
-        internal static string Notification_LastOut_Message {
+        internal static string Notification_LastToLeave_Message {
             get {
-                return ResourceManager.GetString("Notification_LastOut_Message", resourceCulture);
+                return ResourceManager.GetString("Notification_LastToLeave_Message", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Staying a bit later?.
+        ///   Looks up a localized string similar to Switch everything off before you leave.
         /// </summary>
-        internal static string Notification_LastOut_Title {
+        internal static string Notification_LastToLeave_Title {
             get {
-                return ResourceManager.GetString("Notification_LastOut_Title", resourceCulture);
+                return ResourceManager.GetString("Notification_LastToLeave_Title", resourceCulture);
             }
         }
     }

@@ -12,7 +12,8 @@ namespace RemindSME.Desktop.Services
 {
     public class ReminderService : IService, IHandle<HeatingNotificationEvent>, IHandle<NetworkCountChangeEvent>
     {
-        private const int LastOutThreshold = 3;
+        private const int FirstInThreshold = 3;
+        private const int LastToLeaveThreshold = 3;
 
         private static readonly TimeSpan FirstLoginMinimumTime = new TimeSpan(06, 00, 00);
         private static readonly TimeSpan FirstLoginMaximumTime = new TimeSpan(11, 00, 00);
@@ -101,6 +102,7 @@ namespace RemindSME.Desktop.Services
             return settings.HeatingOptIn && // Opted in.
                    time >= FirstLoginMinimumTime && // Not too early.
                    time <= FirstLoginMaximumTime && // Early enough.
+                   networkCount.HasValue && networkCount.Value <= FirstInThreshold && // Few enough people.
                    settings.MostRecentFirstLoginNotification.Date != DateTime.Today; // No notification yet today.
         }
 
@@ -113,15 +115,14 @@ namespace RemindSME.Desktop.Services
         private bool ShouldShowLastToLeaveNotification()
         {
             return DateTime.Now.TimeOfDay >= LastToLeaveMinimumTime && // Late enough.
-                   networkCount.HasValue && // Is on a counted network.
-                   networkCount.Value <= LastOutThreshold && // Few enough people.
+                   networkCount.HasValue && networkCount.Value <= LastToLeaveThreshold && // Few enough people.
                    settings.MostRecentLastToLeaveNotification.Date != DateTime.Today; // No notification yet today.
         }
 
         private void ShowLastToLeaveNotification()
         {
             settings.MostRecentLastToLeaveNotification = DateTime.Now;
-            ShowNotification(Resources.Notification_LastOut_Title, Resources.Notification_LastOut_Message);
+            ShowNotification(Resources.Notification_LastToLeave_Title, Resources.Notification_LastToLeave_Message);
         }
 
         private void ShowNotification(string title, string message)
