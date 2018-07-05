@@ -334,8 +334,11 @@
     <!-- Add error messages for missing packages -->
     <Error Condition="!Exists(%(NuGetExe.FullPath))" Text="You are trying to use the NuGet.CommandLine package, but it is not installed. Please install NuGet.CommandLine from the Package Manager." />
     <Error Condition="!Exists(%(SquirrelExe.FullPath))" Text="You are trying to use the Squirrel.Windows package, but it is not installed. Please install Squirrel.Windows from the Package Manager." />
+    <RemoveDir Directories="$(ReleaseDir)" />   
     <Exec Command="&quot;%(NuGetExe.FullPath)&quot; pack $(PackageName).nuspec -Version $(SemVerNumber) -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
     <Exec Command="&quot;%(SquirrelExe.FullPath)&quot; --releasify $(OutDir)$(PackageName).$(SemVerNumber).nupkg --releaseDir=$(ReleaseDir) $(SquirrelParams)" />
+    <Move SourceFiles="$(ReleaseDir)\Setup.exe" DestinationFiles="$(ReleaseDir)\ZappSetup.exe" />
+    <Copy SourceFiles="$(ReleaseDir)\ZappSetup.exe" DestinationFiles="$(ReleaseDir)\ZappSetup-$(SemVerNumber).exe" />
   </Target>
   <Import Project="..\packages\Microsoft.VisualStudio.SlowCheetah.3.0.61\build\Microsoft.VisualStudio.SlowCheetah.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.SlowCheetah.3.0.61\build\Microsoft.VisualStudio.SlowCheetah.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
