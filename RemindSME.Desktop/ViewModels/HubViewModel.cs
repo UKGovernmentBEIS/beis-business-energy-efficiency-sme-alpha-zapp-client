@@ -132,7 +132,7 @@ namespace RemindSME.Desktop.ViewModels
         }
 
         public string AppVersion => $"Current version: {AppInfo.Version} ({ConfigurationManager.AppSettings["Configuration"]})";
-        public string CompanyName => Settings.Default.CompanyName;
+        public string CompanyName => settings.CompanyName;
 
         public bool ShowExplanationText
         {
