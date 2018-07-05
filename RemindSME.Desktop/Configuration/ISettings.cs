@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 
 namespace RemindSME.Desktop.Configuration
 {
@@ -10,7 +11,9 @@ namespace RemindSME.Desktop.Configuration
         bool HibernationOptIn { get; set; }
         DateTime NextHibernationTime { get; set; }
         string Pseudonym { get; set; }
-
-        void Save();
+        string CompanyId { get; set; }
+        string CompanyName { get; set; }
+        StringCollection WorkNetworks { get; set; }
+        StringCollection OtherNetworks { get; set; }
     }
 }

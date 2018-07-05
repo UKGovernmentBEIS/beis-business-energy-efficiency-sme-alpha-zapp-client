@@ -20,18 +20,31 @@ namespace RemindSME.Desktop.Services
             NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
         }
 
+        //public bool IsWorkNetwork => settings.WorkNetworks.Contains(currentNetwork);
+
+        // private string currentNetwork;
+        
+
+
         private void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
-            Console.WriteLine($@"New network");
+            //update current network
+            //fire notification if new network
+
+            Console.WriteLine("New network");
+
             var network = GetNetworkAddress();
             if (Settings.Default.WorkNetworks.Contains(network))
             {
                 Console.WriteLine($@"New network is Work Network");
                 // start app as normal
+                //do nothing
             }
             else if (Settings.Default.OtherNetworks.Contains(network))
             {
                 // don't send any notifications
+                // set bool, which can be picked up elsewhere
+
             }
             else
             {

@@ -35,7 +35,7 @@
                 </StackPanel>
 
                 <TextBlock Text="You've scheduled your computer to hibernate within the next 15 minutes"
-                           TextWrapping="Wrap" Opacity=".8" Margin="0,8,0,0" />
+                           TextWrapping="Wrap" Opacity=".8" Margin="0,8,0,8" />
             </DockPanel>
         </Grid>
     </Border>

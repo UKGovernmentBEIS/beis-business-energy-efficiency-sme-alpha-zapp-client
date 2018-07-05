@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.IO;
 using System.Reflection;
+using Caliburn.Micro;
 
 namespace RemindSME.Desktop.Helpers
 {
@@ -18,11 +19,11 @@ namespace RemindSME.Desktop.Helpers
             Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName,
             "backup.config");
 
-        private readonly IActionTracker actionTracker;
+        private readonly ILog log;
 
-        public AppConfigurationManager(IActionTracker actionTracker)
+        public AppConfigurationManager(ILog log)
         {
-            this.actionTracker = actionTracker;
+            this.log = log;
         }
 
         public void BackupSettings()
@@ -43,13 +44,14 @@ namespace RemindSME.Desktop.Helpers
 
             try
             {
+                // ReSharper disable once AssignNullToNotNullAttribute
                 Directory.CreateDirectory(Path.GetDirectoryName(destFile));
                 File.Copy(sourceFile, destFile, true);
                 File.Delete(sourceFile);
             }
             catch (Exception e)
             {
-                actionTracker.Log($"Error occurred while restoring settings: {e.Message}");
+                log.Error(e);
             }
         }
     }

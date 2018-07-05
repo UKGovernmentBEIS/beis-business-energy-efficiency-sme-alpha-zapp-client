@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RemindSME.Desktop.Services
+﻿namespace RemindSME.Desktop.Services
 {
     public interface IService
     {

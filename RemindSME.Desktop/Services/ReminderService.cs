@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
-using Microsoft.Win32;
 using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
@@ -12,9 +10,7 @@ using RemindSME.Desktop.ViewModels;
 
 namespace RemindSME.Desktop.Services
 {
-    public interface IReminderService : IService { }
-
-    public class ReminderService : IReminderService, IHandle<HeatingNotificationEvent>, IHandle<NetworkCountChangeEvent>
+    public class ReminderService : IService, IHandle<HeatingNotificationEvent>, IHandle<NetworkCountChangeEvent>
     {
         private const int LastOutThreshold = 3;
 
@@ -22,7 +18,7 @@ namespace RemindSME.Desktop.Services
         private static readonly TimeSpan FirstLoginMaximumTime = new TimeSpan(11, 00, 00);
         private static readonly TimeSpan LastToLeaveMinimumTime = new TimeSpan(17, 00, 00);
 
-        private readonly IActionTracker actionTracker;
+        private readonly ILog log;
         private readonly IAppWindowManager appWindowManager;
         private readonly IEventAggregator eventAggregator;
         private readonly INotificationManager notificationManager;
@@ -35,14 +31,14 @@ namespace RemindSME.Desktop.Services
         private int networkCount = int.MaxValue;
 
         public ReminderService(
-            IActionTracker actionTracker,
+            ILog log,
             INotificationManager notificationManager,
             IAppWindowManager appWindowManager,
             IEventAggregator eventAggregator,
             ISettings settings,
             DispatcherTimer timer)
         {
-            this.actionTracker = actionTracker;
+            this.log = log;
             this.notificationManager = notificationManager;
             this.appWindowManager = appWindowManager;
             this.eventAggregator = eventAggregator;
@@ -74,7 +70,7 @@ namespace RemindSME.Desktop.Services
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if (appWindowManager.AnyAppWindowIsOpen())
+            if (appWindowManager.AnyAppWindowIsOpen() /* or is not work network*/)
             {
                 // Suppress all timed reminders while app windows are open.
                 // This avoids immediately showing notifications to new or newly opted-in users.
@@ -132,13 +128,13 @@ namespace RemindSME.Desktop.Services
 
         private void ShowNotification(string title, string message)
         {
-            actionTracker.Log($"Displayed '{title}' notification.");
+            log.Info($"Displayed '{title}' notification.");
 
             var model = IoC.Get<ReminderViewModel>();
             model.Title = title;
             model.Message = message;
             notificationManager.Show(model, expirationTime: TimeSpan.FromMinutes(15),
-                onClose: () => actionTracker.Log($"User dismissed '{title}' notification."));
+                onClose: () => log.Info($"User dismissed '{title}' notification."));
         }
     }
 }

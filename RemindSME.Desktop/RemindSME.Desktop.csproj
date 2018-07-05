@@ -199,14 +199,15 @@
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Events\HeatingNotificationEvent.cs" />
     <Compile Include="Events\NetworkCountChangeEvent.cs" />
-    <Compile Include="Events\NextHibernationTimeUpdatedEvent.cs" />
-    <Compile Include="Helpers\CompanyApiClient.cs" />
-    <Compile Include="Helpers\IActionTracker.cs" />
+    <Compile Include="Events\SettingChangedEvent.cs" />
     <Compile Include="Helpers\AppInfo.cs" />
     <Compile Include="Helpers\AppConfigurationManager.cs" />
-    <Compile Include="Helpers\AppUpdateManager.cs" />
-    <Compile Include="Helpers\HibernationManager.cs" />
-    <Compile Include="Helpers\HibernationSettings.cs" />
+    <Compile Include="Helpers\CompanyApiClient.cs" />
+    <Compile Include="Helpers\DummyUpdateManager.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
+    <Compile Include="Events\TrackingEvent.cs" />
+    <Compile Include="Services\AppUpdateService.cs" />
+    <Compile Include="Services\HibernationService.cs" />
     <Compile Include="Helpers\Listeners\ArgumentParser.cs" />
     <Compile Include="Helpers\Listeners\HeatingNotificationListener.cs" />
     <Compile Include="Helpers\Listeners\CompanyCountChangeListener.cs" />
@@ -230,7 +231,7 @@
     </Compile>
     <Compile Include="Services\IService.cs" />
     <Compile Include="Services\ReminderService.cs" />
-    <Compile Include="ViewModels\NotificationViewModel.cs" />
+    <Compile Include="ViewModels\Notification.cs" />
     <Compile Include="ViewModels\FaqViewModel.cs" />
     <Compile Include="ViewModels\HubViewModel.cs" />
     <Compile Include="ViewModels\HibernationPromptViewModel.cs" />

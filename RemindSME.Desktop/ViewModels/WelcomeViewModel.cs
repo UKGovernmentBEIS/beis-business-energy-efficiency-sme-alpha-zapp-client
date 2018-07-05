@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using Caliburn.Micro;
+using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Helpers;
-using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Views;
 using RemindSME.Desktop.Services;
 
@@ -12,17 +12,20 @@ namespace RemindSME.Desktop.ViewModels
         private readonly IAppWindowManager appWindowManager;
         private readonly ICompanyApiClient companyApiClient;
         private readonly INetworkService networkService;
-        
+        private readonly ISettings settings;
+
         private bool isWorkNetwork = true;
 
         public WelcomeViewModel(
             IAppWindowManager appWindowManager,
             ICompanyApiClient companyApiClient,
-            INetworkService networkService)
+            INetworkService networkService, 
+            ISettings settings)
         {
             this.appWindowManager = appWindowManager;
             this.companyApiClient = companyApiClient;
             this.networkService = networkService;
+            this.settings = settings;
         }
 
         public void OpenHubWindow()
@@ -31,15 +34,14 @@ namespace RemindSME.Desktop.ViewModels
 
             networkService.AddNetwork(isWorkNetwork);
 
-            Settings.Default.DisplaySettingExplanations = true;
-            Settings.Default.Save();
+            settings.DisplaySettingExplanations = true;
 
             appWindowManager.OpenOrActivateWindow<HubView, HubViewModel>();
         }
 
         public string CompanyIdInput
         {
-            get => Settings.Default.CompanyId == null ? "" : Settings.Default.CompanyId.ToString();
+            get => settings.CompanyId == null ? "" : settings.CompanyId.ToString();
             set
             {
                 if (value.Length == 6)
@@ -47,13 +49,13 @@ namespace RemindSME.Desktop.ViewModels
                     UpdateCompanyName(value);
                 }
 
-                Settings.Default.CompanyId = value;
+                settings.CompanyId = value;
             }
         }
 
-        public string CompanyName => Settings.Default.CompanyName ?? "Company not found";
+        public string CompanyName => settings.CompanyName ?? "Company not found";
 
-        public bool CanOpenHubWindow => Settings.Default.CompanyName != null;
+        public bool CanOpenHubWindow => settings.CompanyName != null;
 
         private async void UpdateCompanyName(string companyId )
         {

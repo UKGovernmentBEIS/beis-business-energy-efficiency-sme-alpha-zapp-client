@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
@@ -6,12 +7,14 @@ using System.Windows;
 using System.Windows.Threading;
 using Autofac;
 using Bogus;
+using Caliburn.Micro;
 using Caliburn.Micro.Autofac;
 using Custom.Windows;
 using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Helpers.Listeners;
+using RemindSME.Desktop.Logging;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Services;
 using RemindSME.Desktop.ViewModels;
@@ -37,35 +40,27 @@ namespace RemindSME.Desktop
             base.PrepareApplication();
         }
 
-        protected override void ConfigureBootstrapper()
-        {
-            if (string.IsNullOrEmpty(Settings.Default.Pseudonym))
-            {
-                Settings.Default.Pseudonym = new Faker().Name.FindName(withPrefix: false, withSuffix: false);
-                Settings.Default.Save();
-            }
-
-            base.ConfigureBootstrapper();
-        }
-
         protected override void ConfigureContainer(ContainerBuilder builder)
         {
             var assembly = Assembly.GetExecutingAssembly();
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces().SingleInstance();
+
+            builder.RegisterAssemblyTypes(assembly).Where(t => t.IsAssignableTo<IService>()).AsSelf().SingleInstance();
             builder.RegisterAssemblyTypes(assembly).Where(t => t.IsAssignableTo<SocketListener>()).AsSelf().SingleInstance();
 
             builder.RegisterType<NotificationManager>().As<INotificationManager>().SingleInstance();
             builder.RegisterInstance(Settings.Default).As<ISettings>().SingleInstance();
+
             builder.RegisterType<DispatcherTimer>().AsSelf().InstancePerDependency();
+            builder.RegisterType<Logger>().As<ILog>().InstancePerDependency();
 
             if (!string.IsNullOrEmpty(UpdateUrl))
             {
                 builder.RegisterInstance(new UpdateManager(UpdateUrl)).As<IUpdateManager>().SingleInstance();
-                builder.RegisterType<AppUpdateManager>().As<IAppUpdateManager>().SingleInstance();
             }
             else
             {
-                builder.RegisterType<DummyAppUpdateManager>().As<IAppUpdateManager>().SingleInstance();
+                builder.RegisterType<DummyUpdateManager>().As<IUpdateManager>().SingleInstance();
             }
 
             base.ConfigureContainer(builder);
@@ -73,23 +68,37 @@ namespace RemindSME.Desktop
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            InitializeSettings();
+            InitializeServices();
+
             var instanceAwareApplication = (InstanceAwareApplication)Application;
             if (!instanceAwareApplication.IsFirstInstance.GetValueOrDefault() && !IsRelaunchAfterUpdate(Environment.GetCommandLineArgs()))
             {
-                Environment.Exit(0);
+                Application.Current.Shutdown();
             }
 
-            var serviceTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.IsInterface && type.IsAssignableTo<IService>());
+            DisplayRootViewFor<MainViewModel>();
+
+            base.OnStartup(sender, e);
+        }
+
+        private void InitializeSettings()
+        {
+            var settings = Container.Resolve<ISettings>();
+            if (string.IsNullOrEmpty(settings.Pseudonym))
+            {
+                settings.Pseudonym = new Faker().Name.FindName(withPrefix: false, withSuffix: false);
+            }
+        }
+
+        private void InitializeServices()
+        {
+            var serviceTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsInterface && type.IsAssignableTo<IService>());
             foreach (var serviceType in serviceTypes)
             {
                 var service = (IService)Container.Resolve(serviceType);
                 service.Initialize();
             }
-
-            Container.Resolve<IHibernationManager>().UpdateNextHiberationTime();
-            DisplayRootViewFor<MainViewModel>();
-
-            base.OnStartup(sender, e);
         }
 
         private void InstanceAwareApplication_StartupNextInstance(object sender, StartupNextInstanceEventArgs e)
@@ -100,7 +109,7 @@ namespace RemindSME.Desktop
             }
         }
 
-        private static bool IsRelaunchAfterUpdate(string[] commandLineArgs)
+        private static bool IsRelaunchAfterUpdate(IEnumerable<string> commandLineArgs)
         {
             return commandLineArgs.Any(arg => arg.Contains("--squirrel"));
         }
