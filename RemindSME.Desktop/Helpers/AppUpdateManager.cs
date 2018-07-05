@@ -30,17 +30,20 @@ namespace RemindSME.Desktop.Helpers
     // RELEASE
     public class AppUpdateManager : IAppUpdateManager, IDisposable
     {
+        private readonly IActionTracker actionTracker;
         private readonly IUpdateManager updateManager;
         private readonly IRegistryManager registryManager;
         private readonly IAppConfigurationManager configurationManager;
         private readonly IAppWindowManager appWindowManager;
 
         public AppUpdateManager(
+            IActionTracker actionTracker,
             IUpdateManager updateManager, 
             IRegistryManager registryManager, 
             IAppConfigurationManager configurationManager,
             IAppWindowManager appWindowManager)
         {
+            this.actionTracker = actionTracker;
             this.updateManager = updateManager;
             this.registryManager = registryManager;
             this.configurationManager = configurationManager;
@@ -54,6 +57,7 @@ namespace RemindSME.Desktop.Helpers
 
         private void PerformInstallActions()
         {
+            actionTracker.Log("Performing post-update actions.");
             updateManager.CreateShortcutForThisExe();
             registryManager.CreateEntryToLaunchOnStartup();
             configurationManager.RestoreSettings();
@@ -67,12 +71,14 @@ namespace RemindSME.Desktop.Helpers
 
         public async Task<bool> CheckForUpdate()
         {
+            actionTracker.Log("Checking for update.");
             var updateInfo = await updateManager.CheckForUpdate();
             return updateInfo.FutureReleaseEntry != updateInfo.CurrentlyInstalledVersion;
         }
 
         public async Task UpdateAndRestart()
         {
+            actionTracker.Log("Updating app in background.");
             configurationManager.BackupSettings();
             await updateManager.UpdateApp();
             RestartWhenAllWindowsClosed();
@@ -84,9 +90,11 @@ namespace RemindSME.Desktop.Helpers
             {
                 await Task.Delay(TimeSpan.FromSeconds(5));
             }
+
+            actionTracker.Log("Restarting after update.");
             UpdateManager.RestartApp();
-            Application.Current.Shutdown();
         }
+
         public void Dispose()
         {
             updateManager?.Dispose();

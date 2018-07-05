@@ -1,14 +1,19 @@
 using System;
 using System.Configuration;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Threading;
 using Autofac;
 using Bogus;
 using Caliburn.Micro.Autofac;
 using Custom.Windows;
 using Notifications.Wpf;
+using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Helpers;
+using RemindSME.Desktop.Helpers.Listeners;
 using RemindSME.Desktop.Properties;
+using RemindSME.Desktop.Services;
 using RemindSME.Desktop.ViewModels;
 using RemindSME.Desktop.Views;
 using Squirrel;
@@ -28,6 +33,7 @@ namespace RemindSME.Desktop
         {
             var instanceAwareApplication = (InstanceAwareApplication)Application;
             instanceAwareApplication.StartupNextInstance += InstanceAwareApplication_StartupNextInstance;
+
             base.PrepareApplication();
         }
 
@@ -44,9 +50,13 @@ namespace RemindSME.Desktop
 
         protected override void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).AsImplementedInterfaces().SingleInstance();
+            var assembly = Assembly.GetExecutingAssembly();
+            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterAssemblyTypes(assembly).Where(t => t.IsAssignableTo<SocketListener>()).AsSelf().SingleInstance();
 
             builder.RegisterType<NotificationManager>().As<INotificationManager>().SingleInstance();
+            builder.RegisterInstance(Settings.Default).As<ISettings>().SingleInstance();
+            builder.RegisterType<DispatcherTimer>().AsSelf().InstancePerDependency();
 
             if (!string.IsNullOrEmpty(UpdateUrl))
             {
@@ -64,18 +74,35 @@ namespace RemindSME.Desktop
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             var instanceAwareApplication = (InstanceAwareApplication)Application;
-            if (!instanceAwareApplication.IsFirstInstance.GetValueOrDefault())
+            if (!instanceAwareApplication.IsFirstInstance.GetValueOrDefault() && !IsRelaunchAfterUpdate(Environment.GetCommandLineArgs()))
             {
                 Environment.Exit(0);
             }
 
+            var serviceTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.IsInterface && type.IsAssignableTo<IService>());
+            foreach (var serviceType in serviceTypes)
+            {
+                var service = (IService)Container.Resolve(serviceType);
+                service.Initialize();
+            }
+
             Container.Resolve<IHibernationManager>().UpdateNextHiberationTime();
             DisplayRootViewFor<MainViewModel>();
+
+            base.OnStartup(sender, e);
         }
 
         private void InstanceAwareApplication_StartupNextInstance(object sender, StartupNextInstanceEventArgs e)
         {
-            Container.Resolve<IAppWindowManager>().OpenOrActivateWindow<HubView, HubViewModel>();
+            if (!IsRelaunchAfterUpdate(e.Args))
+            {
+                Container.Resolve<IAppWindowManager>().OpenOrActivateWindow<HubView, HubViewModel>();
+            }
+        }
+
+        private static bool IsRelaunchAfterUpdate(string[] commandLineArgs)
+        {
+            return commandLineArgs.Any(arg => arg.Contains("--squirrel"));
         }
     }
 }

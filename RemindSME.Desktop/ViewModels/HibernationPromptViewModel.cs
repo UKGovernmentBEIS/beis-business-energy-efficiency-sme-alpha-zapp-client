@@ -1,9 +1,8 @@
-﻿using Caliburn.Micro;
-using RemindSME.Desktop.Helpers;
+﻿using RemindSME.Desktop.Helpers;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class HibernationPromptViewModel : PropertyChangedBase
+    public class HibernationPromptViewModel : NotificationViewModel
     {
         private readonly IActionTracker actionTracker;
         private readonly IHibernationManager hibernationManager;

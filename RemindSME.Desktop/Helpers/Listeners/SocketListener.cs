@@ -1,4 +1,5 @@
 ﻿using System;
+using Caliburn.Micro;
 using Quobject.EngineIoClientDotNet.ComponentEmitter;
 
 namespace RemindSME.Desktop.Helpers.Listeners
@@ -8,9 +9,12 @@ namespace RemindSME.Desktop.Helpers.Listeners
         private static readonly Random Ids = new Random();
         private readonly int id;
 
-        protected SocketListener()
+        protected readonly IEventAggregator EventAggregator;
+
+        protected SocketListener(IEventAggregator eventAggregator)
         {
             id = Ids.Next();
+            EventAggregator = eventAggregator;
         }
 
         public abstract void Call(params object[] args);

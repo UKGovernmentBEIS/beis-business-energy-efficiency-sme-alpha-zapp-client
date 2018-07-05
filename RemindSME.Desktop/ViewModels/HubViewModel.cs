@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using Caliburn.Micro;
+using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
@@ -15,19 +16,19 @@ namespace RemindSME.Desktop.ViewModels
     {
         private readonly IActionTracker actionTracker;
         private readonly IHibernationManager hibernationManager;
-        private readonly IReminderManager reminderManager;
+        private readonly ISettings settings;
         private readonly IAppWindowManager appWindowManager;
 
         public HubViewModel(
             IActionTracker actionTracker,
             IEventAggregator eventAggregator,
             IHibernationManager hibernationManager,
-            IReminderManager reminderManager,
+            ISettings settings,
             IAppWindowManager appWindowManager)
         {
             this.actionTracker = actionTracker;
             this.hibernationManager = hibernationManager;
-            this.reminderManager = reminderManager;
+            this.settings = settings;
             this.appWindowManager = appWindowManager;
 
             eventAggregator.Subscribe(this);
@@ -35,16 +36,17 @@ namespace RemindSME.Desktop.ViewModels
 
         public bool HeatingOptIn
         {
-            get => reminderManager.HeatingOptIn;
+            get => settings.HeatingOptIn;
             set
             {
-                if (value == reminderManager.HeatingOptIn)
+                if (value == settings.HeatingOptIn)
                 {
                     return;
                 }
 
                 actionTracker.Log($"User opted {(value ? "in to" : "out of")} heating notifications.");
-                reminderManager.HeatingOptIn = value;
+                settings.HeatingOptIn = value;
+                settings.Save();
                 NotifyOfPropertyChange(() => HeatingOptIn);
             }
         }

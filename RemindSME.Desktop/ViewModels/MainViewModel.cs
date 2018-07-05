@@ -6,7 +6,6 @@ using Microsoft.Win32;
 using Notifications.Wpf;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
-using RemindSME.Desktop.Helpers.Listeners;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Views;
 using Squirrel;
@@ -17,11 +16,9 @@ namespace RemindSME.Desktop.ViewModels
     public class MainViewModel : PropertyChangedBase, IHandle<NextHibernationTimeUpdatedEvent>
     {
         private readonly IActionTracker actionTracker;
+        private readonly IAppWindowManager appWindowManager;
         private readonly IHibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
-        private readonly IReminderManager reminderManager;
-        private readonly IAppWindowManager appWindowManager;
-        private readonly ISocketManager socketManager;
         private readonly IAppUpdateManager updateManager;
 
         private bool hibernationPromptHasBeenShown;
@@ -33,29 +30,25 @@ namespace RemindSME.Desktop.ViewModels
             IEventAggregator eventAggregator,
             IHibernationManager hibernationManager,
             INotificationManager notificationManager,
-            IReminderManager reminderManager,
-            IAppWindowManager appWindowManager,
-            ISocketManager socketManager)
+            IAppWindowManager appWindowManager)
         {
             this.actionTracker = actionTracker;
             this.hibernationManager = hibernationManager;
             this.notificationManager = notificationManager;
-            this.reminderManager = reminderManager;
             this.updateManager = updateManager;
             this.appWindowManager = appWindowManager;
-            this.socketManager = socketManager;
 
             eventAggregator.Subscribe(this);
 
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            timer.Tick += Timer_Tick_Reminders;
             timer.Tick += Timer_Tick_Hibernation;
             timer.Start();
 
-            SquirrelAwareApp.HandleEvents(onFirstRun: OpenWelcomeWindow);
+            var updateTimer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(5) };
+            updateTimer.Tick += UpdateTimer_TickAsync;
+            updateTimer.Start();
 
-            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
-            Connect();
+            SquirrelAwareApp.HandleEvents(onFirstRun: OpenWelcomeWindow);
         }
 
         public void Handle(NextHibernationTimeUpdatedEvent e)
@@ -90,11 +83,6 @@ namespace RemindSME.Desktop.ViewModels
         {
             actionTracker.Log("User quit the app via taskbar menu click.");
             Application.Current.Shutdown();
-        }
-
-        private void Timer_Tick_Reminders(object sender, EventArgs e)
-        {
-            reminderManager.MaybeShowTimeDependentNotifications();
         }
 
         private void Timer_Tick_Hibernation(object sender, EventArgs e)
@@ -144,31 +132,6 @@ namespace RemindSME.Desktop.ViewModels
             actionTracker.Log("Showed hibernation warning.");
             appWindowManager.OpenOrActivateDialog<HibernationWarningView, HibernationWarningViewModel>();
             hibernationWarningHasBeenShown = true;
-        }
-
-        private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
-        {
-            switch (e.Reason)
-            {
-                case SessionSwitchReason.SessionUnlock:
-                    Connect();
-                    break;
-                case SessionSwitchReason.SessionLock:
-                    Disconnect();
-                    break;
-            }
-        }
-
-        private void Connect()
-        {
-            var socket = socketManager.Connect();
-            socket.On("company-count-change", new CompanyCountChangeListener(reminderManager));
-            socket.On("heating-notification", new HeatingNotificationListener(reminderManager));
-        }
-
-        private void Disconnect()
-        {
-            socketManager.Disconnect();
         }
 
         private async void UpdateTimer_TickAsync(object sender, EventArgs e)
