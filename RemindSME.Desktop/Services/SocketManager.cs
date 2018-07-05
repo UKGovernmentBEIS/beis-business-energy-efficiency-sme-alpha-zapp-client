@@ -7,13 +7,10 @@ using Quobject.SocketIoClientDotNet.Client;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Helpers.Listeners;
-using RemindSME.Desktop.Properties;
 
 namespace RemindSME.Desktop.Services
 {
-    public interface ISocketManager : IService { }
-
-    public class SocketManager : ISocketManager, IActionTracker
+    public class SocketManager : IService, IActionTracker
     {
         private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
 
@@ -38,6 +35,12 @@ namespace RemindSME.Desktop.Services
             this.settings = settings;
         }
 
+        public void Initialize()
+        {
+            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+            Connect();
+        }
+
         public void Log(string message)
         {
             if (socket != null)
@@ -48,12 +51,6 @@ namespace RemindSME.Desktop.Services
             {
                 trackingMessages.Enqueue(new QueuedMessage(message));
             }
-        }
-
-        public void Initialize()
-        {
-            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
-            Connect();
         }
 
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)

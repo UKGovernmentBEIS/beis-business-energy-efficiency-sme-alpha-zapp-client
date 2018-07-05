@@ -41,6 +41,7 @@ namespace RemindSME.Desktop
         {
             var assembly = Assembly.GetExecutingAssembly();
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterAssemblyTypes(assembly).Where(t => t.IsAssignableTo<IService>()).AsSelf().SingleInstance();
             builder.RegisterAssemblyTypes(assembly).Where(t => t.IsAssignableTo<SocketListener>()).AsSelf().SingleInstance();
 
             builder.RegisterType<NotificationManager>().As<INotificationManager>().SingleInstance();
@@ -89,7 +90,7 @@ namespace RemindSME.Desktop
 
         private void RegisterServices()
         {
-            var serviceTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.IsInterface && type.IsAssignableTo<IService>());
+            var serviceTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsInterface && type.IsAssignableTo<IService>());
             foreach (var serviceType in serviceTypes)
             {
                 var service = (IService)Container.Resolve(serviceType);

@@ -10,9 +10,7 @@ using RemindSME.Desktop.ViewModels;
 
 namespace RemindSME.Desktop.Services
 {
-    public interface IReminderService : IService { }
-
-    public class ReminderService : IReminderService, IHandle<HeatingNotificationEvent>, IHandle<NetworkCountChangeEvent>
+    public class ReminderService : IService, IHandle<HeatingNotificationEvent>, IHandle<NetworkCountChangeEvent>
     {
         private const int LastOutThreshold = 3;
 
@@ -48,6 +46,15 @@ namespace RemindSME.Desktop.Services
             this.timer = timer;
         }
 
+        public void Initialize()
+        {
+            eventAggregator.Subscribe(this);
+
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += Timer_Tick;
+            timer.Start();
+        }
+
         public void Handle(HeatingNotificationEvent e)
         {
             if (ShouldShowHeatingNotification())
@@ -59,15 +66,6 @@ namespace RemindSME.Desktop.Services
         public void Handle(NetworkCountChangeEvent e)
         {
             networkCount = e.Count;
-        }
-
-        public void Initialize()
-        {
-            eventAggregator.Subscribe(this);
-
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += Timer_Tick;
-            timer.Start();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
