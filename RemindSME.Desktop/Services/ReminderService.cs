@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Threading;
 using Caliburn.Micro;
 using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
+using RemindSME.Desktop.Models;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.ViewModels;
 using Action = System.Action;
@@ -125,15 +128,28 @@ namespace RemindSME.Desktop.Services
         private async void ShowFirstLoginReminder()
         {
             isShowingFirstLoginReminder = true;
-            var weatherData = await weatherDataService.GetWeatherData("London");
-            var message = !string.IsNullOrEmpty(weatherData?.Name)
-                ? $"The current temperature in {weatherData.Name} is {weatherData.Main.Temp:F1}°C."
-                : Resources.Reminder_HeatingFirstLogin_Message;
+            var message = await GetWeatherDependentMessage();
             ShowReminder(
                 Resources.Reminder_HeatingFirstLogin_Title,
                 message,
                 () => isShowingFirstLoginReminder = false,
                 new ReminderViewModel.Button("Done!", FirstLoginReminder_Done));
+        }
+
+        private async Task<string> GetWeatherDependentMessage()
+        {
+            var forecast = await weatherDataService.GetWeatherForecastForLocation("London,UK");
+            var peakTemperature = GetPeakTemperatureForToday(forecast);
+            return peakTemperature != null
+                ? $"Looks like it's going to be hot today ({peakTemperature:F0}°C)! Please make sure the air conditioning is set to a sensible temperature for today's weather. Can you open windows instead?"
+                : Resources.Reminder_HeatingFirstLogin_Message;
+        }
+
+        private double? GetPeakTemperatureForToday(WeatherForecast weatherForecast)
+        {
+            return weatherForecast?.Forecasts
+                .Where(forecast => forecast.Time < DateTime.Today.AddDays(1))
+                .Max(forecast => forecast.Measurements.Temperature);
         }
 
         private void FirstLoginReminder_Done()
