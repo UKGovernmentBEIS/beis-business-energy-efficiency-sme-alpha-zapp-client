@@ -4,11 +4,11 @@ using System.Configuration;
 using System.Linq;
 using Microsoft.Win32;
 using Quobject.SocketIoClientDotNet.Client;
+using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Helpers.Listeners;
 using RemindSME.Desktop.Properties;
-using RemindSME.Desktop.Services;
 
-namespace RemindSME.Desktop.Helpers
+namespace RemindSME.Desktop.Services
 {
     public interface ISocketManager : IService { }
 
