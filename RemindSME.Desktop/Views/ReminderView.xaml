@@ -26,7 +26,7 @@
                             Style="{StaticResource NotificationButtonStyle}" />
                 </StackPanel>
 
-                <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Opacity=".8" Margin="0,8,0,0" />
+                <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Opacity=".8" Margin="0,8,0,8" />
             </DockPanel>
         </Grid>
     </Border>
