@@ -28,7 +28,7 @@ namespace RemindSME.Desktop.Services
         public static readonly TimeSpan HibernationWarningPeriod = TimeSpan.FromSeconds(30);
         public static readonly TimeSpan SnoozeTime = TimeSpan.FromHours(1);
 
-        private readonly IActionTracker actionTracker;
+        private readonly ILog log;
         private readonly IAppWindowManager appWindowManager;
         private readonly INotificationManager notificationManager;
         private readonly ISettings settings;
@@ -38,14 +38,14 @@ namespace RemindSME.Desktop.Services
         private bool hibernationWarningHasBeenShown;
 
         public HibernationService(
-            IActionTracker actionTracker,
+            ILog log,
             IAppWindowManager appWindowManager,
             IEventAggregator eventAggregator,
             INotificationManager notificationManager,
             ISettings settings,
             DispatcherTimer timer)
         {
-            this.actionTracker = actionTracker;
+            this.log = log;
             this.appWindowManager = appWindowManager;
             this.notificationManager = notificationManager;
             this.settings = settings;
@@ -89,7 +89,7 @@ namespace RemindSME.Desktop.Services
         private void Hibernate()
         {
             SetNextHiberateToTomorrow();
-            actionTracker.Log("Machine was hibernated automatically.");
+            log.Info("Machine was hibernated automatically.");
 
             if (Debugger.IsAttached)
             {
@@ -155,7 +155,7 @@ namespace RemindSME.Desktop.Services
 
         private void ShowHibernationPrompt()
         {
-            actionTracker.Log("Showed hibernation prompt.");
+            log.Info("Showed hibernation prompt.");
             hibernationPromptHasBeenShown = true;
             var model = IoC.Get<HibernationPromptViewModel>();
             notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
@@ -163,7 +163,7 @@ namespace RemindSME.Desktop.Services
 
         private void ShowHibernationWarning()
         {
-            actionTracker.Log("Showed hibernation warning.");
+            log.Info("Showed hibernation warning.");
             hibernationWarningHasBeenShown = true;
             appWindowManager.OpenOrActivateDialog<HibernationWarningView, HibernationWarningViewModel>();
         }

@@ -7,12 +7,14 @@ using System.Windows;
 using System.Windows.Threading;
 using Autofac;
 using Bogus;
+using Caliburn.Micro;
 using Caliburn.Micro.Autofac;
 using Custom.Windows;
 using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Helpers.Listeners;
+using RemindSME.Desktop.Logging;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.Services;
 using RemindSME.Desktop.ViewModels;
@@ -48,7 +50,9 @@ namespace RemindSME.Desktop
 
             builder.RegisterType<NotificationManager>().As<INotificationManager>().SingleInstance();
             builder.RegisterInstance(Settings.Default).As<ISettings>().SingleInstance();
+
             builder.RegisterType<DispatcherTimer>().AsSelf().InstancePerDependency();
+            builder.RegisterType<Logger>().As<ILog>().InstancePerDependency();
 
             if (!string.IsNullOrEmpty(UpdateUrl))
             {

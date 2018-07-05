@@ -13,17 +13,17 @@ namespace RemindSME.Desktop.ViewModels
 {
     public class HubViewModel : Screen, IHandle<SettingChangedEvent>
     {
-        private readonly IActionTracker actionTracker;
+        private readonly ILog log;
         private readonly IAppWindowManager appWindowManager;
         private readonly ISettings settings;
 
         public HubViewModel(
-            IActionTracker actionTracker,
+            ILog log,
             IAppWindowManager appWindowManager,
             IEventAggregator eventAggregator,
             ISettings settings)
         {
-            this.actionTracker = actionTracker;
+            this.log = log;
             this.appWindowManager = appWindowManager;
             this.settings = settings;
 
@@ -40,7 +40,7 @@ namespace RemindSME.Desktop.ViewModels
                     return;
                 }
 
-                actionTracker.Log($"User opted {(value ? "in to" : "out of")} heating notifications.");
+                log.Info($"User opted {(value ? "in to" : "out of")} heating notifications.");
                 settings.HeatingOptIn = value;
                 NotifyOfPropertyChange(() => HeatingOptIn);
             }
@@ -56,7 +56,7 @@ namespace RemindSME.Desktop.ViewModels
                     return;
                 }
 
-                actionTracker.Log($"User opted {(value ? "in to" : "out of")} scheduled hibernation.");
+                log.Info($"User opted {(value ? "in to" : "out of")} scheduled hibernation.");
                 settings.HibernationOptIn = value;
                 NotifyOfPropertyChange(() => HibernationOptIn);
                 NotifyOfPropertyChange(() => HibernationOptionIsVisible);
@@ -82,7 +82,7 @@ namespace RemindSME.Desktop.ViewModels
                     return;
                 }
 
-                actionTracker.Log($"User set hibernation time to {time}.");
+                log.Info($"User set hibernation time to {time}.");
                 settings.DefaultHibernationTime = time;
                 NotifyOfPropertyChange(() => SelectedHibernateHour);
             }
@@ -105,7 +105,7 @@ namespace RemindSME.Desktop.ViewModels
                     return;
                 }
 
-                actionTracker.Log($"User set hibernation time to {time}.");
+                log.Info($"User set hibernation time to {time}.");
                 settings.DefaultHibernationTime = time;
                 NotifyOfPropertyChange(() => SelectedHibernateMinute);
             }
@@ -154,7 +154,7 @@ namespace RemindSME.Desktop.ViewModels
 
         public void OnClose()
         {
-            actionTracker.Log("User closed Hub window.");
+            log.Info("User closed Hub window.");
             ShowExplanationText = false;
         }
 
@@ -165,7 +165,7 @@ namespace RemindSME.Desktop.ViewModels
 
         public void CloseWindow()
         {
-            actionTracker.Log("User dismissed Hub window by clicking OK button.");
+            log.Info("User dismissed Hub window by clicking OK button.");
             TryClose();
         }
     }

@@ -1,33 +1,33 @@
-﻿using RemindSME.Desktop.Helpers;
+﻿using Caliburn.Micro;
 using RemindSME.Desktop.Services;
 
 namespace RemindSME.Desktop.ViewModels
 {
     public class HibernationPromptViewModel : Notification
     {
-        private readonly IActionTracker actionTracker;
         private readonly IHibernationService hibernationService;
+        private readonly ILog log;
 
-        public HibernationPromptViewModel(IActionTracker actionTracker, IHibernationService hibernationService)
+        public HibernationPromptViewModel(ILog log, IHibernationService hibernationService)
         {
-            this.actionTracker = actionTracker;
+            this.log = log;
             this.hibernationService = hibernationService;
         }
 
         public void Sure()
         {
-            actionTracker.Log("User clicked 'Sure!' on hibernation prompt.");
+            log.Info("User clicked 'Sure!' on hibernation prompt.");
         }
 
         public void Snooze()
         {
-            actionTracker.Log("User clicked 'Snooze' on hibernation prompt.");
+            log.Info("User clicked 'Snooze' on hibernation prompt.");
             hibernationService.Snooze();
         }
 
         public void NotTonight()
         {
-            actionTracker.Log("User clicked 'Not tonight' on hibernation prompt.");
+            log.Info("User clicked 'Not tonight' on hibernation prompt.");
             hibernationService.NotTonight();
         }
     }

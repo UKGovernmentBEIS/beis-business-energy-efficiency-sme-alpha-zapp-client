@@ -8,15 +8,15 @@ namespace RemindSME.Desktop.ViewModels
 {
     public class MainViewModel : PropertyChangedBase
     {
-        private readonly IActionTracker actionTracker;
         private readonly IAppWindowManager appWindowManager;
+        private readonly ILog log;
 
         public MainViewModel(
-            IActionTracker actionTracker,
+            ILog log,
             IAppWindowManager appWindowManager,
             IEventAggregator eventAggregator)
         {
-            this.actionTracker = actionTracker;
+            this.log = log;
             this.appWindowManager = appWindowManager;
 
             eventAggregator.Subscribe(this);
@@ -31,7 +31,7 @@ namespace RemindSME.Desktop.ViewModels
 
         public void OpenHubWindow(string actionArea)
         {
-            actionTracker.Log($"User opened Hub window via taskbar {actionArea}.");
+            log.Info($"User opened Hub window via taskbar {actionArea}.");
             OpenHubWindow();
         }
 
@@ -42,13 +42,13 @@ namespace RemindSME.Desktop.ViewModels
 
         public void OpenFaqWindow()
         {
-            actionTracker.Log("User opened FAQ window.");
+            log.Info("User opened FAQ window.");
             appWindowManager.OpenOrActivateWindow<FaqView, FaqViewModel>();
         }
 
         public void Quit()
         {
-            actionTracker.Log("User quit the app via taskbar menu click.");
+            log.Info("User quit the app via taskbar menu click.");
             Application.Current.Shutdown();
         }
     }

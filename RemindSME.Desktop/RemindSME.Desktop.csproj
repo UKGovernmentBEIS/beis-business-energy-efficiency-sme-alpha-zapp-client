@@ -195,9 +195,11 @@
     <Compile Include="Events\NetworkCountChangeEvent.cs" />
     <Compile Include="Events\SettingChangedEvent.cs" />
     <Compile Include="Helpers\DummyUpdateManager.cs" />
-    <Compile Include="Helpers\IActionTracker.cs" />
     <Compile Include="Helpers\AppInfo.cs" />
     <Compile Include="Helpers\AppConfigurationManager.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
+    <Compile Include="Events\TrackingEvent.cs" />
     <Compile Include="Services\AppUpdateService.cs" />
     <Compile Include="Services\HibernationService.cs" />
     <Compile Include="Helpers\Listeners\ArgumentParser.cs" />

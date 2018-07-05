@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using Caliburn.Micro;
 using RemindSME.Desktop.Helpers;
 using Squirrel;
 
@@ -8,7 +9,7 @@ namespace RemindSME.Desktop.Services
 {
     public class AppUpdateService : IService, IDisposable
     {
-        private readonly IActionTracker actionTracker;
+        private readonly ILog log;
         private readonly IAppWindowManager appWindowManager;
         private readonly DispatcherTimer timer;
         private readonly IAppConfigurationManager configurationManager;
@@ -16,14 +17,14 @@ namespace RemindSME.Desktop.Services
         private readonly IUpdateManager updateManager;
 
         public AppUpdateService(
-            IActionTracker actionTracker,
+            ILog log,
             IUpdateManager updateManager,
             IRegistryManager registryManager,
             IAppConfigurationManager configurationManager,
             IAppWindowManager appWindowManager,
             DispatcherTimer timer)
         {
-            this.actionTracker = actionTracker;
+            this.log = log;
             this.updateManager = updateManager;
             this.registryManager = registryManager;
             this.configurationManager = configurationManager;
@@ -59,14 +60,14 @@ namespace RemindSME.Desktop.Services
 
         private async Task<bool> CheckForUpdate()
         {
-            actionTracker.Log("Checking for update.");
+            log.Info("Checking for update.");
             var updateInfo = await updateManager.CheckForUpdate();
             return updateInfo.FutureReleaseEntry != updateInfo.CurrentlyInstalledVersion;
         }
 
         private async Task UpdateAndRestart()
         {
-            actionTracker.Log("Updating app in background.");
+            log.Info("Updating app in background.");
             configurationManager.BackupSettings();
             await updateManager.UpdateApp();
             RestartWhenAllWindowsClosed();
@@ -78,13 +79,13 @@ namespace RemindSME.Desktop.Services
             {
                 await Task.Delay(TimeSpan.FromSeconds(5));
             }
-            actionTracker.Log("Restarting after update.");
+            log.Info("Restarting after update.");
             UpdateManager.RestartApp();
         }
 
         private void PerformInstallActions()
         {
-            actionTracker.Log("Performing post-update actions.");
+            log.Info("Performing post-update actions.");
             updateManager.CreateShortcutForThisExe();
             registryManager.CreateEntryToLaunchOnStartup();
             configurationManager.RestoreSettings();

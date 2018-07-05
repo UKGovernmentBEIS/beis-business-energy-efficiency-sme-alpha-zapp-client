@@ -2,28 +2,32 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using Caliburn.Micro;
 using Microsoft.Win32;
 using Quobject.SocketIoClientDotNet.Client;
 using RemindSME.Desktop.Configuration;
+using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Helpers.Listeners;
+using RemindSME.Desktop.Logging;
 
 namespace RemindSME.Desktop.Services
 {
-    public class SocketManager : IService, IActionTracker
+    public class SocketManager : IService, IHandle<TrackingEvent>
     {
         private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
 
         private readonly HeatingNotificationListener heatingNotificationListener;
-        private readonly ISettings settings;
         private readonly NetworkCountChangeListener networkCountChangeListener;
         private readonly INetworkFinder networkFinder;
+        private readonly ISettings settings;
 
         private readonly Queue<QueuedMessage> trackingMessages = new Queue<QueuedMessage>();
 
         private Socket socket;
 
         public SocketManager(
+            IEventAggregator eventAggregator,
             INetworkFinder networkFinder,
             NetworkCountChangeListener networkCountChangeListener,
             HeatingNotificationListener heatingNotificationListener,
@@ -33,6 +37,8 @@ namespace RemindSME.Desktop.Services
             this.networkCountChangeListener = networkCountChangeListener;
             this.heatingNotificationListener = heatingNotificationListener;
             this.settings = settings;
+
+            eventAggregator.Subscribe(this);
         }
 
         public void Initialize()
@@ -41,16 +47,9 @@ namespace RemindSME.Desktop.Services
             Connect();
         }
 
-        public void Log(string message)
+        public void Handle(TrackingEvent e)
         {
-            if (socket != null)
-            {
-                socket.Emit("track", message);
-            }
-            else
-            {
-                trackingMessages.Enqueue(new QueuedMessage(message));
-            }
+            Log(e.LogLevel, e.Message);
         }
 
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
@@ -80,7 +79,7 @@ namespace RemindSME.Desktop.Services
                 while (trackingMessages.Any())
                 {
                     var queuedMessage = trackingMessages.Dequeue();
-                    Log($"{queuedMessage.Message} (at {queuedMessage.Timestamp:R})");
+                    Log(queuedMessage.LogLevel, "{0} (at {1:R})", queuedMessage.Message, queuedMessage.Timestamp);
                 }
             });
             socket.On("network-count-change", networkCountChangeListener);
@@ -98,16 +97,32 @@ namespace RemindSME.Desktop.Services
             socket = null;
         }
 
+        private void Log(LogLevel logLevel, string format, params object[] args)
+        {
+            var message = string.Format(format, args);
+            if (socket != null)
+            {
+                var level = logLevel.ToString().ToLower();
+                socket.Emit($"track-{level}", message);
+            }
+            else
+            {
+                trackingMessages.Enqueue(new QueuedMessage(message, logLevel));
+            }
+        }
+
         private class QueuedMessage
         {
-            internal QueuedMessage(string message)
+            internal QueuedMessage(string message, LogLevel logLevel)
             {
                 Timestamp = DateTime.Now;
                 Message = message;
+                LogLevel = logLevel;
             }
 
             internal DateTime Timestamp { get; }
             internal string Message { get; }
+            internal LogLevel LogLevel { get; }
         }
     }
 }

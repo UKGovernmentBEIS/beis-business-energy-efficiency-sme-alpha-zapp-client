@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Threading;
+using Caliburn.Micro;
 using RemindSME.Desktop.Configuration;
-using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Services;
 
 namespace RemindSME.Desktop.ViewModels
 {
     public class HibernationWarningViewModel : Notification
     {
-        private readonly IActionTracker actionTracker;
         private readonly IHibernationService hibernationService;
+        private readonly ILog log;
         private readonly ISettings settings;
 
         public HibernationWarningViewModel(
-            IActionTracker actionTracker,
+            ILog log,
             IHibernationService hibernationService,
             ISettings settings,
             DispatcherTimer timer)
         {
-            this.actionTracker = actionTracker;
+            this.log = log;
             this.hibernationService = hibernationService;
             this.settings = settings;
 
@@ -33,14 +33,14 @@ namespace RemindSME.Desktop.ViewModels
         public void Snooze()
         {
             CloseWindow();
-            actionTracker.Log("User clicked 'Snooze' on hibernation warning modal.");
+            log.Info("User clicked 'Snooze' on hibernation warning modal.");
             hibernationService.Snooze();
         }
 
         public void NotTonight()
         {
             CloseWindow();
-            actionTracker.Log("User clicked 'Not tonight' on hibernation warning modal.");
+            log.Info("User clicked 'Not tonight' on hibernation warning modal.");
             hibernationService.NotTonight();
         }
 
