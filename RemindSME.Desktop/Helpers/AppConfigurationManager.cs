@@ -43,6 +43,7 @@ namespace RemindSME.Desktop.Helpers
 
             try
             {
+                // ReSharper disable once AssignNullToNotNullAttribute
                 Directory.CreateDirectory(Path.GetDirectoryName(destFile));
                 File.Copy(sourceFile, destFile, true);
                 File.Delete(sourceFile);

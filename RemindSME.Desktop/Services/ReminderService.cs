@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
-using Microsoft.Win32;
 using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
@@ -50,15 +48,6 @@ namespace RemindSME.Desktop.Services
             this.timer = timer;
         }
 
-        public void Initialize()
-        {
-            eventAggregator.Subscribe(this);
-
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += Timer_Tick;
-            timer.Start();
-        }
-
         public void Handle(HeatingNotificationEvent e)
         {
             if (ShouldShowHeatingNotification())
@@ -70,6 +59,15 @@ namespace RemindSME.Desktop.Services
         public void Handle(NetworkCountChangeEvent e)
         {
             networkCount = e.Count;
+        }
+
+        public void Initialize()
+        {
+            eventAggregator.Subscribe(this);
+
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += Timer_Tick;
+            timer.Start();
         }
 
         private void Timer_Tick(object sender, EventArgs e)

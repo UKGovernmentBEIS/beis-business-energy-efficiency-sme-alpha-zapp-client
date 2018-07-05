@@ -99,14 +99,14 @@ namespace RemindSME.Desktop.Services
 
         private class QueuedMessage
         {
-            internal DateTime Timestamp { get; }
-            internal string Message { get; }
-
             internal QueuedMessage(string message)
             {
                 Timestamp = DateTime.Now;
                 Message = message;
             }
+
+            internal DateTime Timestamp { get; }
+            internal string Message { get; }
         }
     }
 }

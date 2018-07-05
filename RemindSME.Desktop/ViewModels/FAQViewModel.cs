@@ -2,8 +2,5 @@
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class FaqViewModel : ViewAware
-    {
-        public FaqViewModel() { }
-    }
+    public class FaqViewModel : ViewAware { }
 }

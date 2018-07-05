@@ -56,7 +56,7 @@ namespace RemindSME.Desktop.Helpers
                 eventAggregator.PublishOnUIThread(new NextHibernationTimeUpdatedEvent());
             }
         }
- 
+
         public bool HibernationOptIn
         {
             get => Settings.Default.HibernationOptIn;

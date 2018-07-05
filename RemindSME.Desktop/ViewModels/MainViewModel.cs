@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
-using Microsoft.Win32;
 using Notifications.Wpf;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;

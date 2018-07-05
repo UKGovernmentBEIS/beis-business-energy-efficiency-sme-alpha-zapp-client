@@ -15,9 +15,9 @@ namespace RemindSME.Desktop.ViewModels
     public class HubViewModel : Screen, IHandle<NextHibernationTimeUpdatedEvent>
     {
         private readonly IActionTracker actionTracker;
+        private readonly IAppWindowManager appWindowManager;
         private readonly IHibernationManager hibernationManager;
         private readonly ISettings settings;
-        private readonly IAppWindowManager appWindowManager;
 
         public HubViewModel(
             IActionTracker actionTracker,
@@ -126,7 +126,7 @@ namespace RemindSME.Desktop.ViewModels
 
                 if (date == DateTime.Today)
                 {
-                   return $"Today at {time}";
+                    return $"Today at {time}";
                 }
                 if (date == DateTime.Today.AddDays(1))
                 {
@@ -134,9 +134,19 @@ namespace RemindSME.Desktop.ViewModels
                 }
                 return $"{date:d} at {time}";
             }
-        } 
+        }
 
         public string AppVersion => $"Current version: {AppInfo.Version} ({ConfigurationManager.AppSettings["Configuration"]})";
+
+        public bool ShowExplanationText
+        {
+            get => Settings.Default.DisplaySettingExplanations;
+            set
+            {
+                Settings.Default.DisplaySettingExplanations = value;
+                Settings.Default.Save();
+            }
+        }
 
         public void Handle(NextHibernationTimeUpdatedEvent message)
         {
@@ -157,16 +167,6 @@ namespace RemindSME.Desktop.ViewModels
         public void OpenFaqWindow()
         {
             appWindowManager.OpenOrActivateWindow<FaqView, FaqViewModel>();
-        }
-
-        public bool ShowExplanationText
-        {
-            get => Settings.Default.DisplaySettingExplanations;
-            set
-            {
-                Settings.Default.DisplaySettingExplanations = value;
-                Settings.Default.Save();
-            }
         }
 
         public void CloseWindow()
