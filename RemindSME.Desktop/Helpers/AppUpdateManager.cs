@@ -6,6 +6,7 @@ namespace RemindSME.Desktop.Helpers
 {
     public interface IAppUpdateManager
     {
+        void HandleUpdateEvents();
         Task<bool> CheckForUpdate();
         Task UpdateAndRestart();
     }
@@ -13,6 +14,8 @@ namespace RemindSME.Desktop.Helpers
     // DEBUG
     public class DummyAppUpdateManager : IAppUpdateManager
     {
+        public void HandleUpdateEvents() { }
+
         public Task<bool> CheckForUpdate()
         {
             return Task.FromResult(false);
@@ -45,7 +48,10 @@ namespace RemindSME.Desktop.Helpers
             this.registryManager = registryManager;
             this.configurationManager = configurationManager;
             this.appWindowManager = appWindowManager;
+        }
 
+        public void HandleUpdateEvents()
+        {
             SquirrelAwareApp.HandleEvents(
                 onInitialInstall: version => PerformInstallActions(),
                 onAppUpdate: version => PerformInstallActions(),

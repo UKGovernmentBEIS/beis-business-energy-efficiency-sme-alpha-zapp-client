@@ -62,6 +62,8 @@ namespace RemindSME.Desktop
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            Container.Resolve<IAppUpdateManager>().HandleUpdateEvents();
+
             var instanceAwareApplication = (InstanceAwareApplication)Application;
             if (!instanceAwareApplication.IsFirstInstance.GetValueOrDefault() && !IsRelaunchAfterUpdate(Environment.GetCommandLineArgs()))
             {
