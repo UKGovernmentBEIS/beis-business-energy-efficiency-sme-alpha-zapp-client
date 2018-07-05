@@ -200,7 +200,6 @@
     <Compile Include="Helpers\AppConfigurationManager.cs" />
     <Compile Include="Services\AppUpdateService.cs" />
     <Compile Include="Services\HibernationService.cs" />
-    <Compile Include="Helpers\HibernationSettings.cs" />
     <Compile Include="Helpers\Listeners\ArgumentParser.cs" />
     <Compile Include="Helpers\Listeners\HeatingNotificationListener.cs" />
     <Compile Include="Helpers\Listeners\NetworkCountChangeListener.cs" />

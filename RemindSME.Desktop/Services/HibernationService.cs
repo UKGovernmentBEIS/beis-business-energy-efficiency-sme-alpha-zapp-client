@@ -24,6 +24,10 @@ namespace RemindSME.Desktop.Services
 
     public class HibernationService : IHibernationService, IHandle<SettingChangedEvent>
     {
+        public static readonly TimeSpan HibernationPromptPeriod = TimeSpan.FromMinutes(15);
+        public static readonly TimeSpan HibernationWarningPeriod = TimeSpan.FromSeconds(30);
+        public static readonly TimeSpan SnoozeTime = TimeSpan.FromHours(1);
+
         private readonly IActionTracker actionTracker;
         private readonly IAppWindowManager appWindowManager;
         private readonly INotificationManager notificationManager;
@@ -74,7 +78,7 @@ namespace RemindSME.Desktop.Services
 
         public void Snooze()
         {
-            settings.NextHibernationTime = settings.NextHibernationTime.Add(HibernationSettings.SnoozeTime);
+            settings.NextHibernationTime = settings.NextHibernationTime.Add(SnoozeTime);
         }
 
         public void NotTonight()
@@ -102,7 +106,7 @@ namespace RemindSME.Desktop.Services
             var defaultHibernationTime = settings.DefaultHibernationTime;
 
             // If the hibernation time today has already passed or is within the prompt period, push until tomorrow.
-            var pushToTomorrow = DateTime.Now.TimeOfDay >= defaultHibernationTime.Subtract(HibernationSettings.HibernationPromptPeriod);
+            var pushToTomorrow = DateTime.Now.TimeOfDay >= defaultHibernationTime.Subtract(HibernationPromptPeriod);
 
             var today = DateTime.Today;
             var tomorrow = today.AddDays(1);
@@ -126,12 +130,12 @@ namespace RemindSME.Desktop.Services
 
             // Within 15 minutes of next hibernation time, so show prompt.
             var timeUntilHibernation = nextHibernationTime.Subtract(DateTime.Now);
-            if (!hibernationPromptHasBeenShown && timeUntilHibernation <= HibernationSettings.HibernationPromptPeriod)
+            if (!hibernationPromptHasBeenShown && timeUntilHibernation <= HibernationPromptPeriod)
             {
                 ShowHibernationPrompt();
             }
 
-            if (!hibernationWarningHasBeenShown && timeUntilHibernation <= HibernationSettings.HibernationWarningPeriod)
+            if (!hibernationWarningHasBeenShown && timeUntilHibernation <= HibernationWarningPeriod)
             {
                 ShowHibernationWarning();
             }
