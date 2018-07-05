@@ -15,13 +15,35 @@ namespace RemindSME.Desktop.Services
 
     public class NetworkService : INetworkService
     {
-        public void Initialize () { }
+        public void Initialize()
+        {
+            NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
+        }
+
+        private void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine($@"New network");
+            var network = GetNetworkAddress();
+            if (Settings.Default.WorkNetworks.Contains(network))
+            {
+                Console.WriteLine($@"New network is Work Network");
+                // start app as normal
+            }
+            else if (Settings.Default.OtherNetworks.Contains(network))
+            {
+                // don't send any notifications
+            }
+            else
+            {
+                // fire new network notification
+            }
+        }
+
         public void AddNetwork(bool isWorkNetwork)
         {
             var network = GetNetworkAddress();
             if (isWorkNetwork)
             {
-
                 Settings.Default.WorkNetworks.Add(network);
             }
             else
@@ -30,6 +52,7 @@ namespace RemindSME.Desktop.Services
             }
             Settings.Default.Save();
         }
+
         public string GetNetworkAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
