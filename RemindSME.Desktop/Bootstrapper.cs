@@ -67,7 +67,7 @@ namespace RemindSME.Desktop
             var instanceAwareApplication = (InstanceAwareApplication)Application;
             if (!instanceAwareApplication.IsFirstInstance.GetValueOrDefault() && !IsRelaunchAfterUpdate(Environment.GetCommandLineArgs()))
             {
-                Environment.Exit(0);
+                Application.Current.Shutdown();
             }
 
             InitializeSettings();
