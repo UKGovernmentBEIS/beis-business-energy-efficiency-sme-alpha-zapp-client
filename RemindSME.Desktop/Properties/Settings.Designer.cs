@@ -118,5 +118,16 @@ namespace RemindSME.Desktop.Properties {
                 this["CompanyName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection WorkNetworks {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["WorkNetworks"]));
+            }
+            set {
+                this["WorkNetworks"] = value;
+            }
+        }
     }
 }
