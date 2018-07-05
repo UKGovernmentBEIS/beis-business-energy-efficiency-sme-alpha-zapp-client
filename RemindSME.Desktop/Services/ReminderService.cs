@@ -29,7 +29,7 @@ namespace RemindSME.Desktop.Services
         private readonly IEventAggregator eventAggregator;
         private readonly ILog log;
         private readonly INotificationManager notificationManager;
-        private readonly IWeatherDataService weatherDataService;
+        private readonly IWeatherApiClient weatherApiClient;
         private readonly ISettings settings;
         private readonly DispatcherTimer timer;
 
@@ -41,7 +41,7 @@ namespace RemindSME.Desktop.Services
         public ReminderService(
             ILog log,
             INotificationManager notificationManager,
-            IWeatherDataService weatherDataService,
+            IWeatherApiClient weatherApiClient,
             IAppWindowManager appWindowManager,
             IEventAggregator eventAggregator,
             ISettings settings,
@@ -49,7 +49,7 @@ namespace RemindSME.Desktop.Services
         {
             this.log = log;
             this.notificationManager = notificationManager;
-            this.weatherDataService = weatherDataService;
+            this.weatherApiClient = weatherApiClient;
             this.appWindowManager = appWindowManager;
             this.eventAggregator = eventAggregator;
             this.settings = settings;
@@ -138,7 +138,7 @@ namespace RemindSME.Desktop.Services
 
         private async Task<string> GetWeatherDependentMessage()
         {
-            var forecast = await weatherDataService.GetWeatherForecastForLocation("London,UK");
+            var forecast = await weatherApiClient.GetWeatherForecastForLocation("London,UK");
             var peakTemperature = GetPeakTemperatureForToday(forecast);
             return peakTemperature != null
                 ? $"Looks like it's going to be hot today ({peakTemperature:F0}°C)! Please make sure the air conditioning is set to a sensible temperature for today's weather. Can you open windows instead?"

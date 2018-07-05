@@ -6,12 +6,12 @@ using RemindSME.Desktop.Models;
 
 namespace RemindSME.Desktop.Helpers
 {
-    public interface IWeatherDataService {
+    public interface IWeatherApiClient {
         Task<CurrentWeather> GetCurrentWeatherForLocation(string location);
         Task<WeatherForecast> GetWeatherForecastForLocation(string location);
     }
 
-    public class WeatherDataService : IWeatherDataService
+    public class WeatherApiClient : IWeatherApiClient
     {
         private const string BaseUrl = "http://api.openweathermap.org/data/2.5";
         private const string ApiKey = "api-key";
@@ -30,7 +30,7 @@ namespace RemindSME.Desktop.Helpers
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to fetch current weather data: {e.Message}");
+                Console.WriteLine($@"Failed to fetch current weather data: {e.Message}");
                 return null;
             }
         }
@@ -49,7 +49,7 @@ namespace RemindSME.Desktop.Helpers
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to fetch weather forecast data: {e.Message}");
+                Console.WriteLine($@"Failed to fetch forecast weather data: {e.Message}");
                 return null;
             }
         }
