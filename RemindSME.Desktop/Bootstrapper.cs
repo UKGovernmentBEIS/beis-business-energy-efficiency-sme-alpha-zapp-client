@@ -37,17 +37,6 @@ namespace RemindSME.Desktop
             base.PrepareApplication();
         }
 
-        protected override void ConfigureBootstrapper()
-        {
-            if (string.IsNullOrEmpty(Settings.Default.Pseudonym))
-            {
-                Settings.Default.Pseudonym = new Faker().Name.FindName(withPrefix: false, withSuffix: false);
-                Settings.Default.Save();
-            }
-
-            base.ConfigureBootstrapper();
-        }
-
         protected override void ConfigureContainer(ContainerBuilder builder)
         {
             var assembly = Assembly.GetExecutingAssembly();
@@ -79,17 +68,33 @@ namespace RemindSME.Desktop
                 Environment.Exit(0);
             }
 
+            InitializeSettings();
+            RegisterServices();
+
+            Container.Resolve<IHibernationManager>().UpdateNextHiberationTime();
+
+            DisplayRootViewFor<MainViewModel>();
+
+            base.OnStartup(sender, e);
+        }
+
+        private void InitializeSettings()
+        {
+            var settings = Container.Resolve<ISettings>();
+            if (string.IsNullOrEmpty(settings.Pseudonym))
+            {
+                settings.Pseudonym = new Faker().Name.FindName(withPrefix: false, withSuffix: false);
+            }
+        }
+
+        private void RegisterServices()
+        {
             var serviceTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.IsInterface && type.IsAssignableTo<IService>());
             foreach (var serviceType in serviceTypes)
             {
                 var service = (IService)Container.Resolve(serviceType);
                 service.Initialize();
             }
-
-            Container.Resolve<IHibernationManager>().UpdateNextHiberationTime();
-            DisplayRootViewFor<MainViewModel>();
-
-            base.OnStartup(sender, e);
         }
 
         private void InstanceAwareApplication_StartupNextInstance(object sender, StartupNextInstanceEventArgs e)

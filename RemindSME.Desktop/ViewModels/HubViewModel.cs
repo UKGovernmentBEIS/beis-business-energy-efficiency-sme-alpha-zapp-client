@@ -46,7 +46,6 @@ namespace RemindSME.Desktop.ViewModels
 
                 actionTracker.Log($"User opted {(value ? "in to" : "out of")} heating notifications.");
                 settings.HeatingOptIn = value;
-                settings.Save();
                 NotifyOfPropertyChange(() => HeatingOptIn);
             }
         }
@@ -140,12 +139,8 @@ namespace RemindSME.Desktop.ViewModels
 
         public bool ShowExplanationText
         {
-            get => Settings.Default.DisplaySettingExplanations;
-            set
-            {
-                Settings.Default.DisplaySettingExplanations = value;
-                Settings.Default.Save();
-            }
+            get => settings.DisplaySettingExplanations;
+            set => settings.DisplaySettingExplanations = value;
         }
 
         public void Handle(NextHibernationTimeUpdatedEvent message)

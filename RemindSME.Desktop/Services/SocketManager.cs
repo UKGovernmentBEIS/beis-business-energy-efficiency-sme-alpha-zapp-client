@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using Microsoft.Win32;
 using Quobject.SocketIoClientDotNet.Client;
+using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Helpers.Listeners;
 using RemindSME.Desktop.Properties;
@@ -17,6 +18,7 @@ namespace RemindSME.Desktop.Services
         private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
 
         private readonly HeatingNotificationListener heatingNotificationListener;
+        private readonly ISettings settings;
         private readonly NetworkCountChangeListener networkCountChangeListener;
         private readonly INetworkFinder networkFinder;
 
@@ -27,11 +29,13 @@ namespace RemindSME.Desktop.Services
         public SocketManager(
             INetworkFinder networkFinder,
             NetworkCountChangeListener networkCountChangeListener,
-            HeatingNotificationListener heatingNotificationListener)
+            HeatingNotificationListener heatingNotificationListener,
+            ISettings settings)
         {
             this.networkFinder = networkFinder;
             this.networkCountChangeListener = networkCountChangeListener;
             this.heatingNotificationListener = heatingNotificationListener;
+            this.settings = settings;
         }
 
         public void Log(string message)
@@ -75,7 +79,7 @@ namespace RemindSME.Desktop.Services
             socket.On("connect", () =>
             {
                 var network = networkFinder.GetNetworkAddress();
-                socket.Emit("join", network, Settings.Default.Pseudonym);
+                socket.Emit("join", network, settings.Pseudonym);
                 while (trackingMessages.Any())
                 {
                     var queuedMessage = trackingMessages.Dequeue();

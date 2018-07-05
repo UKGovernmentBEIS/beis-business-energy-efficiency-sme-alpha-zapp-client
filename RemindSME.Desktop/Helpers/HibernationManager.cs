@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Forms;
 using Caliburn.Micro;
+using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Properties;
 using static RemindSME.Desktop.Helpers.HibernationSettings;
@@ -28,43 +29,39 @@ namespace RemindSME.Desktop.Helpers
     {
         private readonly IActionTracker actionTracker;
         private readonly IEventAggregator eventAggregator;
+        private readonly ISettings settings;
 
-        public HibernationManager(IActionTracker actionTracker, IEventAggregator eventAggregator)
+        public HibernationManager(IActionTracker actionTracker, IEventAggregator eventAggregator, ISettings settings)
         {
             this.actionTracker = actionTracker;
             this.eventAggregator = eventAggregator;
+            this.settings = settings;
         }
 
         public TimeSpan DefaultHibernationTime
         {
-            get => Settings.Default.DefaultHibernationTime;
+            get => settings.DefaultHibernationTime;
             set
             {
-                Settings.Default.DefaultHibernationTime = value;
+                settings.DefaultHibernationTime = value;
                 UpdateNextHiberationTime();
             }
         }
 
         public DateTime NextHibernationTime
         {
-            get => Settings.Default.NextHibernationTime;
+            get => settings.NextHibernationTime;
             private set
             {
-                Settings.Default.NextHibernationTime = value;
-                Settings.Default.Save();
-
+                settings.NextHibernationTime = value;
                 eventAggregator.PublishOnUIThread(new NextHibernationTimeUpdatedEvent());
             }
         }
 
         public bool HibernationOptIn
         {
-            get => Settings.Default.HibernationOptIn;
-            set
-            {
-                Settings.Default.HibernationOptIn = value;
-                Settings.Default.Save();
-            }
+            get => settings.HibernationOptIn;
+            set => settings.HibernationOptIn = value;
         }
 
         public void Hibernate()

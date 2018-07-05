@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
 using Notifications.Wpf;
+using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
@@ -16,6 +17,7 @@ namespace RemindSME.Desktop.ViewModels
     {
         private readonly IActionTracker actionTracker;
         private readonly IAppWindowManager appWindowManager;
+        private readonly ISettings settings;
         private readonly IHibernationManager hibernationManager;
         private readonly INotificationManager notificationManager;
         private readonly IAppUpdateManager updateManager;
@@ -29,13 +31,15 @@ namespace RemindSME.Desktop.ViewModels
             IEventAggregator eventAggregator,
             IHibernationManager hibernationManager,
             INotificationManager notificationManager,
-            IAppWindowManager appWindowManager)
+            IAppWindowManager appWindowManager,
+            ISettings settings)
         {
             this.actionTracker = actionTracker;
             this.hibernationManager = hibernationManager;
             this.notificationManager = notificationManager;
             this.updateManager = updateManager;
             this.appWindowManager = appWindowManager;
+            this.settings = settings;
 
             eventAggregator.Subscribe(this);
 
@@ -74,7 +78,7 @@ namespace RemindSME.Desktop.ViewModels
 
         public void OpenFaqWindow()
         {
-            actionTracker.Log($"User opened FAQ window.");
+            actionTracker.Log("User opened FAQ window.");
             appWindowManager.OpenOrActivateWindow<FaqView, FaqViewModel>();
         }
 
@@ -86,7 +90,7 @@ namespace RemindSME.Desktop.ViewModels
 
         private void Timer_Tick_Hibernation(object sender, EventArgs e)
         {
-            if (!Settings.Default.HibernationOptIn)
+            if (!settings.HibernationOptIn)
             {
                 return;
             }
