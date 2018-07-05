@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Threading;
-using Caliburn.Micro;
 using RemindSME.Desktop.Helpers;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class HibernationWarningViewModel : ViewAware
+    public class HibernationWarningViewModel : Notification
     {
         private readonly IActionTracker actionTracker;
         private readonly IHibernationManager hibernationManager;

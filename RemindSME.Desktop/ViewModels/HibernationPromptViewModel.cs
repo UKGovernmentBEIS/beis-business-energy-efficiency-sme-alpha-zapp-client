@@ -2,7 +2,7 @@
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class HibernationPromptViewModel : NotificationViewModel
+    public class HibernationPromptViewModel : Notification
     {
         private readonly IActionTracker actionTracker;
         private readonly IHibernationManager hibernationManager;

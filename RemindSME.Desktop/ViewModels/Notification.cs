@@ -4,9 +4,9 @@ using Microsoft.Win32;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public abstract class NotificationViewModel : ViewAware
+    public abstract class Notification : ViewAware
     {
-        protected NotificationViewModel()
+        protected Notification()
         {
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
         }

@@ -223,7 +223,7 @@
     </Compile>
     <Compile Include="Services\IService.cs" />
     <Compile Include="Services\ReminderService.cs" />
-    <Compile Include="ViewModels\NotificationViewModel.cs" />
+    <Compile Include="ViewModels\Notification.cs" />
     <Compile Include="ViewModels\FaqViewModel.cs" />
     <Compile Include="ViewModels\HubViewModel.cs" />
     <Compile Include="ViewModels\HibernationPromptViewModel.cs" />
