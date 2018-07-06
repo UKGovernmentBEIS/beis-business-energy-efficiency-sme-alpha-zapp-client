@@ -21,19 +21,20 @@
             <DockPanel Grid.Column="1">
                 <TextBlock DockPanel.Dock="Top" Text="{Binding Title}" FontWeight="Medium"
                            TextTrimming="CharacterEllipsis" />
-
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
-                    <ItemsControl ItemsSource="{Binding Buttons}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Button Content="{Binding Label}" cal:Message.Attach="OnClick"
-                                        DockPanel.Dock="Right" controls:Notification.CloseOnClick="True"
-                                        Style="{StaticResource NotificationButtonStyle}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-
+                <ItemsControl ItemsSource="{Binding Buttons}" DockPanel.Dock="Bottom">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Label}" cal:Message.Attach="OnClick"
+                                    DockPanel.Dock="Right" controls:Notification.CloseOnClick="True"
+                                    Margin="5,0,0,0" Style="{StaticResource NotificationButtonStyle}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
                 <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Opacity=".8" Margin="0,8,0,8" />
             </DockPanel>
         </Grid>
