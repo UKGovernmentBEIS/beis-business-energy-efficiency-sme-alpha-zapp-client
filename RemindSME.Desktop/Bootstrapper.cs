@@ -124,7 +124,7 @@ namespace RemindSME.Desktop
             }
             else
             {
-                Container.Resolve<Logger>().Error(e.Exception);
+                Container.Resolve<ILog>().Error(e.Exception);
                 e.Handled = true;
             }
 
