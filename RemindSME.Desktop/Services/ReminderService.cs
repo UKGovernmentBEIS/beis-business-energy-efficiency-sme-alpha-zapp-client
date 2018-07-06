@@ -26,7 +26,7 @@ namespace RemindSME.Desktop.Services
         private readonly IEventAggregator eventAggregator;
         private readonly ILog log;
         private readonly INotificationManager notificationManager;
-        private readonly IHeatingRecommendationHelper heatingRecommendationHelper;
+        private readonly IHeatingReminderHelper heatingReminderHelper;
         private readonly ISettings settings;
         private readonly DispatcherTimer timer;
 
@@ -38,7 +38,7 @@ namespace RemindSME.Desktop.Services
         public ReminderService(
             ILog log,
             INotificationManager notificationManager,
-            IHeatingRecommendationHelper heatingRecommendationHelper,
+            IHeatingReminderHelper heatingReminderHelper,
             IAppWindowManager appWindowManager,
             IEventAggregator eventAggregator,
             ISettings settings,
@@ -46,7 +46,7 @@ namespace RemindSME.Desktop.Services
         {
             this.log = log;
             this.notificationManager = notificationManager;
-            this.heatingRecommendationHelper = heatingRecommendationHelper;
+            this.heatingReminderHelper = heatingReminderHelper;
             this.appWindowManager = appWindowManager;
             this.eventAggregator = eventAggregator;
             this.settings = settings;
@@ -125,7 +125,7 @@ namespace RemindSME.Desktop.Services
         private async void ShowFirstLoginReminder()
         {
             isShowingFirstLoginReminder = true;
-            var message = await heatingRecommendationHelper.GetWeatherDependentMessage();
+            var message = await heatingReminderHelper.GetWeatherDependentMessage();
             ShowReminder(
                 Resources.Reminder_HeatingFirstLogin_Title,
                 message,

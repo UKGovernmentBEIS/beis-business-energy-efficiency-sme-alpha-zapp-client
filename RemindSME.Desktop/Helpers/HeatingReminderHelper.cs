@@ -7,16 +7,16 @@ using RemindSME.Desktop.Properties;
 
 namespace RemindSME.Desktop.Helpers
 {
-    public interface IHeatingRecommendationHelper {
+    public interface IHeatingReminderHelper {
         Task<string> GetWeatherDependentMessage();
     }
 
-    public class HeatingRecommendationHelper : IHeatingRecommendationHelper
+    public class HeatingReminderHelper : IHeatingReminderHelper
     {
         private readonly IWeatherApiClient weatherApiClient;
         private readonly ISettings settings;
 
-        public HeatingRecommendationHelper(IWeatherApiClient weatherApiClient, ISettings settings)
+        public HeatingReminderHelper(IWeatherApiClient weatherApiClient, ISettings settings)
         {
             this.weatherApiClient = weatherApiClient;
             this.settings = settings;
@@ -29,7 +29,7 @@ namespace RemindSME.Desktop.Helpers
 
             if (!peakTemperature.HasValue)
             {
-                return Resources.Notification_HeatingFirstLogin_Message;
+                return Resources.Reminder_HeatingFirstLogin_Message;
             }
 
             var message = GetRecommendationMessageForTemperature(peakTemperature.Value);
@@ -56,7 +56,7 @@ namespace RemindSME.Desktop.Helpers
                 return $"Looks like it's going to be cold today ({temperature:F0}°C)! Please make sure the heating is set to a sensible temperature for today's weather.";
             }
 
-            return Resources.Notification_HeatingFirstLogin_Message;
+            return Resources.Reminder_HeatingFirstLogin_Message;
         }
 
         private bool ShouldShowAirConditioningMessage(double temperature)

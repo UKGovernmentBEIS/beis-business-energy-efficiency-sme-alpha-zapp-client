@@ -210,7 +210,7 @@
     <Compile Include="Helpers\DummyUpdateManager.cs" />
     <Compile Include="Helpers\AppInfo.cs" />
     <Compile Include="Helpers\AppConfigurationManager.cs" />
-    <Compile Include="Helpers\HeatingRecommendationHelper.cs" />
+    <Compile Include="Helpers\HeatingReminderHelper.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Events\TrackingEvent.cs" />
