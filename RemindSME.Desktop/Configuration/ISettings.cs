@@ -12,5 +12,6 @@ namespace RemindSME.Desktop.Configuration
         string Pseudonym { get; set; }
         DateTime MostRecentFirstLoginNotification { get; set; }
         DateTime MostRecentLastToLeaveNotification { get; set; }
+        DateTime LastToLeaveNotificationSnoozeTime { get; set; }
     }
 }

@@ -118,5 +118,16 @@ namespace RemindSME.Desktop.Properties {
                 this["MostRecentLastToLeaveNotification"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime LastToLeaveNotificationSnoozeTime {
+            get {
+                return ((global::System.DateTime)(this["LastToLeaveNotificationSnoozeTime"]));
+            }
+            set {
+                this["LastToLeaveNotificationSnoozeTime"] = value;
+            }
+        }
     }
 }
