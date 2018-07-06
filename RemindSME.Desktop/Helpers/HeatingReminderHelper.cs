@@ -67,19 +67,8 @@ namespace RemindSME.Desktop.Helpers
             return $"It's going to be {temperature:F0}°C today. Please consider whether you need the heating or air conditioning. Can you open windows instead?";
         }
 
-        private bool ShouldShowAirConditioningMessage(double temperature) => TemperatureRequiresAirConditioning(temperature)
-                                                                          && TemperatureIsHotterThanYesterday(temperature);
-
-        private bool ShouldShowHeatingMessage(double temperature) => TemperatureRequiresHeating(temperature)
-                                                                  && TemperatureIsColderThanYesterday(temperature);
-
-        private bool TemperatureIsAboveAverage(double temperature) => temperature > RoomTemperature;
-        private bool TemperatureRequiresHeating(double temperature) => temperature < MaximumTemperatureForHeating;
-        private bool TemperatureRequiresAirConditioning(double temperature) => temperature > MinimumTemperatureForAirConditioning;
-
-        private bool TemperatureIsDifferentFromYesterday(double temperature) => Math.Abs(TemperatureDifference(temperature)) > 2.5;
-        private bool TemperatureIsHotterThanYesterday(double temperature) => TemperatureDifference(temperature) > +2.5;
-        private bool TemperatureIsColderThanYesterday(double temperature) => TemperatureDifference(temperature) < -2.5;
-        private double TemperatureDifference(double temperature) => temperature - settings.MostRecentPeakTemperature;
+        private static bool TemperatureIsAboveAverage(double temperature) => temperature > RoomTemperature;
+        private static bool TemperatureRequiresHeating(double temperature) => temperature < MaximumTemperatureForHeating;
+        private static bool TemperatureRequiresAirConditioning(double temperature) => temperature > MinimumTemperatureForAirConditioning;
     }
 }
