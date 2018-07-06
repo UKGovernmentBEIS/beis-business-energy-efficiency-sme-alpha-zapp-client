@@ -23,13 +23,13 @@ namespace RemindSME.Desktop.ViewModels
         public void WorkNetwork()
         {
             log.Info("User clicked 'Work network' on new network notification.");
-            networkService.AddNetwork(true);
+            networkService.AddNetworkFromNotification(true);
         }
 
         public void OtherNetwork()
         {
             log.Info("User clicked 'Other network' on new network notification.");
-            networkService.AddNetwork(false);
+            networkService.AddNetworkFromNotification(false);
         }
 
         public string NewNetworkMessage => 

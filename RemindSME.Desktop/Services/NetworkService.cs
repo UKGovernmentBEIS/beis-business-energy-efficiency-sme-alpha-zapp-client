@@ -18,6 +18,7 @@ namespace RemindSME.Desktop.Services
     {
         bool IsWorkNetwork { get; }
         string GetNetworkAddress();
+        void AddNetworkFromNotification(bool isWorkNetwork);
         void AddNetwork(bool isWorkNetwork);
     }
 
@@ -57,6 +58,14 @@ namespace RemindSME.Desktop.Services
             {
                 ShowNewNetworkNotification();
             }
+        }
+
+        public void AddNetworkFromNotification(bool isWorkNetwork)
+        {
+            AddNetwork(isWorkNetwork);
+            newNetworkNotificationHasBeenShown = false;
+
+            // Resets the bool, ready for the next time it joins a new network.
         }
 
         public void AddNetwork(bool isWorkNetwork)
@@ -124,7 +133,6 @@ namespace RemindSME.Desktop.Services
             notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
             log.Info("Showed new network notification.");
             newNetworkNotificationHasBeenShown = true;
-          
         }
     }
 }
