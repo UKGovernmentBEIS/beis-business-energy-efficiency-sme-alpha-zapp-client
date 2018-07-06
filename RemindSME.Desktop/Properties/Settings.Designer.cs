@@ -25,7 +25,6 @@ namespace RemindSME.Desktop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
         public global::System.DateTime NextHibernationTime {
             get {
                 return ((global::System.DateTime)(this["NextHibernationTime"]));
@@ -97,7 +96,6 @@ namespace RemindSME.Desktop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
         public global::System.DateTime MostRecentFirstLoginNotification {
             get {
                 return ((global::System.DateTime)(this["MostRecentFirstLoginNotification"]));
@@ -109,7 +107,6 @@ namespace RemindSME.Desktop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
         public global::System.DateTime MostRecentLastToLeaveNotification {
             get {
                 return ((global::System.DateTime)(this["MostRecentLastToLeaveNotification"]));
