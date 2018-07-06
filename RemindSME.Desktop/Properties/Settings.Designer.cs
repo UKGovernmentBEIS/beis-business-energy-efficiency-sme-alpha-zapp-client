@@ -96,34 +96,34 @@ namespace RemindSME.Desktop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.DateTime MostRecentFirstLoginNotification {
+        public global::System.DateTime MostRecentFirstLoginReminderDismissal {
             get {
-                return ((global::System.DateTime)(this["MostRecentFirstLoginNotification"]));
+                return ((global::System.DateTime)(this["MostRecentFirstLoginReminderDismissal"]));
             }
             set {
-                this["MostRecentFirstLoginNotification"] = value;
+                this["MostRecentFirstLoginReminderDismissal"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.DateTime MostRecentLastToLeaveNotification {
+        public global::System.DateTime MostRecentLastToLeaveReminderDismissal {
             get {
-                return ((global::System.DateTime)(this["MostRecentLastToLeaveNotification"]));
+                return ((global::System.DateTime)(this["MostRecentLastToLeaveReminderDismissal"]));
             }
             set {
-                this["MostRecentLastToLeaveNotification"] = value;
+                this["MostRecentLastToLeaveReminderDismissal"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.DateTime LastToLeaveNotificationSnoozeTime {
+        public global::System.DateTime LastToLeaveReminderSnoozeUntilTime {
             get {
-                return ((global::System.DateTime)(this["LastToLeaveNotificationSnoozeTime"]));
+                return ((global::System.DateTime)(this["LastToLeaveReminderSnoozeUntilTime"]));
             }
             set {
-                this["LastToLeaveNotificationSnoozeTime"] = value;
+                this["LastToLeaveReminderSnoozeUntilTime"] = value;
             }
         }
     }

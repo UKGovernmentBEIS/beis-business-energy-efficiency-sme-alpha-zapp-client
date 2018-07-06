@@ -63,54 +63,54 @@ namespace RemindSME.Desktop.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The temperature outside has changed, make sure air conditioning is set to a suitable temperature. If it is hot, can you open the windows instead of using the air con?.
         /// </summary>
-        internal static string Notification_HeatingDefault_Message {
+        internal static string Reminder_HeatingDefault_Message {
             get {
-                return ResourceManager.GetString("Notification_HeatingDefault_Message", resourceCulture);
+                return ResourceManager.GetString("Reminder_HeatingDefault_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Check the air conditioning.
         /// </summary>
-        internal static string Notification_HeatingDefault_Title {
+        internal static string Reminder_HeatingDefault_Title {
             get {
-                return ResourceManager.GetString("Notification_HeatingDefault_Title", resourceCulture);
+                return ResourceManager.GetString("Reminder_HeatingDefault_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Looks like you&apos;re one of the first people in the office today, make sure the air conditioning is set to a suitable temperature for this morning&apos;s weather..
         /// </summary>
-        internal static string Notification_HeatingFirstLogin_Message {
+        internal static string Reminder_HeatingFirstLogin_Message {
             get {
-                return ResourceManager.GetString("Notification_HeatingFirstLogin_Message", resourceCulture);
+                return ResourceManager.GetString("Reminder_HeatingFirstLogin_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Check the air conditioning.
         /// </summary>
-        internal static string Notification_HeatingFirstLogin_Title {
+        internal static string Reminder_HeatingFirstLogin_Title {
             get {
-                return ResourceManager.GetString("Notification_HeatingFirstLogin_Title", resourceCulture);
+                return ResourceManager.GetString("Reminder_HeatingFirstLogin_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Looks like you&apos;re one of the last in the office, don&apos;t forget to turn off the air conditioning and lights before you leave..
         /// </summary>
-        internal static string Notification_LastToLeave_Message {
+        internal static string Reminder_LastToLeave_Message {
             get {
-                return ResourceManager.GetString("Notification_LastToLeave_Message", resourceCulture);
+                return ResourceManager.GetString("Reminder_LastToLeave_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Switch everything off before you leave.
         /// </summary>
-        internal static string Notification_LastToLeave_Title {
+        internal static string Reminder_LastToLeave_Title {
             get {
-                return ResourceManager.GetString("Notification_LastToLeave_Title", resourceCulture);
+                return ResourceManager.GetString("Reminder_LastToLeave_Title", resourceCulture);
             }
         }
     }

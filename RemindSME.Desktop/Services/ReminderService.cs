@@ -29,8 +29,8 @@ namespace RemindSME.Desktop.Services
         private readonly ISettings settings;
         private readonly DispatcherTimer timer;
 
-        private bool isShowingFirstLoginNotification;
-        private bool isShowingLastToLeaveNotification;
+        private bool isShowingFirstLoginReminder;
+        private bool isShowingLastToLeaveReminder;
 
         private int? networkCount;
 
@@ -50,19 +50,6 @@ namespace RemindSME.Desktop.Services
             this.timer = timer;
         }
 
-        public void Handle(HeatingNotificationEvent e)
-        {
-            if (ShouldShowHeatingNotification())
-            {
-                ShowHeatingNotification(e.Title, e.Message);
-            }
-        }
-
-        public void Handle(NetworkCountChangeEvent e)
-        {
-            networkCount = e.Count;
-        }
-
         public void Initialize()
         {
             eventAggregator.Subscribe(this);
@@ -72,41 +59,54 @@ namespace RemindSME.Desktop.Services
             timer.Start();
         }
 
+        public void Handle(NetworkCountChangeEvent e)
+        {
+            networkCount = e.Count;
+        }
+
+        public void Handle(HeatingNotificationEvent e)
+        {
+            if (ShouldShowHeatingReminder())
+            {
+                ShowHeatingReminder(e.Title, e.Message);
+            }
+        }
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             if (appWindowManager.AnyAppWindowIsOpen())
             {
                 // Suppress all timed reminders while app windows are open.
-                // This avoids immediately showing notifications to new or newly opted-in users.
+                // This avoids immediately showing reminders to new or newly opted-in users.
                 return;
             }
 
-            if (ShouldShowLastToLeaveNotification())
+            if (ShouldShowLastToLeaveReminder())
             {
-                ShowLastToLeaveNotification();
+                ShowLastToLeaveReminder();
             }
 
-            if (ShouldShowFirstLoginNotification())
+            if (ShouldShowFirstLoginReminder())
             {
-                ShowFirstLoginNotification();
+                ShowFirstLoginReminder();
             }
         }
 
-        private bool ShouldShowHeatingNotification()
+        private bool ShouldShowHeatingReminder()
         {
             return settings.HeatingOptIn;
         }
 
-        private void ShowHeatingNotification(string title, string message)
+        private void ShowHeatingReminder(string title, string message)
         {
-            ShowNotification(
-                title ?? Resources.Notification_HeatingDefault_Title,
-                message ?? Resources.Notification_HeatingDefault_Message);
+            ShowReminder(
+                title ?? Resources.Reminder_HeatingDefault_Title,
+                message ?? Resources.Reminder_HeatingDefault_Message);
         }
 
-        private bool ShouldShowFirstLoginNotification()
+        private bool ShouldShowFirstLoginReminder()
         {
-            if (isShowingFirstLoginNotification)
+            if (isShowingFirstLoginReminder)
             {
                 return false;
             }
@@ -116,67 +116,70 @@ namespace RemindSME.Desktop.Services
                    time >= FirstLoginMinimumTime && // Not too early.
                    time <= FirstLoginMaximumTime && // Early enough.
                    networkCount.HasValue && networkCount.Value <= FirstInThreshold && // Few enough people.
-                   settings.MostRecentFirstLoginNotification.Date != DateTime.Today; // No notification yet today.
+                   settings.MostRecentFirstLoginReminderDismissal.Date != DateTime.Today; // Has not dismissed today.
         }
 
-        private void ShowFirstLoginNotification()
+        private void ShowFirstLoginReminder()
         {
-            isShowingFirstLoginNotification = true;
-            ShowNotification(
-                Resources.Notification_HeatingFirstLogin_Title,
-                Resources.Notification_HeatingFirstLogin_Message,
-                () => isShowingFirstLoginNotification = false,
-                new ReminderViewModel.Button("Done!", FirstLoginNotification_OK));
+            isShowingFirstLoginReminder = true;
+            ShowReminder(
+                Resources.Reminder_HeatingFirstLogin_Title,
+                Resources.Reminder_HeatingFirstLogin_Message,
+                () => isShowingFirstLoginReminder = false,
+                new ReminderViewModel.Button("Done!", FirstLoginReminder_Done));
         }
 
-        private void FirstLoginNotification_OK()
+        private void FirstLoginReminder_Done()
         {
-            settings.MostRecentFirstLoginNotification = DateTime.Now;
+            log.Info("User clicked 'Done!' on first login reminder.");
+            settings.MostRecentFirstLoginReminderDismissal = DateTime.Now;
         }
 
-        private bool ShouldShowLastToLeaveNotification()
+        private bool ShouldShowLastToLeaveReminder()
         {
-            if (isShowingLastToLeaveNotification)
+            if (isShowingLastToLeaveReminder)
             {
                 return false;
             }
 
             var now = DateTime.Now;
             return now.TimeOfDay >= LastToLeaveMinimumTime && // Late enough.
-                   now >= settings.LastToLeaveNotificationSnoozeTime && // After any existing snooze.
+                   now >= settings.LastToLeaveReminderSnoozeUntilTime && // After any existing snooze.
                    networkCount.HasValue && networkCount.Value <= LastToLeaveThreshold && // Few enough people.
-                   settings.MostRecentLastToLeaveNotification.Date != DateTime.Today; // Has not dismissed today.
+                   settings.MostRecentLastToLeaveReminderDismissal.Date != DateTime.Today; // Has not dismissed today.
         }
 
-        private void ShowLastToLeaveNotification()
+        private void ShowLastToLeaveReminder()
         {
-            isShowingLastToLeaveNotification = true;
-            ShowNotification(
-                Resources.Notification_LastToLeave_Title,
-                Resources.Notification_LastToLeave_Message,
-                () => isShowingLastToLeaveNotification = false,
-                new ReminderViewModel.Button("OK", LastToLeaveNotification_OK),
-                new ReminderViewModel.Button("Snooze", LastToLeaveNotification_Snooze));
+            isShowingLastToLeaveReminder = true;
+            ShowReminder(
+                Resources.Reminder_LastToLeave_Title,
+                Resources.Reminder_LastToLeave_Message,
+                () => isShowingLastToLeaveReminder = false,
+                new ReminderViewModel.Button("OK", LastToLeaveReminder_OK),
+                new ReminderViewModel.Button("Snooze", LastToLeaveReminder_Snooze));
         }
 
-        private void LastToLeaveNotification_OK()
+        private void LastToLeaveReminder_OK()
         {
-            settings.MostRecentLastToLeaveNotification = DateTime.Now;
+            log.Info("User clicked 'OK' on last to leave reminder.");
+            settings.MostRecentLastToLeaveReminderDismissal = DateTime.Now;
         }
 
-        private void LastToLeaveNotification_Snooze()
+        private void LastToLeaveReminder_Snooze()
         {
-            settings.LastToLeaveNotificationSnoozeTime = DateTime.Now.Add(LastToLeaveSnoozePeriod);
+            log.Info("User clicked 'Snooze' on last to leave reminder.");
+            settings.LastToLeaveReminderSnoozeUntilTime = DateTime.Now.Add(LastToLeaveSnoozePeriod);
         }
 
-        private void ShowNotification(string title, string message, params ReminderViewModel.Button[] buttons)
+        private void ShowReminder(string title, string message, params ReminderViewModel.Button[] buttons)
         {
-            ShowNotification(title, message, null, buttons);
+            ShowReminder(title, message, null, buttons);
         }
 
-        private void ShowNotification(string title, string message, Action onClose, params ReminderViewModel.Button[] buttons)
+        private void ShowReminder(string title, string message, Action onClose, params ReminderViewModel.Button[] buttons)
         {
-            log.Info($"Displayed '{title}' notification.");
+            log.Info($"Displayed '{title}' reminder.");
 
             var model = IoC.Get<ReminderViewModel>();
             model.Title = title;
@@ -185,8 +188,14 @@ namespace RemindSME.Desktop.Services
             notificationManager.Show(model, expirationTime: TimeSpan.FromMinutes(15),
                 onClose: () =>
                 {
-                    onClose?.Invoke();
-                    log.Info($"User dismissed '{title}' notification.");
+                    if (onClose != null)
+                    {
+                        onClose.Invoke();
+                    }
+                    else
+                    {
+                        log.Info($"User dismissed '{title}' reminder.");
+                    }
                 });
         }
     }

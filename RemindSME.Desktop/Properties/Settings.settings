@@ -20,13 +20,13 @@
     <Setting Name="Pseudonym" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="MostRecentFirstLoginNotification" Type="System.DateTime" Scope="User">
+    <Setting Name="MostRecentFirstLoginReminderDismissal" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="MostRecentLastToLeaveNotification" Type="System.DateTime" Scope="User">
+    <Setting Name="MostRecentLastToLeaveReminderDismissal" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="LastToLeaveNotificationSnoozeTime" Type="System.DateTime" Scope="User">
+    <Setting Name="LastToLeaveReminderSnoozeUntilTime" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>
