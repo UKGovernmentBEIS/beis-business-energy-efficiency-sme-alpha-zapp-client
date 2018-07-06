@@ -30,6 +30,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
             <RowDefinition Height="20" />
+            <RowDefinition Height="50" />
             <RowDefinition Height="70" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0">
@@ -146,7 +147,12 @@
                    x:Name="CompanyName"
                    Foreground="#BBBBBB"
                    Margin="40, 0, 0, 0" />
-        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Top">
+        <TextBlock Grid.Column="0" Grid.Row="3"
+                   Text="If you have any questions, or need support to install, please get in contact by emailing callum.callinan@inzenka.com."
+                   Foreground="#BBBBBB"
+                   Width="450"
+                   Margin="40, 0, 0, 0" />
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Button
                 Content="FAQs" cal:Message.Attach="OpenFaqWindow"
                 Style="{StaticResource WindowButtonStyle}"
