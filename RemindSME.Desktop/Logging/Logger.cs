@@ -14,7 +14,7 @@ namespace RemindSME.Desktop.Logging
     {
         private static readonly string LogFilePath = Path.Combine(
             Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName,
-            "zapp.log");
+            "Zapp.log");
 
         private readonly IEventAggregator eventAggregator;
         private readonly ILogger fileLogger;
