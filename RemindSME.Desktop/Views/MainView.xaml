@@ -10,7 +10,6 @@
             <ContextMenu>
                 <MenuItem Header="Open Hub" cal:Message.Attach="[Event Click] = [Action OpenHubWindow('menu')]" />
                 <MenuItem Header="Open FAQs" cal:Message.Attach="[Event Click] = [Action OpenFaqWindow()]" />
-                <MenuItem Header="Open Welcome Screen" cal:Message.Attach="[Event Click] = [Action OpenWelcomeWindow()]" />
                 <MenuItem Header="Quit" cal:Message.Attach="Quit" />
             </ContextMenu>
         </tb:TaskbarIcon.ContextMenu>
