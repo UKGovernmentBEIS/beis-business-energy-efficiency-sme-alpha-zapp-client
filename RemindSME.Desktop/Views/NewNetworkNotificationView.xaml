@@ -30,7 +30,11 @@
                             Style="{StaticResource NotificationButtonStyle}" Content="No"
                             cal:Message.Attach="OtherNetwork" />
                 </StackPanel>
-                <TextBlock x:Name="NewNetworkMessage" HorizontalAlignment="Left" Margin="10 0 0 0" VerticalAlignment="Center" />
+                <TextBlock x:Name="NewNetworkMessage" 
+                           TextWrapping="Wrap"
+                           Opacity=".8" 
+                           Margin="0,8,0,8" 
+                           VerticalAlignment="Center" />
             </DockPanel>
         </Grid>
     </Border>

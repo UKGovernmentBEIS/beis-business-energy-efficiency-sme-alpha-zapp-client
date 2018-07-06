@@ -30,6 +30,7 @@ namespace RemindSME.Desktop.Services
 
         public bool IsWorkNetwork => settings.WorkNetworks.Contains(currentNetwork);
         private string currentNetwork;
+        private bool newNetworkNotificationHasBeenShown;
 
         public NetworkService(
             ILog log,
@@ -51,7 +52,11 @@ namespace RemindSME.Desktop.Services
         private void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
             currentNetwork = GetNetworkAddress();
-            ShowNewNetworkNotification();
+
+            if (!newNetworkNotificationHasBeenShown)
+            {
+                ShowNewNetworkNotification();
+            }
         }
 
         public void AddNetwork(bool isWorkNetwork)
@@ -115,11 +120,11 @@ namespace RemindSME.Desktop.Services
 
         private void ShowNewNetworkNotification()
         {
+            var model = IoC.Get<NewNetworkNotificationViewModel>();
+            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
             log.Info("Showed new network notification.");
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                appWindowManager.OpenOrActivateDialog<NewNetworkNotificationView, NewNetworkNotificationViewModel>();
-            });
+            newNetworkNotificationHasBeenShown = true;
+          
         }
     }
 }
