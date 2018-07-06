@@ -25,7 +25,6 @@ namespace RemindSME.Desktop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
         public global::System.DateTime NextHibernationTime {
             get {
                 return ((global::System.DateTime)(this["NextHibernationTime"]));
@@ -92,6 +91,39 @@ namespace RemindSME.Desktop.Properties {
             }
             set {
                 this["Pseudonym"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime MostRecentFirstLoginReminderDismissal {
+            get {
+                return ((global::System.DateTime)(this["MostRecentFirstLoginReminderDismissal"]));
+            }
+            set {
+                this["MostRecentFirstLoginReminderDismissal"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime MostRecentLastToLeaveReminderDismissal {
+            get {
+                return ((global::System.DateTime)(this["MostRecentLastToLeaveReminderDismissal"]));
+            }
+            set {
+                this["MostRecentLastToLeaveReminderDismissal"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime LastToLeaveReminderSnoozeUntilTime {
+            get {
+                return ((global::System.DateTime)(this["LastToLeaveReminderSnoozeUntilTime"]));
+            }
+            set {
+                this["LastToLeaveReminderSnoozeUntilTime"] = value;
             }
         }
         

@@ -11,6 +11,9 @@ namespace RemindSME.Desktop.Configuration
         bool HibernationOptIn { get; set; }
         DateTime NextHibernationTime { get; set; }
         string Pseudonym { get; set; }
+        DateTime MostRecentFirstLoginReminderDismissal { get; set; }
+        DateTime MostRecentLastToLeaveReminderDismissal { get; set; }
+        DateTime LastToLeaveReminderSnoozeUntilTime { get; set; }
         string CompanyId { get; set; }
         string CompanyName { get; set; }
         StringCollection WorkNetworks { get; set; }

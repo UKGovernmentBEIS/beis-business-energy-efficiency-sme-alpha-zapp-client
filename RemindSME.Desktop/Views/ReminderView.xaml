@@ -1,5 +1,6 @@
 ﻿<UserControl x:Class="RemindSME.Desktop.Views.ReminderView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:cal="http://www.caliburnproject.org"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -20,12 +21,20 @@
             <DockPanel Grid.Column="1">
                 <TextBlock DockPanel.Dock="Top" Text="{Binding Title}" FontWeight="Medium"
                            TextTrimming="CharacterEllipsis" />
-
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
-                    <Button Content="OK" DockPanel.Dock="Right" controls:Notification.CloseOnClick="True"
-                            Style="{StaticResource NotificationButtonStyle}" />
-                </StackPanel>
-
+                <ItemsControl ItemsSource="{Binding Buttons}" DockPanel.Dock="Bottom">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Label}" cal:Message.Attach="OnClick"
+                                    DockPanel.Dock="Right" controls:Notification.CloseOnClick="True"
+                                    Margin="5,0,0,0" Style="{StaticResource NotificationButtonStyle}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
                 <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Opacity=".8" Margin="0,8,0,8" />
             </DockPanel>
         </Grid>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -112,6 +113,22 @@ namespace RemindSME.Desktop
         private static bool IsRelaunchAfterUpdate(IEnumerable<string> commandLineArgs)
         {
             return commandLineArgs.Any(arg => arg.Contains("--squirrel"));
+        }
+
+        protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            if (Debugger.IsAttached)
+            {
+                Debugger.Break();
+                e.Handled = true;
+            }
+            else
+            {
+                Container.Resolve<ILog>().Error(e.Exception);
+                e.Handled = true;
+            }
+
+            base.OnUnhandledException(sender, e);
         }
     }
 }
