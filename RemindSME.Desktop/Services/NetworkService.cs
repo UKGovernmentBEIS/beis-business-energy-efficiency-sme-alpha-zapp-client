@@ -53,8 +53,9 @@ namespace RemindSME.Desktop.Services
         private void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
             currentNetwork = GetNetworkAddress();
+            var networkIsNew = CheckIfNetworkIsNew(currentNetwork);
 
-            if (!newNetworkNotificationHasBeenShown)
+            if (networkIsNew && !newNetworkNotificationHasBeenShown)
             {
                 ShowNewNetworkNotification();
             }
@@ -81,6 +82,11 @@ namespace RemindSME.Desktop.Services
             }
 
             Settings.Default.Save();
+        }
+
+        private bool CheckIfNetworkIsNew(string network)
+        {
+            return !(settings.WorkNetworks.Contains(network) || settings.OtherNetworks.Contains(network));
         }
 
         public string GetNetworkAddress()
