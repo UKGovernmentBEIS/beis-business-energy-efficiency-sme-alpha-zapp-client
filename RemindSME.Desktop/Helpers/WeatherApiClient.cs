@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 using Flurl;
 using Flurl.Http;
 using RemindSME.Desktop.Models;
@@ -16,41 +17,39 @@ namespace RemindSME.Desktop.Helpers
         private const string BaseUrl = "http://api.openweathermap.org/data/2.5";
         private const string ApiKey = "api-key";
 
+        private readonly ILog log;
+
+        public WeatherApiClient(ILog log)
+        {
+            this.log = log;
+        }
+
         public async Task<CurrentWeather> GetCurrentWeatherForLocation(string location)
         {
-            var url = BaseUrl
-                .AppendPathSegment("weather")
-                .SetQueryParam("appid", ApiKey)
-                .SetQueryParam("units", "metric")
-                .SetQueryParam("q", location);
-
-            try
-            {
-                return await url.GetJsonAsync<CurrentWeather>();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($@"Failed to fetch current weather data: {e.Message}");
-                return null;
-            }
+            return await MakeApiRequest<CurrentWeather>("weather", location);
         }
 
         public async Task<WeatherForecast> GetWeatherForecastForLocation(string location)
         {
+            return await MakeApiRequest<WeatherForecast>("forecast", location);
+        }
+
+        private async Task<T> MakeApiRequest<T>(string endpoint, string location)
+        {
             var url = BaseUrl
-                .AppendPathSegment("forecast")
+                .AppendPathSegment(endpoint)
                 .SetQueryParam("appid", ApiKey)
                 .SetQueryParam("units", "metric")
                 .SetQueryParam("q", location);
 
             try
             {
-                return await url.GetJsonAsync<WeatherForecast>();
+                return await url.GetJsonAsync<T>();
             }
             catch (Exception e)
             {
-                Console.WriteLine($@"Failed to fetch forecast weather data: {e.Message}");
-                return null;
+                log.Error(e);
+                return default(T);
             }
         }
     }
