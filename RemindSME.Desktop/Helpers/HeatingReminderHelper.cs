@@ -13,6 +13,12 @@ namespace RemindSME.Desktop.Helpers
 
     public class HeatingReminderHelper : IHeatingReminderHelper
     {
+        private const string Location = "London,UK";
+
+        private const double RoomTemperature = 20;
+        private const double MaximumTemperatureForHeating = 16;
+        private const double MinimumTemperatureForAirConditioning = 24;
+
         private readonly IWeatherApiClient weatherApiClient;
         private readonly ISettings settings;
 
@@ -22,59 +28,58 @@ namespace RemindSME.Desktop.Helpers
             this.settings = settings;
         }
 
+        public string DefaultMessage => Resources.Reminder_HeatingFirstLogin_Message;
+
         public async Task<string> GetWeatherDependentMessage()
         {
-            var forecast = await weatherApiClient.GetWeatherForecastForLocation("London,UK");
+            var forecast = await weatherApiClient.GetWeatherForecastForLocation(Location);
             var peakTemperature = GetPeakTemperatureForToday(forecast);
-
-            if (!peakTemperature.HasValue)
-            {
-                return Resources.Reminder_HeatingFirstLogin_Message;
-            }
-
-            var message = GetRecommendationMessageForTemperature(peakTemperature.Value);
-            settings.MostRecentPeakTemperature = peakTemperature.Value;
-            return message;
+            return peakTemperature.HasValue
+                ? GetRecommendationMessageForTemperature(peakTemperature.Value)
+                : DefaultMessage;
         }
 
         private double? GetPeakTemperatureForToday(WeatherForecast weatherForecast)
         {
+            var midnightTonight = DateTime.Today.AddDays(1);
             return weatherForecast?.Forecasts
-                .Where(forecast => forecast.Time < DateTime.Today.AddDays(1))
+                .Where(forecast => forecast.Time < midnightTonight)
                 .Max(forecast => forecast.Measurements.Temperature);
         }
 
         private string GetRecommendationMessageForTemperature(double temperature)
         {
-            if (ShouldShowAirConditioningMessage(temperature))
+            if (TemperatureRequiresAirConditioning(temperature))
             {
-                return $"Looks like it's going to be hot today ({temperature:F0}°C)! Please make sure the air conditioning is set to a sensible temperature for today's weather. Can you open windows instead?";
+                return $"It's going to be hot today (up to {temperature:F0}°C)! Please set the air conditioning to a sensible temperature and close the windows.";
             }
 
-            if (ShouldShowHeatingMessage(temperature))
+            if (TemperatureRequiresHeating(temperature))
             {
-                return $"Looks like it's going to be cold today ({temperature:F0}°C)! Please make sure the heating is set to a sensible temperature for today's weather.";
+                return $"It's cold today ({temperature:F0}°C)! Please set the heating to a sensible temperature and close the windows.";
             }
 
-            return Resources.Reminder_HeatingFirstLogin_Message;
+            if (TemperatureIsAboveAverage(temperature))
+            {
+                return $"It's going to be {temperature:F0}°C today. Rather than use the air conditioning, could you open windows instead?";
+            }
+
+            return $"It's going to be {temperature:F0}°C today. Please consider whether you need the heating or air conditioning. Can you open windows instead?";
         }
 
-        private bool ShouldShowAirConditioningMessage(double temperature)
-        {
-            return TemperatureRequiresAirConditioning(temperature) && TemperatureIsSignificantlyHotterThanYesterday(temperature);
-        }
+        private bool ShouldShowAirConditioningMessage(double temperature) => TemperatureRequiresAirConditioning(temperature)
+                                                                          && TemperatureIsHotterThanYesterday(temperature);
 
-        private bool ShouldShowHeatingMessage(double temperature)
-        {
-            return TemperatureRequiresHeating(temperature) && TemperatureIsSignificantlyColderThanYesterday(temperature);
-        }
+        private bool ShouldShowHeatingMessage(double temperature) => TemperatureRequiresHeating(temperature)
+                                                                  && TemperatureIsColderThanYesterday(temperature);
 
-        private bool TemperatureRequiresHeating(double temperature) => temperature < 15;
-        private bool TemperatureRequiresAirConditioning(double temperature) => temperature > 25;
+        private bool TemperatureIsAboveAverage(double temperature) => temperature > RoomTemperature;
+        private bool TemperatureRequiresHeating(double temperature) => temperature < MaximumTemperatureForHeating;
+        private bool TemperatureRequiresAirConditioning(double temperature) => temperature > MinimumTemperatureForAirConditioning;
 
-        private bool TemperatureIsSignificantlyHotterThanYesterday(double temperature) => TemperatureDifference(temperature) > +5;
-        private bool TemperatureIsSignificantlyColderThanYesterday(double temperature) => TemperatureDifference(temperature) < -5;
-
+        private bool TemperatureIsDifferentFromYesterday(double temperature) => Math.Abs(TemperatureDifference(temperature)) > 2.5;
+        private bool TemperatureIsHotterThanYesterday(double temperature) => TemperatureDifference(temperature) > +2.5;
+        private bool TemperatureIsColderThanYesterday(double temperature) => TemperatureDifference(temperature) < -2.5;
         private double TemperatureDifference(double temperature) => temperature - settings.MostRecentPeakTemperature;
     }
 }
