@@ -3,12 +3,18 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Windows;
+using Caliburn.Micro;
+using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
+using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Properties;
+using RemindSME.Desktop.ViewModels;
+using RemindSME.Desktop.Views;
 
 namespace RemindSME.Desktop.Services
 {
-    public interface INetworkService : IService 
+    public interface INetworkService : IService
     {
         bool IsWorkNetwork { get; }
         string GetNetworkAddress();
@@ -17,13 +23,23 @@ namespace RemindSME.Desktop.Services
 
     public class NetworkService : INetworkService
     {
+        private readonly ILog log;
+        private readonly IAppWindowManager appWindowManager;
+        private readonly INotificationManager notificationManager;
         private readonly ISettings settings;
 
         public bool IsWorkNetwork => settings.WorkNetworks.Contains(currentNetwork);
         private string currentNetwork;
 
-        public NetworkService(ISettings settings)
+        public NetworkService(
+            ILog log,
+            IAppWindowManager appWindowManager,
+            INotificationManager notificationManager,
+            ISettings settings)
         {
+            this.log = log;
+            this.appWindowManager = appWindowManager;
+            this.notificationManager = notificationManager;
             this.settings = settings;
         }
 
@@ -35,10 +51,7 @@ namespace RemindSME.Desktop.Services
         private void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
             currentNetwork = GetNetworkAddress();
-
-            //update current network
-            //fire notification if new network
-
+            ShowNewNetworkNotification();
         }
 
         public void AddNetwork(bool isWorkNetwork)
@@ -52,6 +65,7 @@ namespace RemindSME.Desktop.Services
             {
                 Settings.Default.OtherNetworks.Add(network);
             }
+
             Settings.Default.Save();
         }
 
@@ -95,7 +109,17 @@ namespace RemindSME.Desktop.Services
             {
                 networkAddress[i] = (byte)(ipAdressBytes[i] & subnetMaskBytes[i]);
             }
+
             return new IPAddress(networkAddress);
+        }
+
+        private void ShowNewNetworkNotification()
+        {
+            log.Info("Showed new network notification.");
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                appWindowManager.OpenOrActivateDialog<NewNetworkNotificationView, NewNetworkNotificationViewModel>();
+            });
         }
     }
 }

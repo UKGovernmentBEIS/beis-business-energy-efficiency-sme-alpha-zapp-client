@@ -232,6 +232,7 @@
     </Compile>
     <Compile Include="Services\IService.cs" />
     <Compile Include="Services\ReminderService.cs" />
+    <Compile Include="ViewModels\NewNetworkNotificationViewModel.cs" />
     <Compile Include="ViewModels\Notification.cs" />
     <Compile Include="ViewModels\FaqViewModel.cs" />
     <Compile Include="ViewModels\HubViewModel.cs" />
@@ -266,6 +267,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\NewNetworkNotificationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\HubView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
