@@ -129,12 +129,9 @@ namespace RemindSME.Desktop.Services
         private async void ShowFirstLoginReminder()
         {
             isShowingFirstLoginReminder = true;
-            var message = await heatingReminderHelper.GetWeatherDependentMessage();
-            ShowReminder(
-                Resources.Reminder_HeatingFirstLogin_Title,
-                message,
-                () => isShowingFirstLoginReminder = false,
-                new ReminderViewModel.Button("Done!", FirstLoginReminder_Done));
+            var reminder = await heatingReminderHelper.GetWeatherDependentReminder();
+            reminder.Buttons = new[] { new ReminderViewModel.Button("Done!", FirstLoginReminder_Done) };
+            ShowReminder(reminder, () => isShowingFirstLoginReminder = false);
         }
 
         private void FirstLoginReminder_Done()
@@ -187,12 +184,16 @@ namespace RemindSME.Desktop.Services
 
         private void ShowReminder(string title, string message, Action onClose, params ReminderViewModel.Button[] buttons)
         {
-            log.Info($"Displayed '{title}' reminder.");
-
             var model = IoC.Get<ReminderViewModel>();
             model.Title = title;
             model.Message = message;
             model.Buttons = buttons;
+            ShowReminder(model, onClose);
+        }
+
+        private void ShowReminder(ReminderViewModel model, Action onClose)
+        {
+            log.Info($"Displayed '{model.Title}' reminder.");
             notificationManager.Show(model, expirationTime: TimeSpan.FromMinutes(15),
                 onClose: () =>
                 {
@@ -202,7 +203,7 @@ namespace RemindSME.Desktop.Services
                     }
                     else
                     {
-                        log.Info($"User dismissed '{title}' reminder.");
+                        log.Info($"User dismissed '{model.Title}' reminder.");
                     }
                 });
         }
