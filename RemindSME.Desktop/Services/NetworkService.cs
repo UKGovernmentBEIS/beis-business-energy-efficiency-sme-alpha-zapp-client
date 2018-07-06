@@ -3,53 +3,42 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Properties;
 
 namespace RemindSME.Desktop.Services
 {
     public interface INetworkService : IService 
     {
+        bool IsWorkNetwork { get; }
         string GetNetworkAddress();
         void AddNetwork(bool isWorkNetwork);
     }
 
     public class NetworkService : INetworkService
     {
+        private readonly ISettings settings;
+
+        public bool IsWorkNetwork => settings.WorkNetworks.Contains(currentNetwork);
+        private string currentNetwork;
+
+        public NetworkService(ISettings settings)
+        {
+            this.settings = settings;
+        }
+
         public void Initialize()
         {
             NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
         }
 
-        //public bool IsWorkNetwork => settings.WorkNetworks.Contains(currentNetwork);
-
-        // private string currentNetwork;
-        
-
-
         private void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
+            currentNetwork = GetNetworkAddress();
+
             //update current network
             //fire notification if new network
 
-            Console.WriteLine("New network");
-
-            var network = GetNetworkAddress();
-            if (Settings.Default.WorkNetworks.Contains(network))
-            {
-                Console.WriteLine($@"New network is Work Network");
-                // start app as normal
-                //do nothing
-            }
-            else if (Settings.Default.OtherNetworks.Contains(network))
-            {
-                // don't send any notifications
-                // set bool, which can be picked up elsewhere
-
-            }
-            else
-            {
-                // fire new network notification
-            }
         }
 
         public void AddNetwork(bool isWorkNetwork)

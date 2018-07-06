@@ -24,6 +24,7 @@ namespace RemindSME.Desktop.Services
         private readonly INotificationManager notificationManager;
         private readonly ISettings settings;
         private readonly DispatcherTimer timer;
+        private readonly INetworkService networkService;
 
         private DateTime? mostRecentFirstLoginHeatingNotification;
         private DateTime? mostRecentLastOutNotification;
@@ -36,7 +37,8 @@ namespace RemindSME.Desktop.Services
             IAppWindowManager appWindowManager,
             IEventAggregator eventAggregator,
             ISettings settings,
-            DispatcherTimer timer)
+            DispatcherTimer timer,
+            INetworkService networkService)
         {
             this.log = log;
             this.notificationManager = notificationManager;
@@ -44,6 +46,7 @@ namespace RemindSME.Desktop.Services
             this.eventAggregator = eventAggregator;
             this.settings = settings;
             this.timer = timer;
+            this.networkService = networkService;
         }
 
         public void Initialize()
@@ -70,10 +73,12 @@ namespace RemindSME.Desktop.Services
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if (appWindowManager.AnyAppWindowIsOpen() /* or is not work network*/)
+            if (appWindowManager.AnyAppWindowIsOpen() || !networkService.IsWorkNetwork)
             {
                 // Suppress all timed reminders while app windows are open.
                 // This avoids immediately showing notifications to new or newly opted-in users.
+
+                // Also suppresses any notifications if user is not on a work network. 
                 return;
             }
 
