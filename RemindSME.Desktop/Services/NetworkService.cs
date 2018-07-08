@@ -1,144 +1,95 @@
 ﻿using System;
-using System.Linq;
-using System.Net;
 using System.Net.NetworkInformation;
-using System.Net.Sockets;
-using System.Windows;
 using Caliburn.Micro;
 using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Helpers;
-using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.ViewModels;
-using RemindSME.Desktop.Views;
 
 namespace RemindSME.Desktop.Services
 {
     public interface INetworkService : IService
     {
         bool IsWorkNetwork { get; }
-        string GetNetworkAddress();
-        void AddNetworkFromNotification(bool isWorkNetwork);
-        void AddNetwork(bool isWorkNetwork);
+        void AddCurrentNetwork(bool isWorkNetwork);
     }
 
     public class NetworkService : INetworkService
     {
+        private static string currentNetwork;
         private readonly ILog log;
-        private readonly IAppWindowManager appWindowManager;
+        private readonly INetworkAddressFinder networkAddressFinder;
         private readonly INotificationManager notificationManager;
         private readonly ISettings settings;
 
-        public bool IsWorkNetwork => settings.WorkNetworks.Contains(currentNetwork);
-        private string currentNetwork;
-        private bool newNetworkNotificationHasBeenShown;
+        private bool isShowingNotification;
 
         public NetworkService(
             ILog log,
-            IAppWindowManager appWindowManager,
+            INetworkAddressFinder networkAddressFinder,
             INotificationManager notificationManager,
             ISettings settings)
         {
             this.log = log;
-            this.appWindowManager = appWindowManager;
+            this.networkAddressFinder = networkAddressFinder;
             this.notificationManager = notificationManager;
             this.settings = settings;
         }
 
+        public bool IsWorkNetwork => settings.WorkNetworks.Contains(currentNetwork);
+
         public void Initialize()
         {
+            currentNetwork = networkAddressFinder.GetCurrentNetworkAddress();
             NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
+        }
+
+        public void AddCurrentNetwork(bool isWorkNetwork)
+        {
+            if (isWorkNetwork)
+            {
+                settings.WorkNetworks.Add(currentNetwork);
+            }
+            else
+            {
+                settings.OtherNetworks.Add(currentNetwork);
+            }
+            settings.Save();
         }
 
         private void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
-            currentNetwork = GetNetworkAddress();
-            var networkIsNew = CheckIfNetworkIsNew(currentNetwork);
+            currentNetwork = networkAddressFinder.GetCurrentNetworkAddress();
 
-            if (networkIsNew && !newNetworkNotificationHasBeenShown)
+            if (settings.WorkNetworks.Count == 0 && settings.OtherNetworks.Count == 0)
+            {
+                // During initial registration.
+                return;
+            }
+
+            if (string.IsNullOrEmpty(currentNetwork) || currentNetwork.StartsWith("127."))
+            {
+                return;
+            }
+
+            var networkIsNew = IsNewNetwork(currentNetwork);
+            if (networkIsNew && !isShowingNotification)
             {
                 ShowNewNetworkNotification();
             }
         }
 
-        public void AddNetworkFromNotification(bool isWorkNetwork)
-        {
-            AddNetwork(isWorkNetwork);
-            newNetworkNotificationHasBeenShown = false;
-
-            // Resets the bool, ready for the next time it joins a new network.
-        }
-
-        public void AddNetwork(bool isWorkNetwork)
-        {
-            var network = GetNetworkAddress();
-            if (isWorkNetwork)
-            {
-                Settings.Default.WorkNetworks.Add(network);
-            }
-            else
-            {
-                Settings.Default.OtherNetworks.Add(network);
-            }
-
-            Settings.Default.Save();
-        }
-
-        private bool CheckIfNetworkIsNew(string network)
+        private bool IsNewNetwork(string network)
         {
             return !(settings.WorkNetworks.Contains(network) || settings.OtherNetworks.Contains(network));
         }
 
-        public string GetNetworkAddress()
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            var addresses = host.AddressList;
-            var address = addresses.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
-
-            if (address == null)
-            {
-                return null;
-            }
-
-            // Adapted from http://www.java2s.com/Code/CSharp/Network/GetSubnetMask.htm
-            var unicastAddresses = NetworkInterface.GetAllNetworkInterfaces().SelectMany(n => n.GetIPProperties().UnicastAddresses);
-            var subnetMask = unicastAddresses.FirstOrDefault(a => a.Address.AddressFamily == AddressFamily.InterNetwork && a.Address.Equals(address))?.IPv4Mask;
-
-            var networkAddress = GetNetworkAddress(address, subnetMask);
-            return networkAddress.ToString();
-        }
-
-        // Adapted from https://blogs.msdn.microsoft.com/knom/2008/12/31/ip-address-calculations-with-c-subnetmasks-networks/
-        private static IPAddress GetNetworkAddress(IPAddress address, IPAddress subnetMask)
-        {
-            if (address == null || subnetMask == null)
-            {
-                return null;
-            }
-
-            var ipAdressBytes = address.GetAddressBytes();
-            var subnetMaskBytes = subnetMask.GetAddressBytes();
-
-            if (ipAdressBytes.Length != subnetMaskBytes.Length)
-            {
-                throw new ArgumentException("Lengths of IP address and subnet mask do not match.");
-            }
-
-            var networkAddress = new byte[ipAdressBytes.Length];
-            for (var i = 0; i < networkAddress.Length; i++)
-            {
-                networkAddress[i] = (byte)(ipAdressBytes[i] & subnetMaskBytes[i]);
-            }
-
-            return new IPAddress(networkAddress);
-        }
-
         private void ShowNewNetworkNotification()
         {
+            isShowingNotification = true;
             var model = IoC.Get<NewNetworkNotificationViewModel>();
-            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2));
+            notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2), onClose: () => isShowingNotification = false);
             log.Info("Showed new network notification.");
-            newNetworkNotificationHasBeenShown = true;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Configuration;
 using System.Threading.Tasks;
-using RemindSME.Desktop.Properties;
 using Flurl;
 using Flurl.Http;
 using RemindSME.Desktop.Configuration;
@@ -11,8 +10,10 @@ namespace RemindSME.Desktop.Helpers
     {
         Task UpdateCompanyName(string companyId);
     }
+
     public class CompanyApiClient : ICompanyApiClient
     {
+        private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
         private readonly ISettings settings;
 
         public CompanyApiClient(ISettings settings)
@@ -22,19 +23,26 @@ namespace RemindSME.Desktop.Helpers
 
         public async Task UpdateCompanyName(string companyId)
         {
-            var serverUrl = ConfigurationManager.AppSettings["ServerUrl"];
+            if (!IsValidCompanyIdFormat(companyId))
+            {
+                settings.CompanyName = null;
+                return;
+            }
+
             try
             {
-                var company =
-                    await serverUrl
-                        .AppendPathSegments("registration", companyId)
-                        .GetStringAsync();
+                var company = await ServerUrl.AppendPathSegments("registration", companyId).GetStringAsync();
                 settings.CompanyName = company;
             }
             catch (FlurlHttpException)
             {
                 settings.CompanyName = null;
             }
+        }
+
+        private static bool IsValidCompanyIdFormat(string id)
+        {
+            return id.Length == 6;
         }
     }
 }

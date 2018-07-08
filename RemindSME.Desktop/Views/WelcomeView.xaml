@@ -37,29 +37,29 @@
                 <TextBox Name="CompanyIdInput" Width="100" VerticalContentAlignment="Center" />
                 <TextBlock x:Name="CompanyName" HorizontalAlignment="Left" Margin="10 0 0 0" VerticalAlignment="Center" />
             </StackPanel>
-            <TextBlock Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
-                       Text="You can get this from your office manager."
+            <TextBlock Text="You can get this from your office manager."
                        FontStyle="Italic"
                        FontSize="12"
                        Margin="0, 0, 70, 0" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 30 0 0"
                         VerticalAlignment="Center">
                 <Label Content="Are you currently on your work network?" Margin="-5 0 10 0" />
-                <RadioButton x:Name="YesButton"
+                <RadioButton x:Name="IsWorkNetwork"
                              IsChecked="True"
                              GroupName="isWorkNetwork"
                              Content="Yes"
                              VerticalContentAlignment="Center" />
-                <RadioButton x:Name="NoButton"
-                             GroupName="isWorkNetwork"
+                <RadioButton GroupName="isWorkNetwork"
                              Content="No"
                              VerticalContentAlignment="Center"
                              Margin="10 0 0 0" />
             </StackPanel>
-            <Button x:Name="OpenHubWindow" Content="Next"
-                    Margin="0, 35, 0, 0"
-                    HorizontalAlignment="Right"
-                    Style="{StaticResource WindowButtonStyle}" />
+            <StackPanel x:Name="NextIsVisible">
+                <Button x:Name="Next" Content="Next"
+                        Margin="0, 35, 0, 0"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource WindowButtonStyle}" />
+            </StackPanel>
         </StackPanel>
     </StackPanel>
 </views:AppWindow>

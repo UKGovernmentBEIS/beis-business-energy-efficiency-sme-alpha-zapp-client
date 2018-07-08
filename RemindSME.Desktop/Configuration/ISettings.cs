@@ -18,5 +18,7 @@ namespace RemindSME.Desktop.Configuration
         string CompanyName { get; set; }
         StringCollection WorkNetworks { get; set; }
         StringCollection OtherNetworks { get; set; }
+
+        void Save();
     }
 }

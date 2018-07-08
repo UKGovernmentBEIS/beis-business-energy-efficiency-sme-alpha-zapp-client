@@ -1,32 +1,36 @@
 ﻿using System.Windows;
 using Caliburn.Micro;
+using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Views;
-using Squirrel;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public class MainViewModel : PropertyChangedBase
+    public class MainViewModel : ViewAware
     {
         private readonly IAppWindowManager appWindowManager;
         private readonly ILog log;
+        private readonly ISettings settings;
 
         public MainViewModel(
             ILog log,
             IAppWindowManager appWindowManager,
-            IEventAggregator eventAggregator)
+            IEventAggregator eventAggregator,
+            ISettings settings)
         {
             this.log = log;
             this.appWindowManager = appWindowManager;
+            this.settings = settings;
 
             eventAggregator.Subscribe(this);
-
-            SquirrelAwareApp.HandleEvents(onFirstRun: OpenWelcomeWindow);
         }
 
-        public void OpenWelcomeWindow()
+        protected override void OnViewLoaded(object view)
         {
-            appWindowManager.OpenOrActivateWindow<WelcomeView, WelcomeViewModel>();
+            if (string.IsNullOrEmpty(settings.CompanyId))
+            {
+                appWindowManager.OpenOrActivateWindow<WelcomeView, WelcomeViewModel>();
+            }
         }
 
         public void OpenHubWindow(string actionArea)

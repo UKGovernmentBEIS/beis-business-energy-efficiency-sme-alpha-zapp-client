@@ -23,16 +23,23 @@ namespace RemindSME.Desktop.ViewModels
         public void WorkNetwork()
         {
             log.Info("User clicked 'Work network' on new network notification.");
-            networkService.AddNetworkFromNotification(true);
+            networkService.AddCurrentNetwork(true);
         }
 
         public void OtherNetwork()
         {
             log.Info("User clicked 'Other network' on new network notification.");
-            networkService.AddNetworkFromNotification(false);
+            networkService.AddCurrentNetwork(false);
         }
 
-        public string NewNetworkMessage => 
-            $"We've detected that you're connected to a new network, is this a {settings.CompanyName} network?";
+        public string NewNetworkMessage
+        {
+            get
+            {
+                var firstLetterOfCompanyName = settings.CompanyName[0];
+                var article = "aeiouAEIOU".IndexOf(firstLetterOfCompanyName) >= 0 ? "an" : "a";
+                return $"We've detected that you're connected to a new network, is this {article} {settings.CompanyName} network?";
+            }
+        }
     }
 }

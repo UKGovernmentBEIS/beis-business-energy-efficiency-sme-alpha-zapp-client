@@ -2,8 +2,8 @@
 using Caliburn.Micro;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Helpers;
-using RemindSME.Desktop.Views;
 using RemindSME.Desktop.Services;
+using RemindSME.Desktop.Views;
 
 namespace RemindSME.Desktop.ViewModels
 {
@@ -14,12 +14,12 @@ namespace RemindSME.Desktop.ViewModels
         private readonly INetworkService networkService;
         private readonly ISettings settings;
 
-        private bool isWorkNetwork = true;
+        private bool _isWorkNetwork = true;
 
         public WelcomeViewModel(
             IAppWindowManager appWindowManager,
             ICompanyApiClient companyApiClient,
-            INetworkService networkService, 
+            INetworkService networkService,
             ISettings settings)
         {
             this.appWindowManager = appWindowManager;
@@ -28,51 +28,53 @@ namespace RemindSME.Desktop.ViewModels
             this.settings = settings;
         }
 
-        public void OpenHubWindow()
-        {
-            (GetView() as Window)?.Close();
-
-            networkService.AddNetwork(isWorkNetwork);
-
-            settings.DisplaySettingExplanations = true;
-
-            appWindowManager.OpenOrActivateWindow<HubView, HubViewModel>();
-        }
-
         public string CompanyIdInput
         {
-            get => settings.CompanyId == null ? "" : settings.CompanyId.ToString();
+            get => settings.CompanyId ?? "";
             set
             {
-                if (value.Length == 6)
+                if (value.Equals(settings.CompanyId))
                 {
-                    UpdateCompanyName(value);
+                    return;
                 }
 
                 settings.CompanyId = value;
+                UpdateCompanyName(value);
+                NotifyOfPropertyChange(() => CompanyIdInput);
             }
         }
 
         public string CompanyName => settings.CompanyName ?? "Company not found";
 
-        public bool CanOpenHubWindow => settings.CompanyName != null;
+        public bool NextIsVisible => !string.IsNullOrEmpty(settings.CompanyName);
 
-        private async void UpdateCompanyName(string companyId )
+        public bool IsWorkNetwork
+        {
+            get => _isWorkNetwork;
+            set
+            {
+                if (value.Equals(_isWorkNetwork))
+                {
+                    return;
+                }
+                _isWorkNetwork = value;
+                NotifyOfPropertyChange(() => IsWorkNetwork);
+            }
+        }
+
+        public void Next()
+        {
+            networkService.AddCurrentNetwork(IsWorkNetwork);
+            settings.DisplaySettingExplanations = true;
+            appWindowManager.OpenOrActivateWindow<HubView, HubViewModel>();
+            (GetView() as Window)?.Close();
+        }
+
+        private async void UpdateCompanyName(string companyId)
         {
             await companyApiClient.UpdateCompanyName(companyId);
             NotifyOfPropertyChange(() => CompanyName);
-            NotifyOfPropertyChange(() => CanOpenHubWindow);
-        }
-
-        public bool YesButton
-        {
-            get => isWorkNetwork;
-            set
-            {
-                if (value.Equals(isWorkNetwork)) return;
-                isWorkNetwork = value;
-                NotifyOfPropertyChange(() => YesButton);
-            }
+            NotifyOfPropertyChange(() => NextIsVisible);
         }
     }
 }
