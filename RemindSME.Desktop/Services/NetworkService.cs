@@ -17,12 +17,12 @@ namespace RemindSME.Desktop.Services
     public class NetworkService : INetworkService
     {
         private static string currentNetwork;
+        private static bool isShowingNotification;
+
         private readonly ILog log;
         private readonly INetworkAddressFinder networkAddressFinder;
         private readonly INotificationManager notificationManager;
         private readonly ISettings settings;
-
-        private bool isShowingNotification;
 
         public NetworkService(
             ILog log,
