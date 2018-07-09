@@ -49,20 +49,20 @@ namespace RemindSME.Desktop.Helpers
         {
             if (TemperatureRequiresAirConditioning(temperature))
             {
-                return $"It's going to be hot today (up to {temperature:F0}°C)! Please set the air conditioning to a sensible temperature and close the windows.";
+                return string.Format(Resources.Reminder_CheckAirCon_Message, temperature);
             }
 
             if (TemperatureRequiresHeating(temperature))
             {
-                return $"It's cold today ({temperature:F0}°C)! Please set the heating to a sensible temperature and close the windows.";
+                return string.Format(Resources.Reminder_CheckHeating_Message, temperature);
             }
 
             if (TemperatureIsAboveAverage(temperature))
             {
-                return $"It's going to be {temperature:F0}°C today. Rather than use the air conditioning, could you open windows instead?";
+                return string.Format(Resources.Reminder_OpenWindows_Message, temperature);
             }
 
-            return $"It's going to be {temperature:F0}°C today. Please consider whether you need the heating or air conditioning. Can you open windows instead?";
+            return string.Format(Resources.Reminder_WeatherDefault_Message, temperature);
         }
 
         private static bool TemperatureIsAboveAverage(double temperature) => temperature > RoomTemperature;

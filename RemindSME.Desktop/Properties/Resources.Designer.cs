@@ -61,6 +61,24 @@ namespace RemindSME.Desktop.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to It&apos;s going to be hot today (up to {0:F0}°C)! Please set the air conditioning to a sensible temperature and close the windows..
+        /// </summary>
+        internal static string Reminder_CheckAirCon_Message {
+            get {
+                return ResourceManager.GetString("Reminder_CheckAirCon_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It&apos;s cold today ({0:F0}°C)! Please set the heating to a sensible temperature and close the windows..
+        /// </summary>
+        internal static string Reminder_CheckHeating_Message {
+            get {
+                return ResourceManager.GetString("Reminder_CheckHeating_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The temperature outside has changed, make sure air conditioning is set to a suitable temperature. If it is hot, can you open the windows instead of using the air con?.
         /// </summary>
         internal static string Reminder_HeatingDefault_Message {
@@ -111,6 +129,24 @@ namespace RemindSME.Desktop.Properties {
         internal static string Reminder_LastToLeave_Title {
             get {
                 return ResourceManager.GetString("Reminder_LastToLeave_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It&apos;s going to be {0:F0}°C today. Rather than use the air conditioning, could you open windows instead?.
+        /// </summary>
+        internal static string Reminder_OpenWindows_Message {
+            get {
+                return ResourceManager.GetString("Reminder_OpenWindows_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It&apos;s going to be {0:F0}°C today. Please consider whether you need the heating or air conditioning. Can you open windows instead?.
+        /// </summary>
+        internal static string Reminder_WeatherDefault_Message {
+            get {
+                return ResourceManager.GetString("Reminder_WeatherDefault_Message", resourceCulture);
             }
         }
     }
