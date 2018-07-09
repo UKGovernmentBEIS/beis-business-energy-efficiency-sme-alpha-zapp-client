@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Flurl;
@@ -14,8 +15,7 @@ namespace RemindSME.Desktop.Helpers
 
     public class WeatherApiClient : IWeatherApiClient
     {
-        private const string BaseUrl = "http://api.openweathermap.org/data/2.5";
-        private const string ApiKey = "api-key";
+        private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
 
         private readonly ILog log;
 
@@ -31,16 +31,14 @@ namespace RemindSME.Desktop.Helpers
 
         public async Task<WeatherForecast> GetWeatherForecastForLocation(string location)
         {
-            return await MakeApiRequest<WeatherForecast>("forecast", location);
+            return await MakeApiRequest<WeatherForecast>("weather/forecast", location);
         }
 
         private async Task<T> MakeApiRequest<T>(string endpoint, string location)
         {
-            var url = BaseUrl
+            var url = ServerUrl
                 .AppendPathSegment(endpoint)
-                .SetQueryParam("appid", ApiKey)
-                .SetQueryParam("units", "metric")
-                .SetQueryParam("q", location);
+                .SetQueryParam("location", location);
 
             try
             {
