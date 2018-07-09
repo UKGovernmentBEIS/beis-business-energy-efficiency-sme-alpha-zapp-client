@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Models;
 using RemindSME.Desktop.Properties;
 
@@ -21,12 +20,10 @@ namespace RemindSME.Desktop.Helpers
         private const double MinimumTemperatureForAirConditioning = 24;
 
         private readonly IWeatherApiClient weatherApiClient;
-        private readonly ISettings settings;
 
-        public HeatingReminderHelper(IWeatherApiClient weatherApiClient, ISettings settings)
+        public HeatingReminderHelper(IWeatherApiClient weatherApiClient)
         {
             this.weatherApiClient = weatherApiClient;
-            this.settings = settings;
         }
 
         public string DefaultMessage => Resources.Reminder_HeatingFirstLogin_Message;
@@ -36,7 +33,7 @@ namespace RemindSME.Desktop.Helpers
             var forecast = await weatherApiClient.GetWeatherForecastForLocation(Location);
             var peakTemperature = GetPeakTemperatureForToday(forecast);
             return peakTemperature.HasValue
-                ? GetRecommendationMessageForTemperature(peakTemperature.Value)
+                ? GetReminderMessageForTemperature(peakTemperature.Value)
                 : DefaultMessage;
         }
 
@@ -48,7 +45,7 @@ namespace RemindSME.Desktop.Helpers
                 .Max(forecast => forecast.Measurements.Temperature);
         }
 
-        private string GetRecommendationMessageForTemperature(double temperature)
+        private string GetReminderMessageForTemperature(double temperature)
         {
             if (TemperatureRequiresAirConditioning(temperature))
             {
