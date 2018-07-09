@@ -14,6 +14,7 @@ namespace RemindSME.Desktop.Configuration
         DateTime MostRecentFirstLoginReminderDismissal { get; set; }
         DateTime MostRecentLastToLeaveReminderDismissal { get; set; }
         DateTime LastToLeaveReminderSnoozeUntilTime { get; set; }
+        double MostRecentPeakTemperature { get; set; }
         string CompanyId { get; set; }
         string CompanyName { get; set; }
         StringCollection WorkNetworks { get; set; }

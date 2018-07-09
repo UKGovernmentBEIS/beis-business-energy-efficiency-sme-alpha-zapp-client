@@ -26,6 +26,7 @@ namespace RemindSME.Desktop.Services
         private readonly IEventAggregator eventAggregator;
         private readonly ILog log;
         private readonly INotificationManager notificationManager;
+        private readonly IHeatingReminderHelper heatingReminderHelper;
         private readonly ISettings settings;
         private readonly DispatcherTimer timer;
         private readonly INetworkService networkService;
@@ -38,6 +39,7 @@ namespace RemindSME.Desktop.Services
         public ReminderService(
             ILog log,
             INotificationManager notificationManager,
+            IHeatingReminderHelper heatingReminderHelper,
             IAppWindowManager appWindowManager,
             IEventAggregator eventAggregator,
             ISettings settings,
@@ -46,6 +48,7 @@ namespace RemindSME.Desktop.Services
         {
             this.log = log;
             this.notificationManager = notificationManager;
+            this.heatingReminderHelper = heatingReminderHelper;
             this.appWindowManager = appWindowManager;
             this.eventAggregator = eventAggregator;
             this.settings = settings;
@@ -123,12 +126,13 @@ namespace RemindSME.Desktop.Services
                    settings.MostRecentFirstLoginReminderDismissal.Date != DateTime.Today; // Has not dismissed today.
         }
 
-        private void ShowFirstLoginReminder()
+        private async void ShowFirstLoginReminder()
         {
             isShowingFirstLoginReminder = true;
+            var message = await heatingReminderHelper.GetWeatherDependentMessage();
             ShowReminder(
                 Resources.Reminder_HeatingFirstLogin_Title,
-                Resources.Reminder_HeatingFirstLogin_Message,
+                message,
                 () => isShowingFirstLoginReminder = false,
                 new ReminderViewModel.Button("Done!", FirstLoginReminder_Done));
         }

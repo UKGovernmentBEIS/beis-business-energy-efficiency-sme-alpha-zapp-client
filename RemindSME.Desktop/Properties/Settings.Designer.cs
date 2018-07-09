@@ -176,5 +176,17 @@ namespace RemindSME.Desktop.Properties {
                 this["OtherNetworks"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MostRecentPeakTemperature {
+            get {
+                return ((double)(this["MostRecentPeakTemperature"]));
+            }
+            set {
+                this["MostRecentPeakTemperature"] = value;
+            }
+        }
     }
 }
