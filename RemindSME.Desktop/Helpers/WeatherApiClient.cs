@@ -8,8 +8,8 @@ using RemindSME.Desktop.Models;
 
 namespace RemindSME.Desktop.Helpers
 {
-    public interface IWeatherApiClient {
-        Task<CurrentWeather> GetCurrentWeatherForLocation(string location);
+    public interface IWeatherApiClient
+    {
         Task<WeatherForecast> GetWeatherForecastForLocation(string location);
     }
 
@@ -24,30 +24,20 @@ namespace RemindSME.Desktop.Helpers
             this.log = log;
         }
 
-        public async Task<CurrentWeather> GetCurrentWeatherForLocation(string location)
-        {
-            return await MakeApiRequest<CurrentWeather>("weather", location);
-        }
-
         public async Task<WeatherForecast> GetWeatherForecastForLocation(string location)
         {
-            return await MakeApiRequest<WeatherForecast>("weather/forecast", location);
-        }
-
-        private async Task<T> MakeApiRequest<T>(string endpoint, string location)
-        {
             var url = ServerUrl
-                .AppendPathSegment(endpoint)
+                .AppendPathSegment("weather/forecast")
                 .SetQueryParam("location", location);
 
             try
             {
-                return await url.GetJsonAsync<T>();
+                return await url.GetJsonAsync<WeatherForecast>();
             }
             catch (Exception e)
             {
                 log.Error(e);
-                return default(T);
+                return null;
             }
         }
     }

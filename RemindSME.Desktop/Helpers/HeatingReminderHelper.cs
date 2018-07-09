@@ -7,7 +7,8 @@ using RemindSME.Desktop.Properties;
 
 namespace RemindSME.Desktop.Helpers
 {
-    public interface IHeatingReminderHelper {
+    public interface IHeatingReminderHelper
+    {
         Task<string> GetWeatherDependentMessage();
     }
 
