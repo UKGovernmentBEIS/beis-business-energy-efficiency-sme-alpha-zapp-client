@@ -205,6 +205,7 @@
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Events\HeatingNotificationEvent.cs" />
+    <Compile Include="Events\NetworkAddressChangedEvent.cs" />
     <Compile Include="Events\NetworkCountChangeEvent.cs" />
     <Compile Include="Events\SettingChangedEvent.cs" />
     <Compile Include="Helpers\AppInfo.cs" />

@@ -12,9 +12,10 @@ using RemindSME.Desktop.Logging;
 
 namespace RemindSME.Desktop.Services
 {
-    public class SocketManager : IService, IHandle<TrackingEvent>
+    public class SocketManager : IService, IHandle<TrackingEvent>, IHandle<NetworkAddressChangedEvent>
     {
         private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
+        private readonly INetworkService networkService;
         private readonly CompanyCountChangeListener companyCountChangeListener;
 
         private readonly HeatingNotificationListener heatingNotificationListener;
@@ -26,15 +27,26 @@ namespace RemindSME.Desktop.Services
 
         public SocketManager(
             IEventAggregator eventAggregator,
+            INetworkService networkService,
             ISettings settings,
             CompanyCountChangeListener companyCountChangeListener,
             HeatingNotificationListener heatingNotificationListener)
         {
+            this.networkService = networkService;
+            this.settings = settings;
             this.companyCountChangeListener = companyCountChangeListener;
             this.heatingNotificationListener = heatingNotificationListener;
-            this.settings = settings;
 
             eventAggregator.Subscribe(this);
+        }
+
+        public void Initialize()
+        {
+            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+            if (networkService.IsWorkNetwork)
+            {
+                Connect();
+            }
         }
 
         public void Handle(TrackingEvent e)
@@ -42,10 +54,13 @@ namespace RemindSME.Desktop.Services
             Log(e.LogLevel, e.Message);
         }
 
-        public void Initialize()
+        public void Handle(NetworkAddressChangedEvent e)
         {
-            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
-            Connect();
+            Disconnect();
+            if (e.IsWorkNetwork)
+            {
+                Connect();
+            }
         }
 
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
@@ -53,7 +68,10 @@ namespace RemindSME.Desktop.Services
             switch (e.Reason)
             {
                 case SessionSwitchReason.SessionUnlock:
-                    Connect();
+                    if (networkService.IsWorkNetwork)
+                    {
+                        Connect();
+                    }
                     break;
                 case SessionSwitchReason.SessionLock:
                     Disconnect();

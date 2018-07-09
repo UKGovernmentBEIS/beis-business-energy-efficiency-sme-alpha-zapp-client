@@ -3,6 +3,7 @@ using System.Net.NetworkInformation;
 using Caliburn.Micro;
 using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
+using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.ViewModels;
 
@@ -19,17 +20,20 @@ namespace RemindSME.Desktop.Services
         private static string currentNetwork;
         private static bool isShowingNotification;
 
+        private readonly IEventAggregator eventAggregator;
         private readonly ILog log;
         private readonly INetworkAddressFinder networkAddressFinder;
         private readonly INotificationManager notificationManager;
         private readonly ISettings settings;
 
         public NetworkService(
+            IEventAggregator eventAggregator,
             ILog log,
             INetworkAddressFinder networkAddressFinder,
             INotificationManager notificationManager,
             ISettings settings)
         {
+            this.eventAggregator = eventAggregator;
             this.log = log;
             this.networkAddressFinder = networkAddressFinder;
             this.notificationManager = notificationManager;
@@ -55,20 +59,23 @@ namespace RemindSME.Desktop.Services
                 settings.OtherNetworks.Add(currentNetwork);
             }
             settings.Save();
+            PublishNetworkAddressChangeEvent();
         }
 
         private void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
             currentNetwork = networkAddressFinder.GetCurrentNetworkAddress();
 
-            if (settings.WorkNetworks.Count == 0 && settings.OtherNetworks.Count == 0)
+            if (string.IsNullOrEmpty(currentNetwork) || currentNetwork.StartsWith("127."))
             {
-                // During initial registration.
                 return;
             }
 
-            if (string.IsNullOrEmpty(currentNetwork) || currentNetwork.StartsWith("127."))
+            PublishNetworkAddressChangeEvent();
+
+            if (settings.WorkNetworks.Count == 0 && settings.OtherNetworks.Count == 0)
             {
+                // During initial registration.
                 return;
             }
 
@@ -90,6 +97,11 @@ namespace RemindSME.Desktop.Services
             var model = IoC.Get<NewNetworkNotificationViewModel>();
             notificationManager.Show(model, expirationTime: TimeSpan.FromHours(2), onClose: () => isShowingNotification = false);
             log.Info("Showed new network notification.");
+        }
+
+        private void PublishNetworkAddressChangeEvent()
+        {
+            eventAggregator.PublishOnUIThread(new NetworkAddressChangedEvent(IsWorkNetwork));
         }
     }
 }
