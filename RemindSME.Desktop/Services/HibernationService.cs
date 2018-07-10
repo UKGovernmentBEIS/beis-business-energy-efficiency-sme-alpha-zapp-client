@@ -73,9 +73,7 @@ namespace RemindSME.Desktop.Services
             {
                 UpdateNextHiberationTime();
                 eventAggregator.PublishOnUIThread(new ResumeFromSuspendedStateEvent());
-                
             }
-            
         }
 
         public void Handle(SettingChangedEvent e)
