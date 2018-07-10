@@ -42,7 +42,7 @@ namespace RemindSME.Desktop.Helpers
             get
             {
                 var model = IoC.Get<ReminderViewModel>();
-                model.Icon = WeatherIcon.Thermometer.Value;
+                model.Icon = NotificationIcon.Thermometer;
                 model.Title = Resources.Reminder_HeatingFirstLogin_Title;
                 model.Message = Resources.Reminder_HeatingFirstLogin_Message;
                 return model;
@@ -60,25 +60,25 @@ namespace RemindSME.Desktop.Helpers
         private ReminderViewModel GetReminderForTemperature(double temperature)
         {
             var model = IoC.Get<ReminderViewModel>();
-            model.Icon = WeatherIcon.Thermometer.Value;
+            model.Icon = NotificationIcon.Thermometer;
             model.Title = Resources.Reminder_HeatingFirstLogin_Title;
             model.Message = string.Format(Resources.Reminder_WeatherDefault_Message, temperature);
 
             if (TemperatureRequiresAirConditioning(temperature))
             {
-                model.Icon = WeatherIcon.Sunny.Value;
+                model.Icon = NotificationIcon.Sunny;
                 model.Title = Resources.Reminder_CheckAirCon_Title;
                 model.Message = string.Format(Resources.Reminder_CheckAirCon_Message, temperature);
             }
             else if (TemperatureRequiresHeating(temperature))
             {
-                model.Icon = WeatherIcon.Cold.Value;
+                model.Icon = NotificationIcon.Cold;
                 model.Title = Resources.Reminder_CheckHeating_Title;
                 model.Message = string.Format(Resources.Reminder_CheckHeating_Message, temperature);
             }
             else if (TemperatureIsAboveAverage(temperature))
             {
-                model.Icon = WeatherIcon.Mixed.Value;
+                model.Icon = NotificationIcon.Thermometer;
                 model.Title = Resources.Reminder_CheckAirCon_Title;
                 model.Message = string.Format(Resources.Reminder_OpenWindows_Message, temperature);
             }
