@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Caliburn.Micro;
+using Action = System.Action;
 
 namespace RemindSME.Desktop.ViewModels
 {
@@ -28,5 +29,7 @@ namespace RemindSME.Desktop.ViewModels
                 onClick?.Invoke();
             }
         }
+
+        public ReminderViewModel(IEventAggregator eventAggregator) : base(eventAggregator) { }
     }
 }
