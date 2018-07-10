@@ -26,6 +26,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
@@ -264,6 +273,10 @@
       <DependentUpon>App.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
     </None>
+    <None Include="App.Test.config">
+      <DependentUpon>App.config</DependentUpon>
+      <IsTransformFile>True</IsTransformFile>
+    </None>
     <None Include="App.Release.config">
       <DependentUpon>App.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
@@ -319,7 +332,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release'">
+  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Test' Or '$(Configuration)' == 'Release'">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
       <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />
     </GetAssemblyIdentity>
@@ -331,6 +344,7 @@
       <PackageName>Zapp</PackageName>
       <ReleaseDir>..\Releases\</ReleaseDir>
       <SquirrelParams>--no-msi</SquirrelParams>
+      <CodeSigningCertificate>..\SoftwireCodeSigning2018.pfx</CodeSigningCertificate>
       <SemVerNumber>$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3))</SemVerNumber>
     </PropertyGroup>
     <!-- Add error messages for missing packages -->
@@ -338,9 +352,13 @@
     <Error Condition="!Exists(%(SquirrelExe.FullPath))" Text="You are trying to use the Squirrel.Windows package, but it is not installed. Please install Squirrel.Windows from the Package Manager." />
     <RemoveDir Directories="$(ReleaseDir)" />   
     <Exec Command="&quot;%(NuGetExe.FullPath)&quot; pack $(PackageName).nuspec -Version $(SemVerNumber) -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
-    <Exec Command="&quot;%(SquirrelExe.FullPath)&quot; --releasify $(OutDir)$(PackageName).$(SemVerNumber).nupkg --releaseDir=$(ReleaseDir) $(SquirrelParams)" />
+    <Exec Command="&quot;%(SquirrelExe.FullPath)&quot; --releasify $(OutDir)$(PackageName).$(SemVerNumber).nupkg --releaseDir=$(ReleaseDir) $(SquirrelParams) --signWithParams=&quot;/a /f $(CodeSigningCertificate) /p &quot;&quot;$(CodeSigningCertificatePassword)&quot;&quot; /fd sha256 /tr http://timestamp.digicert.com /td sha256&quot;" />
     <Move SourceFiles="$(ReleaseDir)\Setup.exe" DestinationFiles="$(ReleaseDir)\ZappSetup.exe" />
     <Copy SourceFiles="$(ReleaseDir)\ZappSetup.exe" DestinationFiles="$(ReleaseDir)\ZappSetup-$(SemVerNumber).exe" />
+  </Target>
+  <Target Name="PublishTestRelease" AfterTargets="AfterBuild" Condition=" '$(Configuration)' == 'Test'">  
+    <Message Text="Publishing to Test release bucket" /> 
+    <Exec Command="aws s3 sync $(ReleaseDir) s3://beis-sme-alpha/Releases/Test/" />
   </Target>
   <Import Project="..\packages\Microsoft.VisualStudio.SlowCheetah.3.0.61\build\Microsoft.VisualStudio.SlowCheetah.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.SlowCheetah.3.0.61\build\Microsoft.VisualStudio.SlowCheetah.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
