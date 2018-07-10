@@ -61,7 +61,7 @@ namespace RemindSME.Desktop.Services
         {
             UpdateNextHiberationTime();
 
-            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Interval = TimeSpan.FromSeconds(30);
             timer.Tick += Timer_Tick;
             timer.Start();
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;

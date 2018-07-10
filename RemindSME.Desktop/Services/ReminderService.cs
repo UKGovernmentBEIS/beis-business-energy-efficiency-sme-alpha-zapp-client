@@ -60,7 +60,7 @@ namespace RemindSME.Desktop.Services
         {
             eventAggregator.Subscribe(this);
 
-            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Interval = TimeSpan.FromSeconds(30);
             timer.Tick += Timer_Tick;
             timer.Start();
         }
