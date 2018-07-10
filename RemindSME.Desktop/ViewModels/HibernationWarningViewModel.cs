@@ -17,7 +17,8 @@ namespace RemindSME.Desktop.ViewModels
             ILog log,
             IHibernationService hibernationService,
             ISettings settings,
-            DispatcherTimer timer)
+            DispatcherTimer timer,
+            IEventAggregator eventAggregator) : base(eventAggregator)
         {
             this.log = log;
             this.hibernationService = hibernationService;

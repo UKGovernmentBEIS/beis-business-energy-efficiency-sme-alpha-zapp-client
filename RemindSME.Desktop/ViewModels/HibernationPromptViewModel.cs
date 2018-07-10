@@ -8,7 +8,10 @@ namespace RemindSME.Desktop.ViewModels
         private readonly IHibernationService hibernationService;
         private readonly ILog log;
 
-        public HibernationPromptViewModel(ILog log, IHibernationService hibernationService)
+        public HibernationPromptViewModel(
+            ILog log, 
+            IHibernationService hibernationService, 
+            IEventAggregator eventAggregator) : base(eventAggregator)
         {
             this.log = log;
             this.hibernationService = hibernationService;

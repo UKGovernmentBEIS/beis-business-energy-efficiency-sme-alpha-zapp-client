@@ -13,7 +13,8 @@ namespace RemindSME.Desktop.ViewModels
         public NewNetworkNotificationViewModel(
             ILog log, 
             INetworkService networkService,
-            ISettings settings)
+            ISettings settings,
+            IEventAggregator eventAggregator) : base(eventAggregator)
         {
             this.log = log;
             this.networkService = networkService;
