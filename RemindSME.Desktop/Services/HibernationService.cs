@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using Caliburn.Micro;
+using Microsoft.Win32;
 using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
@@ -30,6 +31,7 @@ namespace RemindSME.Desktop.Services
 
         private readonly ILog log;
         private readonly IAppWindowManager appWindowManager;
+        private readonly IEventAggregator eventAggregator;
         private readonly INotificationManager notificationManager;
         private readonly ISettings settings;
         private readonly DispatcherTimer timer;
@@ -47,6 +49,7 @@ namespace RemindSME.Desktop.Services
         {
             this.log = log;
             this.appWindowManager = appWindowManager;
+            this.eventAggregator = eventAggregator;
             this.notificationManager = notificationManager;
             this.settings = settings;
             this.timer = timer;
@@ -58,9 +61,19 @@ namespace RemindSME.Desktop.Services
         {
             UpdateNextHiberationTime();
 
-            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Interval = TimeSpan.FromSeconds(30);
             timer.Tick += Timer_Tick;
             timer.Start();
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+        }
+
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            if (e.Mode == PowerModes.Resume)
+            {
+                UpdateNextHiberationTime();
+                eventAggregator.PublishOnUIThread(new ResumeFromSuspendedStateEvent());
+            }
         }
 
         public void Handle(SettingChangedEvent e)
