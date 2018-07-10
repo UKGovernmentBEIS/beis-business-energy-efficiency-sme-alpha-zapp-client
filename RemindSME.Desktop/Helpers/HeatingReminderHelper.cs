@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 using RemindSME.Desktop.Models;
 using RemindSME.Desktop.Properties;
+using RemindSME.Desktop.ViewModels;
 
 namespace RemindSME.Desktop.Helpers
 {
     public interface IHeatingReminderHelper
     {
-        Task<string> GetWeatherDependentMessage();
+        Task<ReminderViewModel> GetWeatherDependentReminder();
     }
 
     public class HeatingReminderHelper : IHeatingReminderHelper
     {
         private const string Location = "London,UK";
 
-        private const double RoomTemperature = 20;
         private const double MaximumTemperatureForHeating = 16;
         private const double MinimumTemperatureForAirConditioning = 24;
 
@@ -26,15 +27,25 @@ namespace RemindSME.Desktop.Helpers
             this.weatherApiClient = weatherApiClient;
         }
 
-        public string DefaultMessage => Resources.Reminder_HeatingFirstLogin_Message;
-
-        public async Task<string> GetWeatherDependentMessage()
+        public async Task<ReminderViewModel> GetWeatherDependentReminder()
         {
             var forecast = await weatherApiClient.GetWeatherForecastForLocation(Location);
             var peakTemperature = GetPeakTemperatureForToday(forecast);
             return peakTemperature.HasValue
-                ? GetReminderMessageForTemperature(peakTemperature.Value)
-                : DefaultMessage;
+                ? GetReminderForTemperature(peakTemperature.Value)
+                : DefaultReminder;
+        }
+
+        private static ReminderViewModel DefaultReminder
+        {
+            get
+            {
+                var model = IoC.Get<ReminderViewModel>();
+                model.Icon = NotificationIcon.Thermometer;
+                model.Title = Resources.Reminder_HeatingFirstLogin_Title;
+                model.Message = Resources.Reminder_HeatingFirstLogin_Message;
+                return model;
+            }
         }
 
         private double? GetPeakTemperatureForToday(WeatherForecast weatherForecast)
@@ -45,27 +56,29 @@ namespace RemindSME.Desktop.Helpers
                 .Max(forecast => forecast.Measurements.Temperature);
         }
 
-        private string GetReminderMessageForTemperature(double temperature)
+        private ReminderViewModel GetReminderForTemperature(double temperature)
         {
+            var model = IoC.Get<ReminderViewModel>();
+            model.Icon = NotificationIcon.Thermometer;
+            model.Title = Resources.Reminder_WeatherDefault_Title;
+            model.Message = string.Format(Resources.Reminder_WeatherDefault_Message, temperature);
+
             if (TemperatureRequiresAirConditioning(temperature))
             {
-                return string.Format(Resources.Reminder_CheckAirCon_Message, temperature);
+                model.Icon = NotificationIcon.Sunny;
+                model.Title = Resources.Reminder_CheckAirCon_Title;
+                model.Message = string.Format(Resources.Reminder_CheckAirCon_Message, temperature);
             }
-
-            if (TemperatureRequiresHeating(temperature))
+            else if (TemperatureRequiresHeating(temperature))
             {
-                return string.Format(Resources.Reminder_CheckHeating_Message, temperature);
+                model.Icon = NotificationIcon.Cold;
+                model.Title = Resources.Reminder_CheckHeating_Title;
+                model.Message = string.Format(Resources.Reminder_CheckHeating_Message, temperature);
             }
 
-            if (TemperatureIsAboveAverage(temperature))
-            {
-                return string.Format(Resources.Reminder_OpenWindows_Message, temperature);
-            }
-
-            return string.Format(Resources.Reminder_WeatherDefault_Message, temperature);
+            return model;
         }
 
-        private static bool TemperatureIsAboveAverage(double temperature) => temperature > RoomTemperature;
         private static bool TemperatureRequiresHeating(double temperature) => temperature < MaximumTemperatureForHeating;
         private static bool TemperatureRequiresAirConditioning(double temperature) => temperature > MinimumTemperatureForAirConditioning;
     }

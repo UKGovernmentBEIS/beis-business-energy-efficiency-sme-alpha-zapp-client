@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Caliburn.Micro;
+using RemindSME.Desktop.Models;
 using Action = System.Action;
 
 namespace RemindSME.Desktop.ViewModels
 {
     public class ReminderViewModel : Notification
     {
+        public string Icon { get; set; } = NotificationIcon.Lightbulb;
         public string Title { get; set; }
         public string Message { get; set; }
 

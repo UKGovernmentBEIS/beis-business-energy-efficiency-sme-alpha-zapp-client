@@ -120,8 +120,14 @@
   <data name="Reminder_CheckAirCon_Message" xml:space="preserve">
     <value>It's going to be hot today (up to {0:F0}°C)! Please set the air conditioning to a sensible temperature and close the windows.</value>
   </data>
+  <data name="Reminder_CheckAirCon_Title" xml:space="preserve">
+    <value>Check the air conditioning</value>
+  </data>
   <data name="Reminder_CheckHeating_Message" xml:space="preserve">
     <value>It's cold today ({0:F0}°C)! Please set the heating to a sensible temperature and close the windows.</value>
+  </data>
+  <data name="Reminder_CheckHeating_Title" xml:space="preserve">
+    <value>Check the heating</value>
   </data>
   <data name="Reminder_HeatingDefault_Message" xml:space="preserve">
     <value>The temperature outside has changed, make sure air conditioning is set to a suitable temperature. If it is hot, can you open the windows instead of using the air con?</value>
@@ -141,10 +147,10 @@
   <data name="Reminder_LastToLeave_Title" xml:space="preserve">
     <value>Switch everything off before you leave</value>
   </data>
-  <data name="Reminder_OpenWindows_Message" xml:space="preserve">
-    <value>It's going to be {0:F0}°C today. Rather than use the air conditioning, could you open windows instead?</value>
-  </data>
   <data name="Reminder_WeatherDefault_Message" xml:space="preserve">
     <value>It's going to be {0:F0}°C today. Please consider whether you need the heating or air conditioning. Can you open windows instead?</value>
+  </data>
+  <data name="Reminder_WeatherDefault_Title" xml:space="preserve">
+    <value>Check the air conditioning</value>
   </data>
 </root>
