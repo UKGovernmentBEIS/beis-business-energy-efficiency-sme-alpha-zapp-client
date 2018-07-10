@@ -151,20 +151,20 @@ namespace RemindSME.Desktop.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It&apos;s going to be {0:F0}°C today. Rather than use the air conditioning, could you open windows instead?.
-        /// </summary>
-        internal static string Reminder_OpenWindows_Message {
-            get {
-                return ResourceManager.GetString("Reminder_OpenWindows_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to It&apos;s going to be {0:F0}°C today. Please consider whether you need the heating or air conditioning. Can you open windows instead?.
         /// </summary>
         internal static string Reminder_WeatherDefault_Message {
             get {
                 return ResourceManager.GetString("Reminder_WeatherDefault_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check the air conditioning.
+        /// </summary>
+        internal static string Reminder_WeatherDefault_Title {
+            get {
+                return ResourceManager.GetString("Reminder_WeatherDefault_Title", resourceCulture);
             }
         }
     }

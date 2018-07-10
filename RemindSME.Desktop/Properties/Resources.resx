@@ -147,10 +147,10 @@
   <data name="Reminder_LastToLeave_Title" xml:space="preserve">
     <value>Switch everything off before you leave</value>
   </data>
-  <data name="Reminder_OpenWindows_Message" xml:space="preserve">
-    <value>It's going to be {0:F0}°C today. Rather than use the air conditioning, could you open windows instead?</value>
-  </data>
   <data name="Reminder_WeatherDefault_Message" xml:space="preserve">
     <value>It's going to be {0:F0}°C today. Please consider whether you need the heating or air conditioning. Can you open windows instead?</value>
+  </data>
+  <data name="Reminder_WeatherDefault_Title" xml:space="preserve">
+    <value>Check the air conditioning</value>
   </data>
 </root>

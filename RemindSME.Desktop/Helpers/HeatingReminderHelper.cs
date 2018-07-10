@@ -17,7 +17,6 @@ namespace RemindSME.Desktop.Helpers
     {
         private const string Location = "London,UK";
 
-        private const double RoomTemperature = 20;
         private const double MaximumTemperatureForHeating = 16;
         private const double MinimumTemperatureForAirConditioning = 24;
 
@@ -61,7 +60,7 @@ namespace RemindSME.Desktop.Helpers
         {
             var model = IoC.Get<ReminderViewModel>();
             model.Icon = NotificationIcon.Thermometer;
-            model.Title = Resources.Reminder_HeatingFirstLogin_Title;
+            model.Title = Resources.Reminder_WeatherDefault_Title;
             model.Message = string.Format(Resources.Reminder_WeatherDefault_Message, temperature);
 
             if (TemperatureRequiresAirConditioning(temperature))
@@ -76,17 +75,10 @@ namespace RemindSME.Desktop.Helpers
                 model.Title = Resources.Reminder_CheckHeating_Title;
                 model.Message = string.Format(Resources.Reminder_CheckHeating_Message, temperature);
             }
-            else if (TemperatureIsAboveAverage(temperature))
-            {
-                model.Icon = NotificationIcon.Thermometer;
-                model.Title = Resources.Reminder_CheckAirCon_Title;
-                model.Message = string.Format(Resources.Reminder_OpenWindows_Message, temperature);
-            }
 
             return model;
         }
 
-        private static bool TemperatureIsAboveAverage(double temperature) => temperature > RoomTemperature;
         private static bool TemperatureRequiresHeating(double temperature) => temperature < MaximumTemperatureForHeating;
         private static bool TemperatureRequiresAirConditioning(double temperature) => temperature > MinimumTemperatureForAirConditioning;
     }
