@@ -220,10 +220,12 @@
     <Compile Include="Events\SettingChangedEvent.cs" />
     <Compile Include="Helpers\AppInfo.cs" />
     <Compile Include="Helpers\AppConfigurationManager.cs" />
+    <Compile Include="Helpers\AppNotificationManager.cs" />
     <Compile Include="Helpers\CompanyApiClient.cs" />
     <Compile Include="Helpers\DummyUpdateManager.cs" />
     <Compile Include="Helpers\HeatingReminderHelper.cs" />
     <Compile Include="Helpers\NetworkAddressFinder.cs" />
+    <Compile Include="Helpers\UserNotificationStateHelper.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Events\TrackingEvent.cs" />
@@ -350,7 +352,7 @@
     <!-- Add error messages for missing packages -->
     <Error Condition="!Exists(%(NuGetExe.FullPath))" Text="You are trying to use the NuGet.CommandLine package, but it is not installed. Please install NuGet.CommandLine from the Package Manager." />
     <Error Condition="!Exists(%(SquirrelExe.FullPath))" Text="You are trying to use the Squirrel.Windows package, but it is not installed. Please install Squirrel.Windows from the Package Manager." />
-    <RemoveDir Directories="$(ReleaseDir)" />   
+    <RemoveDir Directories="$(ReleaseDir)" />
     <Exec Command="&quot;%(NuGetExe.FullPath)&quot; pack $(PackageName).nuspec -Version $(SemVerNumber) -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
     <Exec Command="&quot;%(SquirrelExe.FullPath)&quot; --releasify $(OutDir)$(PackageName).$(SemVerNumber).nupkg --releaseDir=$(ReleaseDir) $(SquirrelParams) --signWithParams=&quot;/a /f $(CodeSigningCertificate) /p &quot;&quot;$(CodeSigningCertificatePassword)&quot;&quot; /fd sha256 /tr http://timestamp.digicert.com /td sha256&quot;" />
     <Move SourceFiles="$(ReleaseDir)\Setup.exe" DestinationFiles="$(ReleaseDir)\ZappSetup.exe" />

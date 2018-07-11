@@ -49,7 +49,7 @@ namespace RemindSME.Desktop
             builder.RegisterAssemblyTypes(assembly).Where(t => t.IsAssignableTo<IService>()).AsSelf().SingleInstance();
             builder.RegisterAssemblyTypes(assembly).Where(t => t.IsAssignableTo<SocketListener>()).AsSelf().SingleInstance();
 
-            builder.RegisterType<NotificationManager>().As<INotificationManager>().SingleInstance();
+            builder.RegisterType<NotificationManager>().AsSelf().SingleInstance();
             builder.RegisterInstance(Settings.Default).As<ISettings>().SingleInstance();
 
             builder.RegisterType<DispatcherTimer>().AsSelf().InstancePerDependency();
