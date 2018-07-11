@@ -7,7 +7,6 @@ namespace RemindSME.Desktop.ViewModels
 {
     public abstract class Notification : ViewAware, IHandle<ResumeFromSuspendedStateEvent>
     {
-
         protected Notification(IEventAggregator eventAggregator)
         {
             eventAggregator.Subscribe(this);
@@ -26,7 +25,10 @@ namespace RemindSME.Desktop.ViewModels
         protected void CloseNotification()
         {
             var view = (DependencyObject)GetView();
-            Window.GetWindow(view)?.Close();
+            if (view != null)
+            {
+                Window.GetWindow(view)?.Close();
+            }
         }
 
         public void Handle(ResumeFromSuspendedStateEvent message)
