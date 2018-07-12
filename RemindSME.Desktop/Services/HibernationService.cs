@@ -78,14 +78,15 @@ namespace RemindSME.Desktop.Services
 
         public void Handle(SettingChangedEvent e)
         {
-            if (e.SettingName == nameof(ISettings.DefaultHibernationTime))
-            {
-                UpdateNextHiberationTime();
-            }
-            else if (e.SettingName == nameof(ISettings.NextHibernationTime))
-            {
-                hibernationPromptHasBeenShown = false;
-                hibernationWarningHasBeenShown = false;
+            switch (e.SettingName) {
+                case nameof(ISettings.HibernationOptIn):
+                case nameof(ISettings.DefaultHibernationTime):
+                    UpdateNextHiberationTime();
+                    break;
+                case nameof(ISettings.NextHibernationTime):
+                    hibernationPromptHasBeenShown = false;
+                    hibernationWarningHasBeenShown = false;
+                    break;
             }
         }
 
