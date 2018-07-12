@@ -354,7 +354,7 @@
     <Error Condition="!Exists(%(SquirrelExe.FullPath))" Text="You are trying to use the Squirrel.Windows package, but it is not installed. Please install Squirrel.Windows from the Package Manager." />
     <RemoveDir Directories="$(ReleaseDir)" />
     <Exec Command="&quot;%(NuGetExe.FullPath)&quot; pack $(PackageName).nuspec -Version $(SemVerNumber) -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
-    <Exec Command="&quot;%(SquirrelExe.FullPath)&quot; --releasify $(OutDir)$(PackageName).$(SemVerNumber).nupkg --releaseDir=$(ReleaseDir) $(SquirrelParams) --signWithParams=&quot;/a /f $(CodeSigningCertificate) /p &quot;&quot;$(CodeSigningCertificatePassword)&quot;&quot; /fd sha256 /tr http://timestamp.digicert.com /td sha256&quot;" />
+    <Exec Command="&quot;%(SquirrelExe.FullPath)&quot; --releasify $(OutDir)$(PackageName).$(SemVerNumber).nupkg --releaseDir=$(ReleaseDir) $(SquirrelParams) --signWithParams=&quot;/a /f $(CodeSigningCertificate) /p &quot;&quot;$(ZappCodeSigningCertificatePassword)&quot;&quot; /fd sha256 /tr http://timestamp.digicert.com /td sha256&quot;" />
     <Move SourceFiles="$(ReleaseDir)\Setup.exe" DestinationFiles="$(ReleaseDir)\ZappSetup.exe" />
     <Copy SourceFiles="$(ReleaseDir)\ZappSetup.exe" DestinationFiles="$(ReleaseDir)\ZappSetup-$(SemVerNumber).exe" />
   </Target>
