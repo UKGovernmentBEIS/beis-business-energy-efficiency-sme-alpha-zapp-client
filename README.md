@@ -16,7 +16,7 @@
 * [AWS CLI](https://aws.amazon.com/cli/) installed
 * AWS credentials with write permissions for the `beis-sme-alpha` S3 bucket
 * Softwire code signing certificate present in the root folder of the codebase
-* Environment variable `CodeSigningCertificatePassword` added with the relevant password
+* Environment variable `ZappCodeSigningCertificatePassword` added with the relevant password
 
 ### Release steps:
 * Increment the `AssemblyVersion` and `AssemblyFileVersion` properties (in AssemblyInfo.cs)
