@@ -61,7 +61,7 @@ namespace RemindSME.Desktop.Services
         {
             UpdateNextHiberationTime();
 
-            timer.Interval = TimeSpan.FromSeconds(30);
+            timer.Interval = TimeSpan.FromSeconds(5);
             timer.Tick += Timer_Tick;
             timer.Start();
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
@@ -140,24 +140,27 @@ namespace RemindSME.Desktop.Services
             if (nextHibernationTime.Date < DateTime.Today)
             {
                 UpdateNextHiberationTime();
+                return; // Avoid race conditions by not acting again until next tick.
             }
 
-            // Within 15 minutes of next hibernation time, so show prompt.
             var timeUntilHibernation = nextHibernationTime.Subtract(DateTime.Now);
-            if (!hibernationPromptHasBeenShown && timeUntilHibernation <= HibernationPromptPeriod)
-            {
-                ShowHibernationPrompt();
-            }
-
-            if (!hibernationWarningHasBeenShown && timeUntilHibernation <= HibernationWarningPeriod)
-            {
-                ShowHibernationWarning();
-            }
-
-            // It is time to hibernate!
-            if (nextHibernationTime <= DateTime.Now)
+            if (timeUntilHibernation <= TimeSpan.Zero)
             {
                 Hibernate();
+            }
+            else if (timeUntilHibernation <= HibernationWarningPeriod)
+            {
+                if (!hibernationWarningHasBeenShown)
+                {
+                    ShowHibernationWarning();
+                }
+            }
+            else if (timeUntilHibernation <= HibernationPromptPeriod)
+            {
+                if (!hibernationPromptHasBeenShown)
+                {
+                    ShowHibernationPrompt();
+                }
             }
         }
 
