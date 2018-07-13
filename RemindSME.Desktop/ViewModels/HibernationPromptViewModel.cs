@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using System;
+using Caliburn.Micro;
 using RemindSME.Desktop.Services;
 
 namespace RemindSME.Desktop.ViewModels
@@ -22,10 +23,10 @@ namespace RemindSME.Desktop.ViewModels
             log.Info("User clicked 'Sure!' on hibernation prompt.");
         }
 
-        public void Snooze()
+        public void Snooze(int minutes)
         {
             log.Info("User clicked 'Snooze' on hibernation prompt.");
-            hibernationService.Snooze();
+            hibernationService.Snooze(TimeSpan.FromMinutes(minutes));
         }
 
         public void NotTonight()

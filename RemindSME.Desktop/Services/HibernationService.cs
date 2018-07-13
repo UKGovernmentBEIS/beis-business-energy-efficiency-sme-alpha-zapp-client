@@ -18,7 +18,7 @@ namespace RemindSME.Desktop.Services
 {
     public interface IHibernationService : IService
     {
-        void Snooze();
+        void Snooze(TimeSpan snoozeTime);
         void NotTonight();
     }
 
@@ -26,7 +26,6 @@ namespace RemindSME.Desktop.Services
     {
         public static readonly TimeSpan HibernationPromptPeriod = TimeSpan.FromMinutes(15);
         public static readonly TimeSpan HibernationWarningPeriod = TimeSpan.FromSeconds(30);
-        public static readonly TimeSpan SnoozeTime = TimeSpan.FromHours(1);
 
         private readonly ILog log;
         private readonly IAppWindowManager appWindowManager;
@@ -78,9 +77,9 @@ namespace RemindSME.Desktop.Services
             }
         }
 
-        public void Snooze()
+        public void Snooze(TimeSpan snoozeTime)
         {
-            settings.NextHibernationTime = settings.NextHibernationTime.Add(SnoozeTime);
+            settings.NextHibernationTime = settings.NextHibernationTime.Add(snoozeTime);
         }
 
         public void NotTonight()

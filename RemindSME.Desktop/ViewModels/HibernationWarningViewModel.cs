@@ -35,7 +35,7 @@ namespace RemindSME.Desktop.ViewModels
         {
             CloseWindow();
             log.Info("User clicked 'Snooze' on hibernation warning modal.");
-            hibernationService.Snooze();
+            hibernationService.Snooze(TimeSpan.FromHours(1));
         }
 
         public void NotTonight()
