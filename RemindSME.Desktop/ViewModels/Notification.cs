@@ -1,11 +1,10 @@
 ﻿using System.Windows;
 using Caliburn.Micro;
 using Microsoft.Win32;
-using RemindSME.Desktop.Events;
 
 namespace RemindSME.Desktop.ViewModels
 {
-    public abstract class Notification : ViewAware, IHandle<ResumeFromSuspendedStateEvent>
+    public abstract class Notification : ViewAware
     {
         protected Notification(IEventAggregator eventAggregator)
         {
@@ -15,10 +14,6 @@ namespace RemindSME.Desktop.ViewModels
 
         private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
-            if (e.Mode != PowerModes.Suspend)
-            {
-                return;
-            }
             CloseNotification();
         }
 
@@ -29,11 +24,6 @@ namespace RemindSME.Desktop.ViewModels
             {
                 Window.GetWindow(view)?.Close();
             }
-        }
-
-        public void Handle(ResumeFromSuspendedStateEvent message)
-        {
-            CloseNotification();
         }
     }
 }
