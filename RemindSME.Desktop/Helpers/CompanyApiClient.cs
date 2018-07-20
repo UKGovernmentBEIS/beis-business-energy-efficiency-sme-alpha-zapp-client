@@ -31,10 +31,10 @@ namespace RemindSME.Desktop.Helpers
 
             try
             {
-                var company = await ServerUrl.AppendPathSegments("registration", companyId).GetStringAsync();
-                settings.CompanyName = company;
+                var companyData = await ServerUrl.AppendPathSegments("company", companyId).WithHeader("Accept", "application/json").GetJsonAsync();
+                settings.CompanyName = companyData.company;
             }
-            catch (FlurlHttpException)
+            catch
             {
                 settings.CompanyName = null;
             }
