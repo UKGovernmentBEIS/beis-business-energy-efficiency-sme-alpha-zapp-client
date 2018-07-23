@@ -53,7 +53,7 @@ namespace RemindSME.Desktop
             builder.RegisterInstance(Settings.Default).As<ISettings>().SingleInstance();
 
             builder.RegisterType<DispatcherTimer>().AsSelf().InstancePerDependency();
-            builder.RegisterType<Logger>().As<ILog>().InstancePerDependency();
+            builder.RegisterType<Logger>().As<ILog>().As<IActionLog>().InstancePerDependency();
 
             if (!string.IsNullOrEmpty(UpdateUrl))
             {

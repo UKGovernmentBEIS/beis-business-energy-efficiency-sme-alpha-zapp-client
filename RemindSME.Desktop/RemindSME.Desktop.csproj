@@ -225,6 +225,8 @@
     <Compile Include="Helpers\HeatingReminderHelper.cs" />
     <Compile Include="Helpers\NetworkAddressFinder.cs" />
     <Compile Include="Helpers\UserNotificationStateHelper.cs" />
+    <Compile Include="Logging\TrackedActions.cs" />
+    <Compile Include="Logging\IActionLog.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Events\TrackingEvent.cs" />

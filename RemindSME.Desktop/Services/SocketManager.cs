@@ -8,7 +8,6 @@ using Quobject.SocketIoClientDotNet.Client;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers.Listeners;
-using RemindSME.Desktop.Logging;
 
 namespace RemindSME.Desktop.Services
 {
@@ -21,7 +20,7 @@ namespace RemindSME.Desktop.Services
         private readonly HeatingNotificationListener heatingNotificationListener;
         private readonly ISettings settings;
 
-        private readonly Queue<QueuedMessage> trackingMessages = new Queue<QueuedMessage>();
+        private readonly Queue<QueuedTrackingEvent> trackingMessages = new Queue<QueuedTrackingEvent>();
 
         private Socket socket;
 
@@ -51,7 +50,7 @@ namespace RemindSME.Desktop.Services
 
         public void Handle(TrackingEvent e)
         {
-            Log(e.LogLevel, e.Message);
+            Log(e);
         }
 
         public void Handle(NetworkAddressChangedEvent e)
@@ -93,7 +92,7 @@ namespace RemindSME.Desktop.Services
                 while (trackingMessages.Any())
                 {
                     var queuedMessage = trackingMessages.Dequeue();
-                    Log(queuedMessage.LogLevel, "{0} (at {1:R})", queuedMessage.Message, queuedMessage.Timestamp);
+                    Log(queuedMessage.TrackingEvent, queuedMessage.Timestamp);
                 }
             });
             socket.On("company-count-change", companyCountChangeListener);
@@ -112,32 +111,30 @@ namespace RemindSME.Desktop.Services
             socket = null;
         }
 
-        private void Log(LogLevel logLevel, string format, params object[] args)
+        private void Log(TrackingEvent e, DateTime? timestamp = null)
         {
-            var message = string.Format(format, args);
             if (socket != null)
             {
-                var level = logLevel.ToString().ToLower();
-                socket.Emit($"track-{level}", message);
+                var level = e.LogLevel.ToString().ToLower();
+                var message = timestamp.HasValue ? $"{e.Message} (at {timestamp:R})" : e.Message;
+                socket.Emit($"track-{level}", message, e.TrackedAction?.ToString());
             }
             else
             {
-                trackingMessages.Enqueue(new QueuedMessage(message, logLevel));
+                trackingMessages.Enqueue(new QueuedTrackingEvent(e));
             }
         }
 
-        private class QueuedMessage
+        private class QueuedTrackingEvent
         {
-            internal QueuedMessage(string message, LogLevel logLevel)
+            internal QueuedTrackingEvent(TrackingEvent trackingEvent)
             {
                 Timestamp = DateTime.Now;
-                Message = message;
-                LogLevel = logLevel;
+                TrackingEvent = trackingEvent;
             }
 
             internal DateTime Timestamp { get; }
-            internal string Message { get; }
-            internal LogLevel LogLevel { get; }
+            internal TrackingEvent TrackingEvent { get; }
         }
     }
 }

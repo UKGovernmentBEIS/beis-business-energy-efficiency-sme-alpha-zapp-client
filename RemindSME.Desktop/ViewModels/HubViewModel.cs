@@ -7,18 +7,20 @@ using Caliburn.Micro;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
+using RemindSME.Desktop.Logging;
 using RemindSME.Desktop.Views;
+using static RemindSME.Desktop.Logging.TrackedActions;
 
 namespace RemindSME.Desktop.ViewModels
 {
     public class HubViewModel : Screen, IHandle<SettingChangedEvent>
     {
-        private readonly ILog log;
+        private readonly IActionLog log;
         private readonly IAppWindowManager appWindowManager;
         private readonly ISettings settings;
 
         public HubViewModel(
-            ILog log,
+            IActionLog log,
             IAppWindowManager appWindowManager,
             IEventAggregator eventAggregator,
             ISettings settings)
@@ -56,8 +58,10 @@ namespace RemindSME.Desktop.ViewModels
                     return;
                 }
 
-                log.Info($"User opted {(value ? "in to" : "out of")} scheduled hibernation.");
-                settings.HibernationOptIn = value;
+                var isOptingIn = value;
+                var trackedAction = isOptingIn ? OptInToHibernate : OptOutOfHibernate;
+                log.Info(trackedAction, $"User opted {(isOptingIn ? "in to" : "out of")} scheduled hibernation.");
+                settings.HibernationOptIn = isOptingIn;
                 NotifyOfPropertyChange(() => HibernationOptIn);
                 NotifyOfPropertyChange(() => HibernationOptionIsVisible);
             }
