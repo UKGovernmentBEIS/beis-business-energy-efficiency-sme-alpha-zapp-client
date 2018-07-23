@@ -8,11 +8,13 @@ using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
+using RemindSME.Desktop.Logging;
 using RemindSME.Desktop.ViewModels;
 using RemindSME.Desktop.Views;
 using Application = System.Windows.Forms.Application;
 using MessageBox = System.Windows.MessageBox;
 using MessageBoxOptions = System.Windows.MessageBoxOptions;
+using static RemindSME.Desktop.Logging.TrackedActions;
 
 namespace RemindSME.Desktop.Services
 {
@@ -27,7 +29,7 @@ namespace RemindSME.Desktop.Services
         public static readonly TimeSpan HibernationPromptPeriod = TimeSpan.FromMinutes(15);
         public static readonly TimeSpan HibernationWarningPeriod = TimeSpan.FromSeconds(30);
 
-        private readonly ILog log;
+        private readonly IActionLog log;
         private readonly IAppWindowManager appWindowManager;
         private readonly INotificationManager notificationManager;
         private readonly ISettings settings;
@@ -37,7 +39,7 @@ namespace RemindSME.Desktop.Services
         private bool hibernationWarningHasBeenShown;
 
         public HibernationService(
-            ILog log,
+            IActionLog log,
             IAppWindowManager appWindowManager,
             IEventAggregator eventAggregator,
             INotificationManager notificationManager,
@@ -90,7 +92,7 @@ namespace RemindSME.Desktop.Services
         private void Hibernate()
         {
             SetNextHiberateToTomorrow();
-            log.Info("Machine was hibernated automatically.");
+            log.Info(ZappHibernation, "Machine was hibernated automatically.");
 
             if (Debugger.IsAttached)
             {
