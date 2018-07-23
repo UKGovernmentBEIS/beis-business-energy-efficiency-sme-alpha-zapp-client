@@ -3,18 +3,20 @@ using System.Windows;
 using System.Windows.Threading;
 using Caliburn.Micro;
 using RemindSME.Desktop.Configuration;
+using RemindSME.Desktop.Logging;
 using RemindSME.Desktop.Services;
+using static RemindSME.Desktop.Logging.TrackedActions;
 
 namespace RemindSME.Desktop.ViewModels
 {
     public class HibernationWarningViewModel : Notification
     {
         private readonly IHibernationService hibernationService;
-        private readonly ILog log;
+        private readonly IActionLog log;
         private readonly ISettings settings;
 
         public HibernationWarningViewModel(
-            ILog log,
+            IActionLog log,
             IHibernationService hibernationService,
             ISettings settings,
             DispatcherTimer timer,
@@ -41,7 +43,7 @@ namespace RemindSME.Desktop.ViewModels
         public void NotTonight()
         {
             CloseWindow();
-            log.Info("User clicked 'Not tonight' on hibernation warning modal.");
+            log.Info(ClickedNotTonight, "User clicked 'Not tonight' on hibernation warning modal.");
             hibernationService.NotTonight();
         }
 

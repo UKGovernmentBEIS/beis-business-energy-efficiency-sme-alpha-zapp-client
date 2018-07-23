@@ -3,6 +3,10 @@
     public enum TrackedActions
     {
         OptInToHibernate,
-        OptOutOfHibernate
+        OptOutOfHibernate,
+        OptInToHeating,
+        OptOutOfHeating,
+        ZappHibernation,
+        ClickedNotTonight
     }
 }

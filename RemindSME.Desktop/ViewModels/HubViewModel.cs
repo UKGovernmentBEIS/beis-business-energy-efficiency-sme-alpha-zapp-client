@@ -42,8 +42,10 @@ namespace RemindSME.Desktop.ViewModels
                     return;
                 }
 
-                log.Info($"User opted {(value ? "in to" : "out of")} heating notifications.");
-                settings.HeatingOptIn = value;
+                var isOptingIn = value;
+                var trackedAction = isOptingIn ? OptInToHeating : OptOutOfHeating;
+                log.Info(trackedAction, $"User opted {(isOptingIn ? "in to" : "out of")} heating notifications.");
+                settings.HeatingOptIn = isOptingIn;
                 NotifyOfPropertyChange(() => HeatingOptIn);
             }
         }
