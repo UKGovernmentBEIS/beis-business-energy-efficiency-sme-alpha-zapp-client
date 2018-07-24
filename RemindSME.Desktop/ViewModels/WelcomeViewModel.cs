@@ -2,8 +2,10 @@
 using Caliburn.Micro;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Helpers;
+using RemindSME.Desktop.Logging;
 using RemindSME.Desktop.Services;
 using RemindSME.Desktop.Views;
+using static RemindSME.Desktop.Logging.TrackedActions;
 
 namespace RemindSME.Desktop.ViewModels
 {
@@ -13,6 +15,7 @@ namespace RemindSME.Desktop.ViewModels
         private readonly ICompanyApiClient companyApiClient;
         private readonly INetworkService networkService;
         private readonly ISettings settings;
+        private readonly IActionLog log;
 
         private bool _isWorkNetwork = true;
 
@@ -20,12 +23,14 @@ namespace RemindSME.Desktop.ViewModels
             IAppWindowManager appWindowManager,
             ICompanyApiClient companyApiClient,
             INetworkService networkService,
-            ISettings settings)
+            ISettings settings,
+            IActionLog log)
         {
             this.appWindowManager = appWindowManager;
             this.companyApiClient = companyApiClient;
             this.networkService = networkService;
             this.settings = settings;
+            this.log = log;
         }
 
         public string CompanyIdInput
@@ -67,6 +72,15 @@ namespace RemindSME.Desktop.ViewModels
             networkService.AddCurrentNetwork(IsWorkNetwork);
             settings.DisplaySettingExplanations = true;
             appWindowManager.OpenOrActivateWindow<HubView, HubViewModel>();
+
+            var isOptingInHeating = settings.HeatingOptIn;
+            var trackedActionHeating = isOptingInHeating ? OptInToHeating : OptOutOfHeating;
+            log.Info(trackedActionHeating, $"User opted {(isOptingInHeating ? "in to" : "out of")} heating notifications.");
+
+            var isOptingInHibernation = settings.HibernationOptIn;
+            var trackedActionHibernation = isOptingInHibernation ? OptInToHibernate : OptOutOfHibernate;
+            log.Info(trackedActionHibernation, $"User opted {(isOptingInHibernation ? "in to" : "out of")} scheduled hibernation.");
+
             (GetView() as Window)?.Close();
         }
 
