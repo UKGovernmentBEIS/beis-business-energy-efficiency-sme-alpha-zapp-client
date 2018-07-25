@@ -176,7 +176,7 @@ namespace RemindSME.Desktop.Properties {
                 this["OtherNetworks"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
@@ -186,6 +186,18 @@ namespace RemindSME.Desktop.Properties {
             }
             set {
                 this["MostRecentPeakTemperature"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("London,UK")]
+        public string Location {
+            get {
+                return ((string)(this["Location"]));
+            }
+            set {
+                this["Location"] = value;
             }
         }
     }

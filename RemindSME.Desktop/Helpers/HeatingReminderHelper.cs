@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Models;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.ViewModels;
@@ -15,25 +16,16 @@ namespace RemindSME.Desktop.Helpers
 
     public class HeatingReminderHelper : IHeatingReminderHelper
     {
-        private const string Location = "London,UK";
-
         private const double MaximumTemperatureForHeating = 16;
         private const double MinimumTemperatureForAirConditioning = 24;
 
+        private readonly ISettings settings;
         private readonly IWeatherApiClient weatherApiClient;
 
-        public HeatingReminderHelper(IWeatherApiClient weatherApiClient)
+        public HeatingReminderHelper(ISettings settings, IWeatherApiClient weatherApiClient)
         {
+            this.settings = settings;
             this.weatherApiClient = weatherApiClient;
-        }
-
-        public async Task<ReminderViewModel> GetWeatherDependentReminder()
-        {
-            var forecast = await weatherApiClient.GetWeatherForecastForLocation(Location);
-            var peakTemperature = GetPeakTemperatureForToday(forecast);
-            return peakTemperature.HasValue
-                ? GetReminderForTemperature(peakTemperature.Value)
-                : DefaultReminder;
         }
 
         private static ReminderViewModel DefaultReminder
@@ -48,7 +40,16 @@ namespace RemindSME.Desktop.Helpers
             }
         }
 
-        private double? GetPeakTemperatureForToday(WeatherForecast weatherForecast)
+        public async Task<ReminderViewModel> GetWeatherDependentReminder()
+        {
+            var forecast = await weatherApiClient.GetWeatherForecastForLocation(settings.Location);
+            var peakTemperature = GetPeakTemperatureForToday(forecast);
+            return peakTemperature.HasValue
+                ? GetReminderForTemperature(peakTemperature.Value)
+                : DefaultReminder;
+        }
+
+        private static double? GetPeakTemperatureForToday(WeatherForecast weatherForecast)
         {
             var midnightTonight = DateTime.Today.AddDays(1);
             return weatherForecast?.Forecasts
@@ -56,12 +57,9 @@ namespace RemindSME.Desktop.Helpers
                 .Max(forecast => forecast.Measurements.Temperature);
         }
 
-        private ReminderViewModel GetReminderForTemperature(double temperature)
+        private static ReminderViewModel GetReminderForTemperature(double temperature)
         {
             var model = IoC.Get<ReminderViewModel>();
-            model.Icon = NotificationIcon.Thermometer;
-            model.Title = Resources.Reminder_WeatherDefault_Title;
-            model.Message = string.Format(Resources.Reminder_WeatherDefault_Message, temperature);
 
             if (TemperatureRequiresAirConditioning(temperature))
             {
@@ -75,11 +73,24 @@ namespace RemindSME.Desktop.Helpers
                 model.Title = Resources.Reminder_CheckHeating_Title;
                 model.Message = string.Format(Resources.Reminder_CheckHeating_Message, temperature);
             }
+            else
+            {
+                model.Icon = NotificationIcon.Thermometer;
+                model.Title = Resources.Reminder_WeatherDefault_Title;
+                model.Message = string.Format(Resources.Reminder_WeatherDefault_Message, temperature);
+            }
 
             return model;
         }
 
-        private static bool TemperatureRequiresHeating(double temperature) => temperature < MaximumTemperatureForHeating;
-        private static bool TemperatureRequiresAirConditioning(double temperature) => temperature > MinimumTemperatureForAirConditioning;
+        private static bool TemperatureRequiresHeating(double temperature)
+        {
+            return temperature < MaximumTemperatureForHeating;
+        }
+
+        private static bool TemperatureRequiresAirConditioning(double temperature)
+        {
+            return temperature > MinimumTemperatureForAirConditioning;
+        }
     }
 }

@@ -46,5 +46,8 @@
     <Setting Name="MostRecentPeakTemperature" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="Location" Type="System.String" Scope="User">
+      <Value Profile="(Default)">London,UK</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
