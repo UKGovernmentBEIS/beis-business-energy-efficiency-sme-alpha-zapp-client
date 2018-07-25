@@ -1,0 +1,17 @@
+﻿<Window x:Class="Zapp.Desktop.Views.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:cal="http://www.caliburnproject.org"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Visibility="Hidden" Height="0" Width="0">
+    <tb:TaskbarIcon x:Name="TaskbarIcon" ToolTipText="Zapp" IconSource="../Zapp.ico" MenuActivation="RightClick"
+                    cal:Message.Attach="[Event TrayLeftMouseDown] = [Action OpenHubWindow('icon')]">
+        <tb:TaskbarIcon.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Open Hub" cal:Message.Attach="[Event Click] = [Action OpenHubWindow('menu')]" />
+                <MenuItem Header="Open FAQs" cal:Message.Attach="[Event Click] = [Action OpenFaqWindow()]" />
+                <MenuItem Header="Quit" cal:Message.Attach="Quit" />
+            </ContextMenu>
+        </tb:TaskbarIcon.ContextMenu>
+    </tb:TaskbarIcon>
+</Window>
