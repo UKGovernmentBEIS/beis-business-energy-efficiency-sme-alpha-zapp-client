@@ -5,9 +5,11 @@ using Notifications.Wpf;
 using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
 using RemindSME.Desktop.Helpers;
+using RemindSME.Desktop.Logging;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.ViewModels;
 using Action = System.Action;
+using static RemindSME.Desktop.Logging.TrackedActions;
 
 namespace RemindSME.Desktop.Services
 {
@@ -23,7 +25,7 @@ namespace RemindSME.Desktop.Services
 
         private readonly IAppWindowManager appWindowManager;
         private readonly IEventAggregator eventAggregator;
-        private readonly ILog log;
+        private readonly IActionLog log;
         private readonly INotificationManager notificationManager;
         private readonly IHeatingReminderHelper heatingReminderHelper;
         private readonly ISettings settings;
@@ -36,7 +38,7 @@ namespace RemindSME.Desktop.Services
         private int? networkCount;
 
         public ReminderService(
-            ILog log,
+            IActionLog log,
             INotificationManager notificationManager,
             IHeatingReminderHelper heatingReminderHelper,
             IAppWindowManager appWindowManager,
@@ -138,13 +140,13 @@ namespace RemindSME.Desktop.Services
 
         private void FirstLoginReminder_Done()
         {
-            log.Info("User clicked 'Done!' on first login reminder.");
+            log.Info(HeatingFirstLoginDone, "User clicked 'Done!' on first login reminder.");
             settings.MostRecentFirstLoginReminderDismissal = DateTime.Now;
         }
 
         private void FirstLoginReminder_NotNow()
         {
-            log.Info("User clicked 'Not now' on first login reminder.");
+            log.Info(HeatingFirstLoginNotNow, "User clicked 'Not now' on first login reminder.");
             settings.MostRecentFirstLoginReminderDismissal = DateTime.Now;
         }
 

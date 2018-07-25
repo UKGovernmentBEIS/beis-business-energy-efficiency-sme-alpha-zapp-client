@@ -9,6 +9,8 @@
         ZappHibernation,
         ClickedNotTonight,
         InstalledZapp,
-        UninstalledZapp
+        UninstalledZapp,
+        HeatingFirstLoginDone,
+        HeatingFirstLoginNotNow
     }
 }
