@@ -14,8 +14,8 @@ namespace RemindSME.Desktop.Services
     public class SocketManager : IService, IHandle<TrackingEvent>, IHandle<NetworkAddressChangedEvent>
     {
         private static readonly string ServerUrl = ConfigurationManager.AppSettings["ServerUrl"];
-        private readonly INetworkService networkService;
         private readonly CompanyCountChangeListener companyCountChangeListener;
+        private readonly INetworkService networkService;
 
         private readonly ISettings settings;
 
@@ -45,11 +45,6 @@ namespace RemindSME.Desktop.Services
             }
         }
 
-        public void Handle(TrackingEvent e)
-        {
-            Log(e);
-        }
-
         public void Handle(NetworkAddressChangedEvent e)
         {
             Disconnect();
@@ -57,6 +52,11 @@ namespace RemindSME.Desktop.Services
             {
                 Connect();
             }
+        }
+
+        public void Handle(TrackingEvent e)
+        {
+            Log(e);
         }
 
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)

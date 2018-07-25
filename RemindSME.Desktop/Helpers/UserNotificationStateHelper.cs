@@ -39,6 +39,8 @@ namespace RemindSME.Desktop.Helpers
         /// <summary>
         ///     A full-screen (exclusive mode) Direct3D application is running.
         /// </summary>
+        // ReSharper disable once InconsistentNaming
+        // Must match external name.
         RunningDirect3dFullScreen = 3,
 
         /// <summary>

@@ -8,8 +8,8 @@ using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Logging;
 using RemindSME.Desktop.Properties;
 using RemindSME.Desktop.ViewModels;
-using Action = System.Action;
 using static RemindSME.Desktop.Logging.TrackedActions;
+using Action = System.Action;
 
 namespace RemindSME.Desktop.Services
 {
@@ -25,12 +25,12 @@ namespace RemindSME.Desktop.Services
 
         private readonly IAppWindowManager appWindowManager;
         private readonly IEventAggregator eventAggregator;
-        private readonly IActionLog log;
-        private readonly INotificationManager notificationManager;
         private readonly IHeatingReminderHelper heatingReminderHelper;
+        private readonly IActionLog log;
+        private readonly INetworkService networkService;
+        private readonly INotificationManager notificationManager;
         private readonly ISettings settings;
         private readonly DispatcherTimer timer;
-        private readonly INetworkService networkService;
 
         private bool isShowingFirstLoginReminder;
         private bool isShowingLastToLeaveReminder;

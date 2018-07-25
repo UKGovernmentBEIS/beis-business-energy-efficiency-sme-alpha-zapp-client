@@ -5,10 +5,6 @@ namespace RemindSME.Desktop.Helpers
 {
     public static class AppInfo
     {
-        public static string Title { get; }
-        public static string Version { get; }
-        public static string Location { get; }
-
         static AppInfo()
         {
             var titleAttribute = (AssemblyTitleAttribute)Assembly.GetExecutingAssembly().GetCustomAttribute(typeof(AssemblyTitleAttribute));
@@ -19,5 +15,9 @@ namespace RemindSME.Desktop.Helpers
 
             Location = Assembly.GetExecutingAssembly().Location;
         }
+
+        public static string Title { get; }
+        public static string Version { get; }
+        public static string Location { get; }
     }
 }

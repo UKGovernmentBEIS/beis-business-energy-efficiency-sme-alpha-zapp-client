@@ -46,7 +46,7 @@ namespace RemindSME.Desktop.Helpers
             return Application.Current.Windows.Cast<Window>().Any(window => window.GetType().IsSubclassOf(typeof(AppWindow)));
         }
 
-        private bool ActivateExistingWindow<TView>()
+        private static bool ActivateExistingWindow<TView>()
         {
             var existingWindow = Application.Current.Windows.Cast<Window>().FirstOrDefault(window => window is TView);
             if (existingWindow == null)

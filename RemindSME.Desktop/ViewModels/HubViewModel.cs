@@ -15,8 +15,8 @@ namespace RemindSME.Desktop.ViewModels
 {
     public class HubViewModel : Screen, IHandle<SettingChangedEvent>
     {
-        private readonly IActionLog log;
         private readonly IAppWindowManager appWindowManager;
+        private readonly IActionLog log;
         private readonly ISettings settings;
 
         public HubViewModel(

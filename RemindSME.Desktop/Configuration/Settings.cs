@@ -3,6 +3,7 @@ using RemindSME.Desktop.Configuration;
 using RemindSME.Desktop.Events;
 
 // ReSharper disable once CheckNamespace
+// Namespace must match the partial class in Settings.Designer.cs (auto-generated file).
 namespace RemindSME.Desktop.Properties
 {
     internal partial class Settings : ISettings

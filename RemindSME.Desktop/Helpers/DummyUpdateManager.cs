@@ -8,7 +8,7 @@ using Squirrel;
 namespace RemindSME.Desktop.Helpers
 {
     /// <summary>
-    ///   Replaces the instance of Squirrel.Windows.UpdateManager when running locally.
+    ///     Replaces the instance of Squirrel.Windows.UpdateManager when running locally.
     /// </summary>
     public class DummyUpdateManager : IUpdateManager
     {

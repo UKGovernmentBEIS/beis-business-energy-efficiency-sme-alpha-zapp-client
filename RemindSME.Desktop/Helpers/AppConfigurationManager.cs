@@ -15,6 +15,7 @@ namespace RemindSME.Desktop.Helpers
     public class AppConfigurationManager : IAppConfigurationManager
     {
         private static readonly string SettingsFilePath = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+
         private static readonly string BackupFilePath = Path.Combine(
             Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName,
             "backup.config");

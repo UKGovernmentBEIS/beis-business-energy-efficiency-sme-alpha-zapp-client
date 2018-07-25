@@ -27,14 +27,6 @@ namespace RemindSME.Desktop.Logging
             fileLogger = LogManager.GetLogger("Logger");
         }
 
-        private void ConfigureLogManager()
-        {
-            var config = new LoggingConfiguration();
-            var logFile = new FileTarget { FileName = LogFilePath };
-            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, logFile);
-            LogManager.Configuration = config;
-        }
-
         public void Info(string format, params object[] args)
         {
             InfoInternal(null, format, args);
@@ -63,6 +55,14 @@ namespace RemindSME.Desktop.Logging
         public void Error(TrackedActions action, Exception exception)
         {
             ErrorInternal(action, exception);
+        }
+
+        private static void ConfigureLogManager()
+        {
+            var config = new LoggingConfiguration();
+            var logFile = new FileTarget { FileName = LogFilePath };
+            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, logFile);
+            LogManager.Configuration = config;
         }
 
         private void InfoInternal(TrackedActions? action, string format, params object[] args)

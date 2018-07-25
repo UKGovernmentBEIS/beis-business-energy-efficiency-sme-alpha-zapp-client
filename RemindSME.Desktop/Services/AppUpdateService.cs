@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using Caliburn.Micro;
 using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Logging;
 using Squirrel;

@@ -11,10 +11,10 @@ using RemindSME.Desktop.Helpers;
 using RemindSME.Desktop.Logging;
 using RemindSME.Desktop.ViewModels;
 using RemindSME.Desktop.Views;
+using static RemindSME.Desktop.Logging.TrackedActions;
 using Application = System.Windows.Forms.Application;
 using MessageBox = System.Windows.MessageBox;
 using MessageBoxOptions = System.Windows.MessageBoxOptions;
-using static RemindSME.Desktop.Logging.TrackedActions;
 
 namespace RemindSME.Desktop.Services
 {

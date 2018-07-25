@@ -13,9 +13,9 @@ namespace RemindSME.Desktop.ViewModels
     {
         private readonly IAppWindowManager appWindowManager;
         private readonly ICompanyApiClient companyApiClient;
+        private readonly IActionLog log;
         private readonly INetworkService networkService;
         private readonly ISettings settings;
-        private readonly IActionLog log;
 
         private bool _isWorkNetwork = true;
 

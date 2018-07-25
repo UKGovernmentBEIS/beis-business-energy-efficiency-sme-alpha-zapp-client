@@ -7,6 +7,8 @@ namespace RemindSME.Desktop.ViewModels
 {
     public class ReminderViewModel : Notification
     {
+        public ReminderViewModel(IEventAggregator eventAggregator) : base(eventAggregator) { }
+
         public string Icon { get; set; } = NotificationIcon.Lightbulb;
         public string Title { get; set; }
         public string Message { get; set; }
@@ -31,7 +33,5 @@ namespace RemindSME.Desktop.ViewModels
                 onClick?.Invoke();
             }
         }
-
-        public ReminderViewModel(IEventAggregator eventAggregator) : base(eventAggregator) { }
     }
 }

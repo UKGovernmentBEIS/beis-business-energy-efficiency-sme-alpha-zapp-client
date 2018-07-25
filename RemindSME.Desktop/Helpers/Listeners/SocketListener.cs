@@ -7,9 +7,10 @@ namespace RemindSME.Desktop.Helpers.Listeners
     public abstract class SocketListener : IListener
     {
         private static readonly Random Ids = new Random();
-        private readonly int id;
 
         protected readonly IEventAggregator EventAggregator;
+
+        private readonly int id;
 
         protected SocketListener(IEventAggregator eventAggregator)
         {
