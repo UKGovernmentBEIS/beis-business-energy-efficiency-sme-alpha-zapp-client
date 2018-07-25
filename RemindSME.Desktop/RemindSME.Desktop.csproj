@@ -213,7 +213,6 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\Settings.cs" />
-    <Compile Include="Events\HeatingNotificationEvent.cs" />
     <Compile Include="Events\NetworkAddressChangedEvent.cs" />
     <Compile Include="Events\NetworkCountChangeEvent.cs" />
     <Compile Include="Events\SettingChangedEvent.cs" />
@@ -233,7 +232,6 @@
     <Compile Include="Services\AppUpdateService.cs" />
     <Compile Include="Services\HibernationService.cs" />
     <Compile Include="Helpers\Listeners\ArgumentParser.cs" />
-    <Compile Include="Helpers\Listeners\HeatingNotificationListener.cs" />
     <Compile Include="Helpers\Listeners\CompanyCountChangeListener.cs" />
     <Compile Include="Helpers\Listeners\SocketListener.cs" />
     <Compile Include="Services\NetworkService.cs" />

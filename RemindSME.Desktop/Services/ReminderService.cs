@@ -13,7 +13,7 @@ using static RemindSME.Desktop.Logging.TrackedActions;
 
 namespace RemindSME.Desktop.Services
 {
-    public class ReminderService : IService, IHandle<HeatingNotificationEvent>, IHandle<NetworkCountChangeEvent>
+    public class ReminderService : IService, IHandle<NetworkCountChangeEvent>
     {
         private const int LastToLeaveThreshold = 3;
 
@@ -71,14 +71,6 @@ namespace RemindSME.Desktop.Services
             networkCount = e.Count;
         }
 
-        public void Handle(HeatingNotificationEvent e)
-        {
-            if (ShouldShowHeatingReminder())
-            {
-                ShowHeatingReminder(e.Title, e.Message);
-            }
-        }
-
         private void Timer_Tick(object sender, EventArgs e)
         {
             if (appWindowManager.AnyAppWindowIsOpen() || !networkService.IsWorkNetwork)
@@ -98,18 +90,6 @@ namespace RemindSME.Desktop.Services
             {
                 ShowFirstLoginReminder();
             }
-        }
-
-        private bool ShouldShowHeatingReminder()
-        {
-            return settings.HeatingOptIn;
-        }
-
-        private void ShowHeatingReminder(string title, string message)
-        {
-            ShowReminder(
-                title ?? Resources.Reminder_HeatingDefault_Title,
-                message ?? Resources.Reminder_HeatingDefault_Message);
         }
 
         private bool ShouldShowFirstLoginReminder()
@@ -185,11 +165,6 @@ namespace RemindSME.Desktop.Services
         {
             log.Info("User clicked 'Snooze' on last to leave reminder.");
             settings.LastToLeaveReminderSnoozeUntilTime = DateTime.Now.Add(LastToLeaveSnoozePeriod);
-        }
-
-        private void ShowReminder(string title, string message, params ReminderViewModel.Button[] buttons)
-        {
-            ShowReminder(title, message, null, buttons);
         }
 
         private void ShowReminder(string title, string message, Action onClose, params ReminderViewModel.Button[] buttons)

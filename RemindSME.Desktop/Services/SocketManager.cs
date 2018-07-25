@@ -17,7 +17,6 @@ namespace RemindSME.Desktop.Services
         private readonly INetworkService networkService;
         private readonly CompanyCountChangeListener companyCountChangeListener;
 
-        private readonly HeatingNotificationListener heatingNotificationListener;
         private readonly ISettings settings;
 
         private readonly Queue<QueuedTrackingEvent> trackingMessages = new Queue<QueuedTrackingEvent>();
@@ -28,13 +27,11 @@ namespace RemindSME.Desktop.Services
             IEventAggregator eventAggregator,
             INetworkService networkService,
             ISettings settings,
-            CompanyCountChangeListener companyCountChangeListener,
-            HeatingNotificationListener heatingNotificationListener)
+            CompanyCountChangeListener companyCountChangeListener)
         {
             this.networkService = networkService;
             this.settings = settings;
             this.companyCountChangeListener = companyCountChangeListener;
-            this.heatingNotificationListener = heatingNotificationListener;
 
             eventAggregator.Subscribe(this);
         }
@@ -96,7 +93,6 @@ namespace RemindSME.Desktop.Services
                 }
             });
             socket.On("company-count-change", companyCountChangeListener);
-            socket.On("heating-notification", heatingNotificationListener);
             socket.Connect();
         }
 
