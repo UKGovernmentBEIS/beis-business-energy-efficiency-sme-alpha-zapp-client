@@ -3,13 +3,15 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using Caliburn.Micro;
 using RemindSME.Desktop.Helpers;
+using RemindSME.Desktop.Logging;
 using Squirrel;
+using static RemindSME.Desktop.Logging.TrackedActions;
 
 namespace RemindSME.Desktop.Services
 {
     public class AppUpdateService : IService, IDisposable
     {
-        private readonly ILog log;
+        private readonly IActionLog log;
         private readonly IAppWindowManager appWindowManager;
         private readonly DispatcherTimer timer;
         private readonly IAppConfigurationManager configurationManager;
@@ -17,7 +19,7 @@ namespace RemindSME.Desktop.Services
         private readonly IUpdateManager updateManager;
 
         public AppUpdateService(
-            ILog log,
+            IActionLog log,
             IUpdateManager updateManager,
             IRegistryManager registryManager,
             IAppConfigurationManager configurationManager,
@@ -39,8 +41,8 @@ namespace RemindSME.Desktop.Services
             timer.Start();
 
             SquirrelAwareApp.HandleEvents(
-                version => PerformInstallActions(),
-                version => PerformInstallActions(),
+                onInitialInstall: version => PerformInitialInstallActions(),
+                onAppUpdate: version => PerformInstallActions(),
                 onAppUninstall: version => PerformUninstallActions());
         }
 
@@ -83,9 +85,15 @@ namespace RemindSME.Desktop.Services
             UpdateManager.RestartApp();
         }
 
+        private void PerformInitialInstallActions()
+        {
+            log.Info(InstalledZapp, "User installed Zapp.");
+            PerformInstallActions();
+        }
+
         private void PerformInstallActions()
         {
-            log.Info("Performing post-update actions.");
+            log.Info("Performing post-install/update actions.");
             updateManager.CreateShortcutForThisExe();
             registryManager.CreateEntryToLaunchOnStartup();
             configurationManager.RestoreSettings();
@@ -93,6 +101,7 @@ namespace RemindSME.Desktop.Services
 
         private void PerformUninstallActions()
         {
+            log.Info(UninstalledZapp, "User uninstalled Zapp.");
             updateManager.RemoveShortcutForThisExe();
             registryManager.RemoveEntryToLaunchOnStartup();
         }

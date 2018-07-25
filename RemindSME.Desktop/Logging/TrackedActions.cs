@@ -7,6 +7,8 @@
         OptInToHeating,
         OptOutOfHeating,
         ZappHibernation,
-        ClickedNotTonight
+        ClickedNotTonight,
+        InstalledZapp,
+        UninstalledZapp
     }
 }
