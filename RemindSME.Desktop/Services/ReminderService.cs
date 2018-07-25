@@ -13,7 +13,6 @@ namespace RemindSME.Desktop.Services
 {
     public class ReminderService : IService, IHandle<HeatingNotificationEvent>, IHandle<NetworkCountChangeEvent>
     {
-        private const int FirstInThreshold = 3;
         private const int LastToLeaveThreshold = 3;
 
         private static readonly TimeSpan FirstLoginMinimumTime = new TimeSpan(06, 00, 00);
@@ -122,7 +121,6 @@ namespace RemindSME.Desktop.Services
             return settings.HeatingOptIn && // Opted in.
                    time >= FirstLoginMinimumTime && // Not too early.
                    time <= FirstLoginMaximumTime && // Early enough.
-                   networkCount.HasValue && networkCount.Value <= FirstInThreshold && // Few enough people.
                    settings.MostRecentFirstLoginReminderDismissal.Date != DateTime.Today; // Has not dismissed today.
         }
 
@@ -130,13 +128,23 @@ namespace RemindSME.Desktop.Services
         {
             isShowingFirstLoginReminder = true;
             var reminder = await heatingReminderHelper.GetWeatherDependentReminder();
-            reminder.Buttons = new[] { new ReminderViewModel.Button("Done!", FirstLoginReminder_Done) };
+            reminder.Buttons = new[]
+            {
+                new ReminderViewModel.Button("Done!", FirstLoginReminder_Done),
+                new ReminderViewModel.Button("Not now", FirstLoginReminder_NotNow)
+            };
             ShowReminder(reminder, () => isShowingFirstLoginReminder = false);
         }
 
         private void FirstLoginReminder_Done()
         {
             log.Info("User clicked 'Done!' on first login reminder.");
+            settings.MostRecentFirstLoginReminderDismissal = DateTime.Now;
+        }
+
+        private void FirstLoginReminder_NotNow()
+        {
+            log.Info("User clicked 'Not now' on first login reminder.");
             settings.MostRecentFirstLoginReminderDismissal = DateTime.Now;
         }
 
